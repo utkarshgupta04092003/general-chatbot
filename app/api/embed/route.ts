@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { TEXT_EMBEDDING_3_SMALL } from "@/lib/config";
+import { getAIClient, getDomain } from "@/lib/utils";
+import { Pinecone, PineconeRecord } from "@pinecone-database/pinecone";
+import { logger } from "@/lib/logger";
 
-// In-memory mock vector store (per chatbot session)
-const mockVectorStore = new Map<string, { text: string; url: string }[]>();
+// Initialize Pinecone client
+const pc = new Pinecone({
+  apiKey: process.env.PINECONE_API_KEY!,
+});
 
 function chunkText(text: string, chunkSize = 500, overlap = 50): string[] {
   const words = text.split(/\s+/);
@@ -36,16 +42,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Chatbot not found" }, { status: 404 });
     }
 
-    const chunks: { text: string; url: string }[] = [];
-
+    const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot");
+    
+    // Group chunks by domain for namespacing
+    const chunksByDomain: Record<string, { id: string; text: string; url: string }[]> = {};
+    
     for (const page of pages) {
       if (!page.content || page.status === "failed") continue;
 
+      const domain = getDomain(page.url);
+      if (!chunksByDomain[domain]) chunksByDomain[domain] = [];
+
       // Create/update data source
       await prisma.dataSource.upsert({
-        where: { id: page.url },
+        where: { 
+          chatbotId_url: {
+            chatbotId,
+            url: page.url
+          }
+        },
         create: {
-          id: page.url,
           chatbotId,
           url: page.url,
           title: page.title,
@@ -63,16 +79,43 @@ export async function POST(req: Request) {
 
       // Chunk the content
       const pageChunks = chunkText(page.content);
-      pageChunks.forEach((chunk) => chunks.push({ text: chunk, url: page.url }));
+      pageChunks.forEach((chunk, index) => {
+        const chunkId = `${Buffer.from(page.url).toString('base64url')}-${index}`;
+        chunksByDomain[domain].push({ id: chunkId, text: chunk, url: page.url });
+      });
     }
 
-    // Store in mock vector store (in real app: generate embeddings + store in Pinecone)
-    if (process.env.OPENAI_API_KEY && process.env.PINECONE_API_KEY) {
-      // Real embedding pipeline would go here
-      console.log("Would generate real embeddings for", chunks.length, "chunks");
-    }
+    // Process each domain's chunks
+    const client = getAIClient(TEXT_EMBEDDING_3_SMALL);
+    let totalChunks = 0;
 
-    mockVectorStore.set(chatbotId, chunks);
+    for (const [domain, domainChunks] of Object.entries(chunksByDomain)) {
+      totalChunks += domainChunks.length;
+      const batchSize = 20;
+      
+      for (let i = 0; i < domainChunks.length; i += batchSize) {
+        const batch = domainChunks.slice(i, i + batchSize);
+        const input = batch.map(c => c.text);
+        
+        const response = await client.embeddings.create({
+          model: TEXT_EMBEDDING_3_SMALL,
+          input,
+        });
+
+        const vectors: PineconeRecord[] = batch.map((chunk, idx) => ({
+          id: chunk.id,
+          values: response.data[idx].embedding,
+          metadata: {
+            chatbotId: String(chatbotId),
+            text: chunk.text,
+            url: chunk.url,
+          },
+        }));
+
+        // Upsert to Pinecone with domain namespace
+        await index.namespace(domain).upsert({ records: vectors });
+      }
+    }
 
     // Update chatbot status to ready
     await prisma.chatbot.update({
@@ -82,14 +125,12 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      chunksGenerated: chunks.length,
+      chunksGenerated: totalChunks,
       pagesIndexed: pages.filter((p: { status: string }) => p.status !== "failed").length,
     });
   } catch (err: unknown) {
+    logger.error("Embedding error:", err);
     const message = err instanceof Error ? err.message : "Embedding failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
-
-// Export for use in chat route
-export { mockVectorStore };

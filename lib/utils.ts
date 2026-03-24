@@ -45,6 +45,15 @@ export function estimateTokens(text: string): number {
   return Math.ceil(text.split(/\s+/).length * 1.3);
 }
 
+export function getDomain(url: string): string {
+  try {
+    const { hostname } = new URL(url);
+    return hostname.replace(/^www\./, "");
+  } catch {
+    return "default";
+  }
+}
+
 export const getAIClient = (model: QAModel) => {
   if (model === GEMINI_3_1_PRO) {
     const client = new OpenAI({

@@ -1,54 +1,23 @@
-import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { GPT_5_2, TEXT_EMBEDDING_3_SMALL } from "@/lib/config";
 import { prisma } from "@/lib/prisma";
+import { getAIClient, getDomain } from "@/lib/utils";
+import { NextResponse } from "next/server";
+import { Pinecone } from "@pinecone-database/pinecone";
 
-// Import the mock vector store
-import { mockVectorStore } from "@/app/api/embed/route";
-
-function findRelevantChunks(query: string, chunks: { text: string; url: string }[], topK = 5): string[] {
-  // Simple keyword-based retrieval (mock BM25)
-  const queryWords = query.toLowerCase().split(/\s+/);
-  const scored = chunks.map((chunk) => {
-    const text = chunk.text.toLowerCase();
-    const score = queryWords.reduce((acc, word) => {
-      const matches = (text.match(new RegExp(word, "g")) || []).length;
-      return acc + matches;
-    }, 0);
-    return { ...chunk, score };
-  });
-
-  scored.sort((a, b) => b.score - a.score);
-  return scored.slice(0, topK).map((c) => c.text);
-}
-
-function generateMockResponse(query: string, context: string[]): string {
-  if (context.length === 0 || context.every((c) => c.trim() === "")) {
-    return "I don't have enough information from the indexed pages to answer that question. Please make sure the relevant pages have been indexed, or try rephrasing your question.";
-  }
-
-  const combinedContext = context.join("\n\n");
-  const queryLower = query.toLowerCase();
-
-  // Extract relevant sentences
-  const sentences = combinedContext.match(/[^.!?]+[.!?]+/g) || [];
-  const relevant = sentences.filter((s) => {
-    const sLower = s.toLowerCase();
-    return queryLower.split(/\s+/).some((word) => word.length > 3 && sLower.includes(word));
-  });
-
-  if (relevant.length > 0) {
-    return relevant.slice(0, 4).join(" ").trim();
-  }
-
-  return `Based on the indexed content, here's what I found:\n\n${combinedContext.slice(0, 400)}...`;
-}
+// Initialize Pinecone client
+const pc = new Pinecone({
+  apiKey: process.env.PINECONE_API_KEY!,
+});
 
 export async function POST(req: Request) {
   try {
     const { chatbotId, message, sessionId } = await req.json();
 
     if (!chatbotId || !message) {
-      return NextResponse.json({ error: "chatbotId and message required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "chatbotId and message required" },
+        { status: 400 },
+      );
     }
 
     // Get chatbot config
@@ -77,31 +46,67 @@ export async function POST(req: Request) {
       data: { conversationId: conversation.id, role: "user", content: message },
     });
 
-    // Retrieve relevant chunks
-    const chunks = mockVectorStore.get(chatbotId) ?? [];
-    const relevantChunks = findRelevantChunks(message, chunks);
+    // Generate embedding for the user message
+    const embeddingClient = getAIClient(TEXT_EMBEDDING_3_SMALL);
+    const embeddingResponse = await embeddingClient.embeddings.create({
+      model: TEXT_EMBEDDING_3_SMALL,
+      input: message,
+    });
+    const queryEmbedding = embeddingResponse.data[0].embedding;
 
-    // Generate response
-    let response: string;
-    if (process.env.OPENAI_API_KEY && chunks.length > 0) {
-      // Real OpenAI call would go here
-      response = generateMockResponse(message, relevantChunks);
-    } else if (chunks.length > 0) {
-      response = generateMockResponse(message, relevantChunks);
-    } else {
-      // Fall back to data sources content
-      const fallbackContent = chatbot.dataSources.map((ds) => ds.content).join("\n\n");
-      response = generateMockResponse(message, [fallbackContent]);
+    // Retrieve relevant chunks from Pinecone
+    const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot");
+    
+    // Determine namespace from the first data source's URL
+    const domain = chatbot.dataSources[0] ? getDomain(chatbot.dataSources[0].url) : "default";
+
+    const queryResults = await index.namespace(domain).query({
+      vector: queryEmbedding,
+      topK: 5,
+      filter: { chatbotId: { $eq: chatbotId } },
+      includeMetadata: true,
+    });
+
+    const relevantChunks = queryResults.matches
+      .map((match) => match.metadata?.text as string)
+      .filter(Boolean);
+
+    // Generate response using real AI Client
+    const client = getAIClient(GPT_5_2);
+
+    let context = relevantChunks.join("\n\n");
+    if (context.length === 0 && chatbot.dataSources.length > 0) {
+      context = chatbot.dataSources.map((ds) => ds.content).join("\n\n");
     }
 
-    // Override with system prompt context
-    if (chatbot.systemPrompt && chunks.length === 0) {
-      response = "I'm your AI assistant. The chatbot is still being trained on your content. Please check back soon or add some data sources from your dashboard.";
-    }
+    const systemMessage = `
+      ${chatbot.systemPrompt || "You are a helpful AI assistant."}
+      
+      Use the following context to answer the user's question. If you don't know the answer, say "I don't have enough information to answer that based on the provided content."
+      
+      Context:
+      ${context}
+    `;
+
+    const aiResponse = await client.chat.completions.create({
+      model: GPT_5_2,
+      messages: [
+        { role: "system", content: systemMessage },
+        { role: "user", content: message },
+      ],
+    });
+
+    const response =
+      aiResponse.choices[0].message.content ||
+      "I'm sorry, I couldn't generate a response.";
 
     // Save assistant message
     await prisma.message.create({
-      data: { conversationId: conversation.id, role: "assistant", content: response },
+      data: {
+        conversationId: conversation.id,
+        role: "assistant",
+        content: response,
+      },
     });
 
     // Update query count
