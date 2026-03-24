@@ -56,9 +56,11 @@ export async function POST(req: Request) {
 
     // Retrieve relevant chunks from Pinecone
     const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot");
-    
+
     // Determine namespace from the first data source's URL
-    const domain = chatbot.dataSources[0] ? getDomain(chatbot.dataSources[0].url) : "default";
+    const domain = chatbot.dataSources[0]
+      ? getDomain(chatbot.dataSources[0].url)
+      : "default";
 
     const queryResults = await index.namespace(domain).query({
       vector: queryEmbedding,
@@ -82,7 +84,11 @@ export async function POST(req: Request) {
     const systemMessage = `
       ${chatbot.systemPrompt || "You are a helpful AI assistant."}
       
-      Use the following context to answer the user's question. If you don't know the answer, say "I don't have enough information to answer that based on the provided content."
+      INSTRUCTIONS:
+      1. Answer the user's question directly and concisely using the provided context.
+      2. DO NOT mention "the provided context", "the document", or "the text" in your response. Act as if you naturally know this information.
+      3. If the answer is not in the context, politely say you don't have enough information to answer that specific question.
+      4. Maintain a professional and helpful tone.
       
       Context:
       ${context}
@@ -100,12 +106,24 @@ export async function POST(req: Request) {
       aiResponse.choices[0].message.content ||
       "I'm sorry, I couldn't generate a response.";
 
+    // Extract unique source URLs
+    const sources = Array.from(
+      new Set(
+        queryResults.matches.map((match) => match.metadata?.url as string),
+      ),
+    ).filter(Boolean);
+
+    let finalResponse = response;
+    if (sources.length > 0) {
+      finalResponse += `\n\n**Sources:**\n${sources.map((url) => `- [${url}](${url})`).join("\n")}`;
+    }
+
     // Save assistant message
     await prisma.message.create({
       data: {
         conversationId: conversation.id,
         role: "assistant",
-        content: response,
+        content: finalResponse,
       },
     });
 
@@ -115,9 +133,40 @@ export async function POST(req: Request) {
       data: { totalQueries: { increment: 1 } },
     });
 
-    return NextResponse.json({ response, conversationId: conversation.id });
+    return NextResponse.json({ response: finalResponse, conversationId: conversation.id });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Chat failed";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const chatbotId = searchParams.get("chatbotId");
+    const sessionId = searchParams.get("sessionId");
+
+    if (!chatbotId || !sessionId) {
+      return NextResponse.json(
+        { error: "Missing parameters" },
+        { status: 400 },
+      );
+    }
+
+    const conversation = await prisma.conversation.findFirst({
+      where: { chatbotId, sessionId },
+      include: {
+        messages: {
+          orderBy: { createdAt: "asc" },
+          select: { role: true, content: true },
+        },
+      },
+    });
+
+    return NextResponse.json({ messages: conversation?.messages || [] });
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error ? err.message : "Failed to fetch history";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

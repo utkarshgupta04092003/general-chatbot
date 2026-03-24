@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Code, Copy, Check, ExternalLink, Loader2, Zap } from "lucide-react";
+import { Copy, Check, ExternalLink, Loader2, Zap } from "lucide-react";
 
 interface Chatbot {
   id: string;
@@ -28,7 +28,7 @@ export default function EmbedPage() {
 
   const embedCode = selected
     ? `<script
-  src="https://chatbase.ai/widget.js"
+  src="${typeof window !== "undefined" ? window.location.origin : ""}/widget.js"
   data-chatbot-id="${selected.id}"
   defer
 ></script>`
