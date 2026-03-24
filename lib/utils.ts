@@ -1,5 +1,9 @@
 import { type ClassValue, clsx } from "clsx";
+import OpenAI, { AzureOpenAI } from "openai";
 import { twMerge } from "tailwind-merge";
+import { API_VERSIONS, GEMINI_3_1_PRO, GPT_5_2 } from "./config";
+import { QAModel } from "./declaration";
+import { logger } from "./logger";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -40,3 +44,33 @@ export function truncate(str: string, length: number): string {
 export function estimateTokens(text: string): number {
   return Math.ceil(text.split(/\s+/).length * 1.3);
 }
+
+export const getAIClient = (model: QAModel) => {
+  if (model === GEMINI_3_1_PRO) {
+    const client = new OpenAI({
+      apiKey: process.env.GEMINI_API_KEY_MB_AI,
+      baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+    });
+    logger.debug("Using Gemini client for model:", model);
+    return client;
+  } else if (model === GPT_5_2) {
+    const client = new AzureOpenAI({
+      apiKey: process.env.AZURE_OPENAI_API_KEY_EAST_US,
+      endpoint: process.env.AZURE_OPENAI_ENDPOINT_EAST_US,
+      deployment: model,
+      apiVersion: API_VERSIONS[model],
+    });
+    logger.debug("Using Azure OpenAI East US client for model:", model);
+    return client;
+  } else {
+    // Grok-4 Fast Reasoning, Mistral Large 3, GPT-5-mini
+    const client = new AzureOpenAI({
+      apiKey: process.env.AZURE_OPENAI_API_KEY,
+      endpoint: process.env.AZURE_OPENAI_ENDPOINT,
+      deployment: model,
+      apiVersion: API_VERSIONS[model],
+    });
+    logger.debug("Using Azure OpenAI client for model:", model);
+    return client;
+  }
+};
