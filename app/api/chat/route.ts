@@ -1,4 +1,4 @@
-import { GPT_5_2, TEXT_EMBEDDING_3_SMALL } from "@/lib/config";
+import { CHAT_ROLES, GPT_5_2, TEXT_EMBEDDING_3_SMALL } from "@/lib/config";
 import { prisma } from "@/lib/prisma";
 import { getAIClient, getDomain } from "@/lib/utils";
 import { NextResponse } from "next/server";
@@ -43,7 +43,11 @@ export async function POST(req: Request) {
 
     // Save user message
     await prisma.message.create({
-      data: { conversationId: conversation.id, role: "user", content: message },
+      data: {
+        conversationId: conversation.id,
+        role: CHAT_ROLES.USER,
+        content: message,
+      },
     });
 
     // Generate embedding for the user message
@@ -98,7 +102,7 @@ export async function POST(req: Request) {
       model: GPT_5_2,
       messages: [
         { role: "system", content: systemMessage },
-        { role: "user", content: message },
+        { role: CHAT_ROLES.USER, content: message },
       ],
     });
 
@@ -122,7 +126,7 @@ export async function POST(req: Request) {
     await prisma.message.create({
       data: {
         conversationId: conversation.id,
-        role: "assistant",
+        role: CHAT_ROLES.ASSISTANT,
         content: finalResponse,
       },
     });
@@ -133,7 +137,10 @@ export async function POST(req: Request) {
       data: { totalQueries: { increment: 1 } },
     });
 
-    return NextResponse.json({ response: finalResponse, conversationId: conversation.id });
+    return NextResponse.json({
+      response: finalResponse,
+      conversationId: conversation.id,
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Chat failed";
     return NextResponse.json({ error: message }, { status: 500 });

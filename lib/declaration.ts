@@ -1,4 +1,5 @@
 import {
+  CHAT_ROLES,
   GEMINI_3_1_PRO,
   GPT_4O_TRANSCRIBE,
   GPT_5_2,
@@ -18,3 +19,5 @@ export type QAModel =
   | typeof GPT_5_NANO
   | typeof GPT_4O_TRANSCRIBE
   | typeof TEXT_EMBEDDING_3_SMALL;
+
+export type ChatRole = (typeof CHAT_ROLES)[keyof typeof CHAT_ROLES];

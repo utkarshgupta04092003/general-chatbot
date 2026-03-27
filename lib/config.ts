@@ -18,3 +18,8 @@ export const API_VERSIONS = {
   [GPT_5_NANO]: "2025-01-01-preview",
   [GPT_4O_TRANSCRIBE]: "2025-03-01-preview",
 };
+
+export const CHAT_ROLES = {
+  USER: "user",
+  ASSISTANT: "assistant",
+} as const;

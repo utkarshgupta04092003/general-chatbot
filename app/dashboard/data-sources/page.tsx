@@ -25,6 +25,9 @@ type DataSource = {
   status: string;
   createdAt: string;
   chatbotId: string;
+  chatbot: {
+    name: string;
+  };
 };
 
 export default function DataSourcesPage() {
@@ -39,6 +42,7 @@ export default function DataSourcesPage() {
   const [verifying, setVerifying] = useState(false);
   const [targetUrl, setTargetUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [selectedChatbotId, setSelectedChatbotId] = useState<string>("all");
 
   useEffect(() => {
     fetchSources();
@@ -109,8 +113,9 @@ export default function DataSourcesPage() {
     setError("");
 
     try {
-      // 1. Get chatbot ID if we don't have it
-      let targetChatbotId = sources[0]?.chatbotId;
+      // 1. Get chatbot ID
+      let targetChatbotId =
+        selectedChatbotId !== "all" ? selectedChatbotId : sources[0]?.chatbotId;
       if (!targetChatbotId) {
         const res = await fetch("/api/chatbots");
         const data = await res.json();
@@ -289,13 +294,49 @@ export default function DataSourcesPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold">Data Sources</h1>
         <p className="text-slate-400 text-sm mt-1">
-          Manage the pages your chatbot is trained on.
+          Manage the pages your chatbots are trained on.
         </p>
       </div>
 
+      {/* Chatbot Filter Tabs */}
+      {sources.length > 0 && (
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+          <button
+            onClick={() => setSelectedChatbotId("all")}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
+              selectedChatbotId === "all"
+                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                : "bg-slate-800 text-slate-400 hover:text-white"
+            }`}
+          >
+            All Sources
+          </button>
+          {Array.from(new Set(sources.map((s) => s.chatbotId))).map((id) => {
+            const name = sources.find((s) => s.chatbotId === id)?.chatbot.name;
+            return (
+              <button
+                key={id}
+                onClick={() => setSelectedChatbotId(id)}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
+                  selectedChatbotId === id
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                    : "bg-slate-800 text-slate-400 hover:text-white"
+                }`}
+              >
+                {name}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Add URL */}
       <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-5 mb-6">
-        <h2 className="text-sm font-semibold mb-3">Add a new page</h2>
+        <h2 className="text-sm font-semibold mb-3">
+          {selectedChatbotId === "all"
+            ? "Add to primary chatbot"
+            : `Add to ${sources.find((s) => s.chatbotId === selectedChatbotId)?.chatbot.name}`}
+        </h2>
         {error && (
           <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-300 px-3 py-2 rounded-lg text-sm mb-3">
             <AlertCircle className="w-4 h-4" />
@@ -335,7 +376,16 @@ export default function DataSourcesPage() {
       <div className="bg-slate-800/50 border border-white/5 rounded-2xl overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
           <h2 className="font-semibold text-sm">
-            {sources.length} indexed pages
+            {
+              sources
+                .filter(
+                  (s) =>
+                    selectedChatbotId === "all" ||
+                    s.chatbotId === selectedChatbotId,
+                )
+                .filter((s) => s.status === "indexed").length
+            }{" "}
+            indexed pages
           </h2>
           <button
             onClick={fetchSources}
@@ -360,67 +410,81 @@ export default function DataSourcesPage() {
           </div>
         ) : (
           <div className="divide-y divide-white/5">
-            {sources.map((source) => (
-              <div
-                key={source.id}
-                className="flex items-center gap-4 px-5 py-4 hover:bg-white/2 transition-colors"
-              >
+            {sources
+              .filter(
+                (s) =>
+                  selectedChatbotId === "all" ||
+                  s.chatbotId === selectedChatbotId,
+              )
+              .map((source) => (
                 <div
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                    source.status === "indexed"
-                      ? "bg-green-500/10"
-                      : source.status === "failed"
-                        ? "bg-red-500/10"
-                        : "bg-yellow-500/10"
-                  }`}
+                  key={source.id}
+                  className="flex items-center gap-4 px-5 py-4 hover:bg-white/2 transition-colors"
                 >
-                  {source.status === "indexed" ? (
-                    <CheckCircle className="w-4 h-4 text-green-400" />
-                  ) : source.status === "failed" ? (
-                    <AlertCircle className="w-4 h-4 text-red-400" />
-                  ) : (
-                    <Clock className="w-4 h-4 text-yellow-400 animate-pulse" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-white truncate">
-                    {source.title || source.url}
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-slate-500 truncate">
-                    {source.url}
-                    {verifiedDomains.includes(new URL(source.url).hostname) && (
-                      <span className="flex items-center gap-0.5 text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded-md font-medium">
-                        <ShieldCheck className="w-3 h-3" />
-                        Verified
-                      </span>
+                  <div
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                      source.status === "indexed"
+                        ? "bg-green-500/10"
+                        : source.status === "failed"
+                          ? "bg-red-500/10"
+                          : "bg-yellow-500/10"
+                    }`}
+                  >
+                    {source.status === "indexed" ? (
+                      <CheckCircle className="w-4 h-4 text-green-400" />
+                    ) : source.status === "failed" ? (
+                      <AlertCircle className="w-4 h-4 text-red-400" />
+                    ) : (
+                      <Clock className="w-4 h-4 text-yellow-400 animate-pulse" />
                     )}
                   </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-white truncate">
+                      {source.title || source.url}
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-slate-500 truncate">
+                      {source.url}
+                      {verifiedDomains.includes(
+                        new URL(source.url).hostname,
+                      ) && (
+                        <span className="flex items-center gap-0.5 text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded-md font-medium">
+                          <ShieldCheck className="w-3 h-3" />
+                          Verified
+                        </span>
+                      )}
+                      {selectedChatbotId === "all" && (
+                        <span className="flex items-center gap-1.5 text-slate-400 bg-slate-800 px-2 py-0.5 rounded-md border border-white/5">
+                          <Plus className="w-2.5 h-2.5 rotate-45" />
+                          {source.chatbot.name}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-xs text-slate-500 hidden sm:block">
+                    {source.wordCount.toLocaleString()} words
+                  </div>
+                  <div className="text-xs text-slate-500 hidden md:block">
+                    {formatDate(source.createdAt)}
+                  </div>
+                  <div
+                    className={`hidden sm:flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
+                      source.status === "indexed"
+                        ? "bg-green-500/10 text-green-400"
+                        : source.status === "failed"
+                          ? "bg-red-500/10 text-red-400"
+                          : "bg-yellow-500/10 text-yellow-400"
+                    }`}
+                  >
+                    {source.status}
+                  </div>
+                  <button
+                    onClick={() => handleDelete(source.id)}
+                    className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
-                <div className="text-xs text-slate-500 hidden sm:block">
-                  {source.wordCount.toLocaleString()} words
-                </div>
-                <div className="text-xs text-slate-500 hidden md:block">
-                  {formatDate(source.createdAt)}
-                </div>
-                <div
-                  className={`hidden sm:flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
-                    source.status === "indexed"
-                      ? "bg-green-500/10 text-green-400"
-                      : source.status === "failed"
-                        ? "bg-red-500/10 text-red-400"
-                        : "bg-yellow-500/10 text-yellow-400"
-                  }`}
-                >
-                  {source.status}
-                </div>
-                <button
-                  onClick={() => handleDelete(source.id)}
-                  className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
+              ))}
           </div>
         )}
       </div>

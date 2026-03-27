@@ -2,6 +2,8 @@
 
 import { Loader2, MessageSquare, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { CHAT_ROLES } from "@/lib/config";
+import { ChatRole } from "@/lib/declaration";
 
 const DEMO_RESPONSES: Record<string, string> = {
   default:
@@ -51,14 +53,14 @@ function getResponse(message: string): string {
 }
 
 type Message = {
-  role: "user" | "assistant";
+  role: ChatRole;
   content: string;
 };
 
 export default function DemoChat() {
   const [messages, setMessages] = useState<Message[]>([
     {
-      role: "assistant",
+      role: CHAT_ROLES.ASSISTANT,
       content:
         "👋 Hi! I'm ChatBase's demo AI. Ask me about pricing, setup, or how it works!",
     },
@@ -75,13 +77,19 @@ export default function DemoChat() {
     if (!input.trim() || loading) return;
     const userMsg = input.trim();
     setInput("");
-    setMessages((prev) => [...prev, { role: "user", content: userMsg }]);
+    setMessages((prev) => [
+      ...prev,
+      { role: CHAT_ROLES.USER, content: userMsg },
+    ]);
     setLoading(true);
 
     // Simulate typing delay
     await new Promise((r) => setTimeout(r, 1000 + Math.random() * 800));
     const response = getResponse(userMsg);
-    setMessages((prev) => [...prev, { role: "assistant", content: response }]);
+    setMessages((prev) => [
+      ...prev,
+      { role: CHAT_ROLES.ASSISTANT, content: response },
+    ]);
     setLoading(false);
   }
 
@@ -110,11 +118,11 @@ export default function DemoChat() {
         {messages.map((msg, i) => (
           <div
             key={i}
-            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+            className={`flex ${msg.role === CHAT_ROLES.USER ? "justify-end" : "justify-start"}`}
           >
             <div
               className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed chat-message ${
-                msg.role === "user"
+                msg.role === CHAT_ROLES.USER
                   ? "bg-indigo-600 text-white rounded-br-sm"
                   : "bg-slate-800 text-slate-200 rounded-bl-sm"
               }`}

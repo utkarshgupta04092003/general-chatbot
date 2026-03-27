@@ -195,7 +195,10 @@ export async function POST(req: Request) {
 
     // 3. Limited BFS for more depth (only if we have fewer than limit)
     if (discoveredUrls.size < CRAWL_CONFIG.BFS_THRESHOLD) {
-      const toCrawl = Array.from(discoveredUrls).slice(1, CRAWL_CONFIG.BFS_DEPTH_LIMIT);
+      const toCrawl = Array.from(discoveredUrls).slice(
+        1,
+        CRAWL_CONFIG.BFS_DEPTH_LIMIT,
+      );
       for (const nextUrl of toCrawl) {
         if (discoveredUrls.size >= CRAWL_CONFIG.MAX_DISCOVERED_LEVEL1) break;
         try {
@@ -210,7 +213,8 @@ export async function POST(req: Request) {
             const html = await res.text();
             const deepLinks = extractLinks(html, nextUrl);
             deepLinks.forEach((l) => {
-              if (discoveredUrls.size < CRAWL_CONFIG.MAX_DISCOVERED_LEVEL1) discoveredUrls.add(l);
+              if (discoveredUrls.size < CRAWL_CONFIG.MAX_DISCOVERED_LEVEL1)
+                discoveredUrls.add(l);
             });
           }
         } catch {
@@ -219,7 +223,10 @@ export async function POST(req: Request) {
       }
     }
 
-    const allUrls = Array.from(discoveredUrls).slice(0, CRAWL_CONFIG.MAX_RETURNED_URLS);
+    const allUrls = Array.from(discoveredUrls).slice(
+      0,
+      CRAWL_CONFIG.MAX_RETURNED_URLS,
+    );
 
     // 4. Persistence if chatbotId is provided
     if (chatbotId) {

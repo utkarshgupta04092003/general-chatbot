@@ -1,5 +1,7 @@
 "use client";
 
+import { CHAT_ROLES } from "@/lib/config";
+import { ChatRole } from "@/lib/declaration";
 import {
   Loader2,
   MessageSquare,
@@ -9,11 +11,10 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MarkdownMessage } from "./MarkdownMessage";
 
 type Message = {
-  role: "user" | "assistant";
+  role: ChatRole;
   content: string;
 };
 
@@ -59,12 +60,16 @@ export default function ChatWidget({
         if (data.messages && data.messages.length > 0) {
           setMessages(data.messages);
         } else if (welcomeMessage) {
-          setMessages([{ role: "assistant", content: welcomeMessage }]);
+          setMessages([
+            { role: CHAT_ROLES.ASSISTANT, content: welcomeMessage },
+          ]);
         }
       } catch (err) {
         console.error("Failed to fetch chat history:", err);
         if (welcomeMessage) {
-          setMessages([{ role: "assistant", content: welcomeMessage }]);
+          setMessages([
+            { role: CHAT_ROLES.ASSISTANT, content: welcomeMessage },
+          ]);
         }
       } finally {
         setFetchingHistory(false);
@@ -85,7 +90,9 @@ export default function ChatWidget({
 
     setSessionId(newSession);
     setMessages(
-      welcomeMessage ? [{ role: "assistant", content: welcomeMessage }] : [],
+      welcomeMessage
+        ? [{ role: CHAT_ROLES.ASSISTANT, content: welcomeMessage }]
+        : [],
     );
     setInput("");
   }
@@ -98,7 +105,10 @@ export default function ChatWidget({
     if (!input.trim() || loading) return;
     const userMsg = input.trim();
     setInput("");
-    setMessages((prev) => [...prev, { role: "user", content: userMsg }]);
+    setMessages((prev) => [
+      ...prev,
+      { role: CHAT_ROLES.USER, content: userMsg },
+    ]);
     setLoading(true);
 
     try {
@@ -111,7 +121,7 @@ export default function ChatWidget({
       setMessages((prev) => [
         ...prev,
         {
-          role: "assistant",
+          role: CHAT_ROLES.ASSISTANT,
           content: data.response || "Sorry, I couldn't process that.",
         },
       ]);
@@ -119,7 +129,7 @@ export default function ChatWidget({
       setMessages((prev) => [
         ...prev,
         {
-          role: "assistant",
+          role: CHAT_ROLES.ASSISTANT,
           content: "Sorry, something went wrong. Please try again.",
         },
       ]);
@@ -176,9 +186,9 @@ export default function ChatWidget({
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex ${msg.role === CHAT_ROLES.USER ? "justify-end" : "justify-start"}`}
               >
-                {msg.role === "assistant" && (
+                {msg.role === CHAT_ROLES.ASSISTANT && (
                   <div
                     className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs shrink-0 mr-2 mt-0.5"
                     style={{ backgroundColor: primaryColor }}
@@ -187,61 +197,19 @@ export default function ChatWidget({
                   </div>
                 )}
                 <div
-                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
-                    msg.role === "user"
+                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed break-words overflow-hidden ${
+                    msg.role === CHAT_ROLES.USER
                       ? "text-white rounded-br-sm"
                       : "bg-white text-gray-700 shadow-sm rounded-bl-sm"
                   }`}
                   style={
-                    msg.role === "user" ? { backgroundColor: primaryColor } : {}
+                    msg.role === CHAT_ROLES.USER
+                      ? { backgroundColor: primaryColor }
+                      : {}
                   }
                 >
-                  {msg.role === "assistant" ? (
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        a: ({ ...props }) => (
-                          <a
-                            {...props}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline font-medium text-indigo-600 hover:text-indigo-800"
-                          />
-                        ),
-                        p: ({ ...props }) => (
-                          <p {...props} className="mb-2 last:mb-0" />
-                        ),
-                        ul: ({ ...props }) => (
-                          <ul {...props} className="list-disc ml-4 mb-2" />
-                        ),
-                        ol: ({ ...props }) => (
-                          <ol {...props} className="list-decimal ml-4 mb-2" />
-                        ),
-                        li: ({ ...props }) => (
-                          <li {...props} className="mb-1" />
-                        ),
-                        code: ({ ...props }) => (
-                          <code
-                            {...props}
-                            className="bg-gray-100 rounded px-1 py-0.5 font-mono text-xs"
-                          />
-                        ),
-                        pre: ({ ...props }) => (
-                          <pre
-                            {...props}
-                            className="bg-gray-100 rounded p-2 mb-2 overflow-x-auto font-mono text-xs"
-                          />
-                        ),
-                        strong: ({ ...props }) => (
-                          <strong
-                            {...props}
-                            className="font-bold whitespace-nowrap"
-                          />
-                        ),
-                      }}
-                    >
-                      {msg.content}
-                    </ReactMarkdown>
+                  {msg.role === CHAT_ROLES.ASSISTANT ? (
+                    <MarkdownMessage content={msg.content} />
                   ) : (
                     msg.content
                   )}
