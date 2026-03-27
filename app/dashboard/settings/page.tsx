@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle, Loader2, Save, Settings } from "lucide-react";
+import { CheckCircle, Loader2, Plus, Save, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ENDPOINTS } from "@/lib/endpoint";
 
@@ -172,7 +172,7 @@ export default function ChatbotSettingsPage() {
             {/* Color */}
             <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6">
               <h2 className="font-semibold mb-5">Primary Color</h2>
-              <div className="flex gap-3">
+              <div className="flex gap-3 flex-wrap">
                 {COLORS.map((color) => (
                   <button
                     key={color}
@@ -187,6 +187,37 @@ export default function ChatbotSettingsPage() {
                     style={{ backgroundColor: color }}
                   />
                 ))}
+
+                {/* Custom Color Picker */}
+                <div className="relative group">
+                  <input
+                    type="color"
+                    id="custom-color"
+                    value={selected.primaryColor}
+                    onChange={(e) =>
+                      setSelected({ ...selected, primaryColor: e.target.value })
+                    }
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  />
+                  <div
+                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-all bg-slate-800 border-2 border-white/10 group-hover:border-white/30 ${
+                      !COLORS.includes(selected.primaryColor)
+                        ? "ring-2 ring-white ring-offset-2 ring-offset-slate-800 scale-110 shadow-lg"
+                        : ""
+                    }`}
+                    style={
+                      !COLORS.includes(selected.primaryColor)
+                        ? { backgroundColor: selected.primaryColor }
+                        : {}
+                    }
+                  >
+                    {!COLORS.includes(selected.primaryColor) ? (
+                      <CheckCircle className="w-4 h-4 text-white drop-shadow-md" />
+                    ) : (
+                      <Plus className="w-4 h-4 text-slate-400 group-hover:text-white" />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
