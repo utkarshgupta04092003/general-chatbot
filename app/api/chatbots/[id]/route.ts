@@ -1,16 +1,20 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
-export async function PATCH(req: Request, ctx: RouteContext<"/api/chatbots/[id]">) {
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const session = await auth();
-    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session?.user?.id)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { id } = await ctx.params;
+    const { id } = await params;
     const body = await req.json();
 
-    const chatbot = await prisma.chatbot.updateMany({
+    await prisma.chatbot.updateMany({
       where: { id, userId: session.user.id },
       data: {
         name: body.name,
@@ -28,12 +32,16 @@ export async function PATCH(req: Request, ctx: RouteContext<"/api/chatbots/[id]"
   }
 }
 
-export async function DELETE(req: Request, ctx: RouteContext<"/api/chatbots/[id]">) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const session = await auth();
-    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session?.user?.id)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { id } = await ctx.params;
+    const { id } = await params;
 
     await prisma.chatbot.deleteMany({ where: { id, userId: session.user.id } });
 

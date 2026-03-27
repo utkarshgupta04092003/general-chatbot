@@ -12,17 +12,17 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-interface Message {
+type Message = {
   role: "user" | "assistant";
   content: string;
-}
+};
 
-interface Props {
+type Props = {
   chatbotId: string;
   chatbotName?: string;
   welcomeMessage?: string;
   primaryColor?: string;
-}
+};
 
 export default function ChatWidget({
   chatbotId,

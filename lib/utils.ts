@@ -47,7 +47,8 @@ export function estimateTokens(text: string): number {
 
 export function getDomain(url: string): string {
   try {
-    const { hostname } = new URL(url);
+    const urlWithProtocol = url.match(/^https?:\/\//) ? url : `https://${url}`;
+    const { hostname } = new URL(urlWithProtocol);
     return hostname.replace(/^www\./, "");
   } catch {
     return "default";

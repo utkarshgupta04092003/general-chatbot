@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Copy, Check, ExternalLink, Loader2, Zap } from "lucide-react";
+import { Check, Copy, ExternalLink, Loader2, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
 
-interface Chatbot {
+type Chatbot = {
   id: string;
   name: string;
   primaryColor: string;
   status: string;
-}
+};
 
 export default function EmbedPage() {
   const [chatbots, setChatbots] = useState<Chatbot[]>([]);
@@ -49,17 +49,20 @@ export default function EmbedPage() {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  if (loading) return (
-    <div className="flex items-center justify-center py-20">
-      <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+      </div>
+    );
 
   return (
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold">Embed Your Chatbot</h1>
-        <p className="text-slate-400 text-sm mt-1">Add your chatbot to any website with a single line of code.</p>
+        <p className="text-slate-400 text-sm mt-1">
+          Add your chatbot to any website with a single line of code.
+        </p>
       </div>
 
       {chatbots.length === 0 ? (
@@ -78,7 +81,9 @@ export default function EmbedPage() {
                   key={bot.id}
                   onClick={() => setSelected(bot)}
                   className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                    selected?.id === bot.id ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"
+                    selected?.id === bot.id
+                      ? "bg-indigo-600 text-white"
+                      : "bg-slate-800 text-slate-400 hover:text-white"
                   }`}
                 >
                   {bot.name}
@@ -92,20 +97,32 @@ export default function EmbedPage() {
             <div className="space-y-6">
               <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-6 h-6 bg-indigo-500/10 rounded flex items-center justify-center text-xs font-bold text-indigo-400">1</div>
+                  <div className="w-6 h-6 bg-indigo-500/10 rounded flex items-center justify-center text-xs font-bold text-indigo-400">
+                    1
+                  </div>
                   <h2 className="font-semibold">Script Tag (Recommended)</h2>
                 </div>
                 <p className="text-sm text-slate-400 mb-4">
-                  Paste this script before the closing <code className="text-indigo-300 bg-indigo-500/10 px-1 rounded">&lt;/body&gt;</code> tag on your website.
+                  Paste this script before the closing{" "}
+                  <code className="text-indigo-300 bg-indigo-500/10 px-1 rounded">
+                    &lt;/body&gt;
+                  </code>{" "}
+                  tag on your website.
                 </p>
                 <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden">
                   <div className="flex items-center justify-between px-4 py-2 bg-slate-800/50 border-b border-white/5">
-                    <span className="text-xs text-slate-400 font-mono">HTML</span>
+                    <span className="text-xs text-slate-400 font-mono">
+                      HTML
+                    </span>
                     <button
                       onClick={() => handleCopy(embedCode)}
                       className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
                     >
-                      {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copied ? (
+                        <Check className="w-3.5 h-3.5 text-green-400" />
+                      ) : (
+                        <Copy className="w-3.5 h-3.5" />
+                      )}
                       {copied ? "Copied!" : "Copy"}
                     </button>
                   </div>
@@ -117,7 +134,9 @@ export default function EmbedPage() {
 
               <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-6 h-6 bg-indigo-500/10 rounded flex items-center justify-center text-xs font-bold text-indigo-400">2</div>
+                  <div className="w-6 h-6 bg-indigo-500/10 rounded flex items-center justify-center text-xs font-bold text-indigo-400">
+                    2
+                  </div>
                   <h2 className="font-semibold">iFrame Embed</h2>
                 </div>
                 <p className="text-sm text-slate-400 mb-4">
@@ -125,7 +144,9 @@ export default function EmbedPage() {
                 </p>
                 <div className="relative bg-slate-900 rounded-xl border border-white/5 overflow-hidden">
                   <div className="flex items-center justify-between px-4 py-2 bg-slate-800/50 border-b border-white/5">
-                    <span className="text-xs text-slate-400 font-mono">HTML</span>
+                    <span className="text-xs text-slate-400 font-mono">
+                      HTML
+                    </span>
                     <button
                       onClick={() => handleCopy(iframeCode)}
                       className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
@@ -142,7 +163,9 @@ export default function EmbedPage() {
 
               {/* Chatbot ID */}
               <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-5">
-                <h3 className="text-sm font-medium text-slate-300 mb-2">Your Chatbot ID</h3>
+                <h3 className="text-sm font-medium text-slate-300 mb-2">
+                  Your Chatbot ID
+                </h3>
                 <div className="flex items-center gap-3">
                   <code className="flex-1 px-3 py-2 bg-white/5 rounded-lg text-sm font-mono text-indigo-300 truncate">
                     {selected?.id}
@@ -161,13 +184,25 @@ export default function EmbedPage() {
             <div>
               <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6 sticky top-6">
                 <h2 className="font-semibold mb-4">Widget Preview</h2>
-                <div className="bg-slate-900 rounded-xl border border-white/10 relative" style={{ height: "400px" }}>
+                <div
+                  className="bg-slate-900 rounded-xl border border-white/10 relative"
+                  style={{ height: "400px" }}
+                >
                   <div className="p-4 h-full flex flex-col">
                     {/* Chat header */}
-                    <div className="rounded-xl px-4 py-3 flex items-center gap-3 mb-3" style={{ backgroundColor: selected?.primaryColor ?? "#6366f1" }}>
-                      <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm">🤖</div>
+                    <div
+                      className="rounded-xl px-4 py-3 flex items-center gap-3 mb-3"
+                      style={{
+                        backgroundColor: selected?.primaryColor ?? "#6366f1",
+                      }}
+                    >
+                      <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm">
+                        🤖
+                      </div>
                       <div>
-                        <div className="text-sm font-semibold text-white">{selected?.name}</div>
+                        <div className="text-sm font-semibold text-white">
+                          {selected?.name}
+                        </div>
                         <div className="text-xs text-white/70 flex items-center gap-1">
                           <div className="w-1.5 h-1.5 bg-green-400 rounded-full" />
                           Online
@@ -180,7 +215,13 @@ export default function EmbedPage() {
                         👋 Hello! How can I help you today?
                       </div>
                       <div className="flex justify-end">
-                        <div className="px-3 py-2 rounded-xl rounded-br-none text-xs text-white max-w-[80%]" style={{ backgroundColor: selected?.primaryColor ?? "#6366f1" }}>
+                        <div
+                          className="px-3 py-2 rounded-xl rounded-br-none text-xs text-white max-w-[80%]"
+                          style={{
+                            backgroundColor:
+                              selected?.primaryColor ?? "#6366f1",
+                          }}
+                        >
                           Tell me about your features
                         </div>
                       </div>
@@ -193,13 +234,23 @@ export default function EmbedPage() {
                       <div className="flex-1 bg-slate-800 rounded-xl px-3 py-2 text-xs text-slate-500">
                         Type a message...
                       </div>
-                      <div className="w-8 h-8 rounded-xl flex items-center justify-center text-xs" style={{ backgroundColor: selected?.primaryColor ?? "#6366f1" }}>
+                      <div
+                        className="w-8 h-8 rounded-xl flex items-center justify-center text-xs"
+                        style={{
+                          backgroundColor: selected?.primaryColor ?? "#6366f1",
+                        }}
+                      >
                         →
                       </div>
                     </div>
                   </div>
                   {/* Floating button mockup */}
-                  <div className="absolute bottom-4 right-4 w-12 h-12 rounded-full flex items-center justify-center shadow-xl text-white text-xl" style={{ backgroundColor: selected?.primaryColor ?? "#6366f1" }}>
+                  <div
+                    className="absolute bottom-4 right-4 w-12 h-12 rounded-full flex items-center justify-center shadow-xl text-white text-xl"
+                    style={{
+                      backgroundColor: selected?.primaryColor ?? "#6366f1",
+                    }}
+                  >
                     💬
                   </div>
                 </div>

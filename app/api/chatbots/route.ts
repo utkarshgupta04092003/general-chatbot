@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
@@ -9,7 +9,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, websiteUrl } = await req.json();
+    const { name } = await req.json();
 
     const chatbot = await prisma.chatbot.create({
       data: {
@@ -22,12 +22,13 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ chatbot });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to create chatbot";
+    const message =
+      err instanceof Error ? err.message : "Failed to create chatbot";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -36,13 +37,16 @@ export async function GET(req: Request) {
 
     const chatbots = await prisma.chatbot.findMany({
       where: { userId: session.user.id },
-      include: { _count: { select: { conversations: true, dataSources: true } } },
+      include: {
+        _count: { select: { conversations: true, dataSources: true } },
+      },
       orderBy: { createdAt: "desc" },
     });
 
     return NextResponse.json({ chatbots });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to fetch chatbots";
+    const message =
+      err instanceof Error ? err.message : "Failed to fetch chatbots";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

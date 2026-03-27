@@ -1,13 +1,17 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
-export async function DELETE(req: Request, ctx: RouteContext<"/api/data-sources/[id]">) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const session = await auth();
-    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session?.user?.id)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { id } = await ctx.params;
+    const { id } = await params;
 
     await prisma.dataSource.deleteMany({
       where: { id, chatbot: { userId: session.user.id } },
