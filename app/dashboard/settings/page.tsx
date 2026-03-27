@@ -2,6 +2,7 @@
 
 import { CheckCircle, Loader2, Save, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ENDPOINTS } from "@/lib/endpoint";
 
 type ChatbotSettings = {
   id: string;
@@ -36,7 +37,7 @@ export default function ChatbotSettingsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/chatbots")
+    fetch(ENDPOINTS.CHATBOTS)
       .then((r) => r.json())
       .then((d) => {
         setChatbots(d.chatbots ?? []);
@@ -49,7 +50,7 @@ export default function ChatbotSettingsPage() {
     if (!selected) return;
     setSaving(true);
     try {
-      await fetch(`/api/chatbots/${selected.id}`, {
+      await fetch(ENDPOINTS.CHATBOT_BY_ID(selected.id), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(selected),

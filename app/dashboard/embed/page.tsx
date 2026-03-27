@@ -2,6 +2,7 @@
 
 import { Check, Copy, ExternalLink, Loader2, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ENDPOINTS } from "@/lib/endpoint";
 
 type Chatbot = {
   id: string;
@@ -17,7 +18,7 @@ export default function EmbedPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/chatbots")
+    fetch(ENDPOINTS.CHATBOTS)
       .then((r) => r.json())
       .then((d) => {
         setChatbots(d.chatbots ?? []);

@@ -11,6 +11,7 @@ import { ProcessingStep } from "./_components/ProcessingStep";
 import { StepIndicator } from "./_components/StepIndicator";
 import { SuccessStep } from "./_components/SuccessStep";
 import { UrlInputStep } from "./_components/UrlInputStep";
+import { ENDPOINTS } from "@/lib/endpoint";
 
 import { ScrapedPage } from "@/lib/onboarding-types";
 
@@ -71,7 +72,7 @@ export default function OnboardingPage() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/verify-domain", {
+      const res = await fetch(ENDPOINTS.VERIFY_DOMAIN, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -99,7 +100,7 @@ export default function OnboardingPage() {
     setLoading(true);
     setError("");
     try {
-      const verifyRes = await fetch("/api/verify-domain", {
+      const verifyRes = await fetch(ENDPOINTS.VERIFY_DOMAIN, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -111,7 +112,7 @@ export default function OnboardingPage() {
       const verifyData = await verifyRes.json();
       if (!verifyRes.ok) throw new Error(verifyData.error);
 
-      const crawlRes = await fetch("/api/crawl", {
+      const crawlRes = await fetch(ENDPOINTS.CRAWL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: url.trim() }),
@@ -148,7 +149,7 @@ export default function OnboardingPage() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/scrape", {
+      const res = await fetch(ENDPOINTS.SCRAPE, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ urls: Array.from(selectedUrls) }),
@@ -170,7 +171,7 @@ export default function OnboardingPage() {
     setError("");
 
     try {
-      const chatRes = await fetch("/api/chatbots", {
+      const chatRes = await fetch(ENDPOINTS.CHATBOTS, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: rootTitle || "AI Assistant" }),
@@ -185,7 +186,7 @@ export default function OnboardingPage() {
         await new Promise((r) => setTimeout(r, PROCESSING_STEPS[i].delay));
       }
 
-      await fetch("/api/embed", {
+      await fetch(ENDPOINTS.EMBED, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chatbotId: id, pages: scrapedPages }),

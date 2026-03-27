@@ -16,6 +16,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ENDPOINTS } from "@/lib/endpoint";
 
 type DataSource = {
   id: string;
@@ -51,7 +52,7 @@ export default function DataSourcesPage() {
 
   async function fetchVerifiedDomains() {
     try {
-      const res = await fetch("/api/verify-domain");
+      const res = await fetch(ENDPOINTS.VERIFY_DOMAIN);
       const data = await res.json();
       if (data.domains) {
         setVerifiedDomains(
@@ -70,7 +71,7 @@ export default function DataSourcesPage() {
 
   async function fetchSources() {
     try {
-      const res = await fetch("/api/data-sources");
+      const res = await fetch(ENDPOINTS.DATA_SOURCES);
       const data = await res.json();
       setSources(data.sources ?? []);
     } catch {
@@ -87,7 +88,7 @@ export default function DataSourcesPage() {
       )
     )
       return;
-    await fetch(`/api/data-sources/${id}`, { method: "DELETE" });
+    await fetch(ENDPOINTS.DATA_SOURCE_BY_ID(id), { method: "DELETE" });
     setSources((prev) => prev.filter((s) => s.id !== id));
   }
 
@@ -117,7 +118,7 @@ export default function DataSourcesPage() {
       let targetChatbotId =
         selectedChatbotId !== "all" ? selectedChatbotId : sources[0]?.chatbotId;
       if (!targetChatbotId) {
-        const res = await fetch("/api/chatbots");
+        const res = await fetch(ENDPOINTS.CHATBOTS);
         const data = await res.json();
         if (data.chatbots?.length > 0) {
           targetChatbotId = data.chatbots[0].id;
@@ -127,7 +128,7 @@ export default function DataSourcesPage() {
       }
 
       // 2. Scrape the URL
-      const scrapeRes = await fetch("/api/scrape", {
+      const scrapeRes = await fetch(ENDPOINTS.SCRAPE, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ urls: [addUrl.trim()] }),
@@ -140,7 +141,7 @@ export default function DataSourcesPage() {
         throw new Error("Failed to extract content from this URL");
 
       // 3. Embed the content
-      const embedRes = await fetch("/api/embed", {
+      const embedRes = await fetch(ENDPOINTS.EMBED, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chatbotId: targetChatbotId, pages: [page] }),
@@ -163,7 +164,7 @@ export default function DataSourcesPage() {
     setVerifying(true);
     setError("");
     try {
-      const res = await fetch("/api/verify-domain", {
+      const res = await fetch(ENDPOINTS.VERIFY_DOMAIN, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: targetUrl }),

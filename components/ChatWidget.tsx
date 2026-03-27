@@ -2,6 +2,7 @@
 
 import { CHAT_ROLES } from "@/lib/config";
 import { ChatRole } from "@/lib/declaration";
+import { ENDPOINTS } from "@/lib/endpoint";
 import {
   Loader2,
   MessageSquare,
@@ -54,7 +55,7 @@ export default function ChatWidget({
       setFetchingHistory(true);
       try {
         const res = await fetch(
-          `/api/chat?chatbotId=${chatbotId}&sessionId=${savedSession}`,
+          `${ENDPOINTS.CHAT}?chatbotId=${chatbotId}&sessionId=${savedSession}`,
         );
         const data = await res.json();
         if (data.messages && data.messages.length > 0) {
@@ -112,7 +113,7 @@ export default function ChatWidget({
     setLoading(true);
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(ENDPOINTS.CHAT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chatbotId, message: userMsg, sessionId }),
