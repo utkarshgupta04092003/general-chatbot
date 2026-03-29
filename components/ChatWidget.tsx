@@ -1,7 +1,7 @@
 "use client";
 
-import { APP_NAME, CHAT_ROLES } from "@/lib/config";
-import { ChatRole } from "@/lib/declaration";
+import { APP_NAME, CHAT_ROLES, FEEDBACK_TEXT } from "@/lib/config";
+import { ChatRole, FeedbackType } from "@/lib/declaration";
 import { ENDPOINTS } from "@/lib/endpoint";
 import {
   Loader2,
@@ -9,15 +9,19 @@ import {
   Minimize2,
   RefreshCw,
   Send,
+  ThumbsDown,
+  ThumbsUp,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { MarkdownMessage } from "./MarkdownMessage";
-import Image from "next/image";
 
 type Message = {
+  id?: string;
   role: ChatRole;
   content: string;
+  feedback?: FeedbackType | null;
 };
 
 type Props = {
@@ -103,6 +107,23 @@ export default function ChatWidget({
     setInput("");
   }
 
+  async function handleFeedback(messageId: string, feedback: FeedbackType) {
+    try {
+      // Optimistic update
+      setMessages((prev) =>
+        prev.map((msg) => (msg.id === messageId ? { ...msg, feedback } : msg)),
+      );
+
+      await fetch(ENDPOINTS.MESSAGE_FEEDBACK(messageId), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ feedback }),
+      });
+    } catch (error) {
+      console.error("Feedback error:", error);
+    }
+  }
+
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, open]);
@@ -127,6 +148,7 @@ export default function ChatWidget({
       setMessages((prev) => [
         ...prev,
         {
+          id: data.messageId,
           role: CHAT_ROLES.ASSISTANT,
           content: data.response || "Sorry, I couldn't process that.",
         },
@@ -222,7 +244,7 @@ export default function ChatWidget({
                   </div>
                 )}
                 <div
-                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed break-words overflow-hidden ${
+                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed break-words overflow-hidden relative group ${
                     msg.role === CHAT_ROLES.USER
                       ? "text-white rounded-br-sm"
                       : "bg-white text-gray-700 shadow-sm rounded-bl-sm"
@@ -234,7 +256,39 @@ export default function ChatWidget({
                   }
                 >
                   {msg.role === CHAT_ROLES.ASSISTANT ? (
-                    <MarkdownMessage content={msg.content} />
+                    <>
+                      <MarkdownMessage content={msg.content} />
+                      {msg.id && (
+                        <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-gray-50 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() =>
+                              handleFeedback(msg.id!, FEEDBACK_TEXT.HELPFUL)
+                            }
+                            className={`hover:bg-gray-100 p-1 rounded transition-colors ${
+                              msg.feedback === FEEDBACK_TEXT.HELPFUL
+                                ? "text-green-600 bg-green-50"
+                                : "text-gray-400"
+                            }`}
+                            title={FEEDBACK_TEXT.HELPFUL}
+                          >
+                            <ThumbsUp className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleFeedback(msg.id!, FEEDBACK_TEXT.UNHELPFUL)
+                            }
+                            className={`hover:bg-gray-100 p-1 rounded transition-colors ${
+                              msg.feedback === FEEDBACK_TEXT.UNHELPFUL
+                                ? "text-red-500 bg-red-50"
+                                : "text-gray-400"
+                            }`}
+                            title={FEEDBACK_TEXT.UNHELPFUL}
+                          >
+                            <ThumbsDown className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      )}
+                    </>
                   ) : (
                     msg.content
                   )}

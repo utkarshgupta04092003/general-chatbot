@@ -25,3 +25,8 @@ export const CHAT_ROLES = {
   USER: "user",
   ASSISTANT: "assistant",
 } as const;
+
+export const FEEDBACK_TEXT = {
+  HELPFUL: "helpful",
+  UNHELPFUL: "unhelpful",
+} as const;

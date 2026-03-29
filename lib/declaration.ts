@@ -1,5 +1,6 @@
 import {
   CHAT_ROLES,
+  FEEDBACK_TEXT,
   GEMINI_3_1_PRO,
   GPT_4O_TRANSCRIBE,
   GPT_5_2,
@@ -21,3 +22,5 @@ export type QAModel =
   | typeof TEXT_EMBEDDING_3_SMALL;
 
 export type ChatRole = (typeof CHAT_ROLES)[keyof typeof CHAT_ROLES];
+
+export type FeedbackType = (typeof FEEDBACK_TEXT)[keyof typeof FEEDBACK_TEXT];

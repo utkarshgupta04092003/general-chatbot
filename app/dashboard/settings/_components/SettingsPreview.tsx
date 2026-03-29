@@ -1,7 +1,9 @@
 "use client";
 
-import { ChatbotSettings } from "./types";
+import { FEEDBACK_TEXT } from "@/lib/config";
+import { ThumbsDown, ThumbsUp } from "lucide-react";
 import Image from "next/image";
+import { ChatbotSettings } from "./types";
 
 type SettingsPreviewProps = {
   selected: ChatbotSettings;
@@ -56,7 +58,15 @@ export function SettingsPreview({ selected }: SettingsPreviewProps) {
               )}
             </div>
             <div className="bg-slate-800 rounded-xl rounded-bl-none px-3 py-2 max-w-[80%] text-sm text-slate-300">
-              {selected.welcomeMessage}
+              <div>{selected.welcomeMessage}</div>
+              <div className="flex items-center gap-1.5 mt-2 pt-1 border-t border-white/5 opacity-40">
+                <div title={FEEDBACK_TEXT.HELPFUL}>
+                  <ThumbsUp className="w-3 h-3" />
+                </div>
+                <div title={FEEDBACK_TEXT.UNHELPFUL}>
+                  <ThumbsDown className="w-3 h-3" />
+                </div>
+              </div>
             </div>
           </div>
           <div className="flex justify-end">

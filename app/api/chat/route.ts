@@ -1,8 +1,8 @@
 import { CHAT_ROLES, GPT_5_2, TEXT_EMBEDDING_3_SMALL } from "@/lib/config";
 import { prisma } from "@/lib/prisma";
 import { getAIClient, getDomain } from "@/lib/utils";
-import { NextResponse } from "next/server";
 import { Pinecone } from "@pinecone-database/pinecone";
+import { NextResponse } from "next/server";
 
 // Initialize Pinecone client
 const pc = new Pinecone({
@@ -123,7 +123,7 @@ export async function POST(req: Request) {
     }
 
     // Save assistant message
-    await prisma.message.create({
+    const assistantMessage = await prisma.message.create({
       data: {
         conversationId: conversation.id,
         role: CHAT_ROLES.ASSISTANT,
@@ -140,6 +140,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       response: finalResponse,
       conversationId: conversation.id,
+      messageId: assistantMessage.id,
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Chat failed";
@@ -165,7 +166,7 @@ export async function GET(req: Request) {
       include: {
         messages: {
           orderBy: { createdAt: "asc" },
-          select: { role: true, content: true },
+          select: { id: true, role: true, content: true, feedback: true },
         },
       },
     });

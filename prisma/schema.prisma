@@ -114,6 +114,7 @@ model Message {
   role           String // user, assistant
   content        String
   deleted        Boolean      @default(false)
+  feedback       String? // like, dislike
   createdAt      DateTime     @default(now())
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }
