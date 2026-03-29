@@ -1,6 +1,7 @@
 "use client";
 
-import { Zap } from "lucide-react";
+import { APP_NAME } from "@/lib/config";
+import { Bot } from "lucide-react";
 
 type OnboardingHeaderProps = {
   step: number;
@@ -12,10 +13,12 @@ export function OnboardingHeader({ step, totalSteps }: OnboardingHeaderProps) {
     <>
       <div className="border-b border-white/5 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
-            <Zap className="w-3.5 h-3.5 text-white" fill="white" />
+          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <Bot className="w-5 h-5 text-white" />
           </div>
-          <span className="font-bold">ChatBase</span>
+          <span className="text-xl font-bold tracking-tight text-white">
+            {APP_NAME}
+          </span>
         </div>
         <div className="text-sm text-slate-400">
           Step {step} of {totalSteps}

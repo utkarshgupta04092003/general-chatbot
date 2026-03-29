@@ -1,3 +1,5 @@
+export const APP_NAME = "Chatbase";
+
 export const GPT_5_2 = "gpt-5.2";
 export const MISTRAL_LARGE_3 = "Mistral-Large-3";
 export const GEMINI_3_1_PRO = "gemini-3.1-pro-preview";

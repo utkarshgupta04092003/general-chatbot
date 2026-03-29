@@ -1,21 +1,16 @@
 "use client";
 
+import { APP_NAME, CHAT_ROLES } from "@/lib/config";
+import { ChatRole } from "@/lib/declaration";
 import { Loader2, MessageSquare, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { CHAT_ROLES } from "@/lib/config";
-import { ChatRole } from "@/lib/declaration";
 
 const DEMO_RESPONSES: Record<string, string> = {
-  default:
-    "I'm a demo chatbot trained on ChatBase's own documentation. I can answer questions about how ChatBase works, pricing, features, and setup. Try asking me something!",
-  pricing:
-    "ChatBase offers 3 plans:\n\n• **Free**: 10 pages, 100 messages/month\n• **Pro** ($29/mo): 500 pages, 5,000 messages, 5 chatbots\n• **Enterprise** ($99/mo): Unlimited everything + dedicated support\n\nNo credit card required for the free plan!",
-  setup:
-    "Setting up ChatBase takes 3 simple steps:\n1. Paste your website URL\n2. We crawl and index your pages automatically\n3. Copy one line of script and paste it on your site\n\nTotal setup time: under 2 minutes!",
-  embed:
-    'To embed the chatbot on your website, just add this script tag before your closing `</body>` tag:\n\n`<script src="chatbase.ai/widget.js" data-id="YOUR_ID"></script>`\n\nThat\'s it! No other configuration needed.',
-  accuracy:
-    "ChatBase uses RAG (Retrieval-Augmented Generation) — it only answers from your actual content, so it won't hallucinate or make things up. Accuracy depends on how well your source pages cover the topic.",
+  default: `I'm a demo chatbot trained on ${APP_NAME}'s own documentation. I can answer questions about how ${APP_NAME} works, pricing, features, and setup. Try asking me something!`,
+  pricing: `${APP_NAME} offers 3 plans:\n\n• **Free**: 10 pages, 100 messages/month\n• **Pro** ($29/mo): 500 pages, 5,000 messages, 5 chatbots\n• **Enterprise** ($99/mo): Unlimited everything + dedicated support\n\nNo credit card required for the free plan!`,
+  setup: `Setting up ${APP_NAME} takes 3 simple steps:\n1. Paste your website URL\n2. We crawl and index your pages automatically\n3. Copy one line of script and paste it on your site\n\nTotal setup time: under 2 minutes!`,
+  embed: `To embed the chatbot on your website, just add this script tag before your closing \`</body>\` tag:\n\n\`<script src="${APP_NAME.toLowerCase()}.ai/widget.js" data-id="YOUR_ID"></script>\`\n\nThat\'s it! No other configuration needed.`,
+  accuracy: `${APP_NAME} uses RAG (Retrieval-Augmented Generation) — it only answers from your actual content, so it won't hallucinate or make things up. Accuracy depends on how well your source pages cover the topic.`,
 };
 
 function getResponse(message: string): string {
@@ -61,8 +56,7 @@ export default function DemoChat() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: CHAT_ROLES.ASSISTANT,
-      content:
-        "👋 Hi! I'm ChatBase's demo AI. Ask me about pricing, setup, or how it works!",
+      content: `👋 Hi! I'm ${APP_NAME}'s demo AI. Ask me about pricing, setup, or how it works!`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -102,12 +96,12 @@ export default function DemoChat() {
         </div>
         <div>
           <div className="text-sm font-semibold text-white">
-            ChatBase Assistant
+            {APP_NAME} Assistant
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
             <span className="text-xs text-indigo-200">
-              Online · Trained on chatbase.ai
+              Online · Trained on {APP_NAME.toLowerCase()}.ai
             </span>
           </div>
         </div>

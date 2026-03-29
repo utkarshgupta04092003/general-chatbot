@@ -1,3 +1,5 @@
+import { APP_NAME } from "./config";
+
 export async function fetchWithFallback(
   url: string,
   options: RobustFetchOptions = {},
@@ -52,7 +54,7 @@ export async function robustFetch(
   const defaultHeaders: Record<string, string> = {
     "User-Agent": useRandomUserAgent
       ? getRandomUserAgent()
-      : "Mozilla/5.0 (compatible; ChatBase-Bot/1.0; +https://chatbase.ai/bot)",
+      : `Mozilla/5.0 (compatible; ${APP_NAME}-Bot/1.0; +https://${APP_NAME.toLowerCase()}.ai/bot)`,
     Accept:
       "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
     "Accept-Language": "en-US,en;q=0.9",

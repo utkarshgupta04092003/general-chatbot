@@ -1,6 +1,6 @@
 "use client";
 
-import { CHAT_ROLES } from "@/lib/config";
+import { APP_NAME, CHAT_ROLES } from "@/lib/config";
 import { ChatRole } from "@/lib/declaration";
 import { ENDPOINTS } from "@/lib/endpoint";
 import {
@@ -277,7 +277,7 @@ export default function ChatWidget({
               </button>
             </form>
             <p className="text-center text-[10px] text-gray-300 mt-2">
-              Powered by ChatBase AI
+              Powered by {APP_NAME} AI
             </p>
           </div>
         </div>

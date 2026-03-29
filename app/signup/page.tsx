@@ -1,7 +1,8 @@
 "use client";
 
+import { APP_NAME } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
-import { Eye, EyeOff, Loader2, Zap } from "lucide-react";
+import { Bot, Eye, EyeOff, Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -65,13 +66,13 @@ export default function SignupPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 text-white">
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" fill="white" />
+            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-indigo-500/20">
+              <Bot className="w-7 h-7 text-white" />
             </div>
-            <span className="text-2xl font-bold">ChatBase</span>
           </Link>
-          <p className="mt-3 text-slate-400 text-sm">
-            Create your free account
+          <h1 className="text-2xl font-bold text-white">Create an account</h1>
+          <p className="text-slate-400 text-sm mt-2">
+            Get started with {APP_NAME} today
           </p>
         </div>
 

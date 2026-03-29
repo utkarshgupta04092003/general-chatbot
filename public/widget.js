@@ -11,7 +11,7 @@
 
   // Create iframe container
   const container = document.createElement("div");
-  container.id = "chatbase-widget-container";
+  container.id = "chat-widget-container";
   container.style.position = "fixed";
   container.style.bottom = "20px";
   container.style.right = "20px";

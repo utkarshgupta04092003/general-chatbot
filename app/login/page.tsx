@@ -4,7 +4,8 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff, Loader2, Zap } from "lucide-react";
+import { Bot, Eye, EyeOff, Loader2 } from "lucide-react";
+import { APP_NAME } from "@/lib/config";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -42,13 +43,15 @@ export default function LoginPage() {
 
       <div className="relative w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-white">
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" fill="white" />
+          <Link href="/" className="inline-flex flex-col items-center gap-2 text-white">
+            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-indigo-500/20">
+              <Bot className="w-7 h-7 text-white" />
             </div>
-            <span className="text-2xl font-bold">ChatBase</span>
+            <h1 className="text-2xl font-bold text-white">Welcome back</h1>
+            <p className="text-slate-400 text-sm mt-2">
+              Sign in to your {APP_NAME} account
+            </p>
           </Link>
-          <p className="mt-3 text-slate-400 text-sm">Welcome back</p>
         </div>
 
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">

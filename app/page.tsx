@@ -1,20 +1,21 @@
-import Link from "next/link";
-import {
-  Zap,
-  Globe,
-  MessageSquare,
-  Code2,
-  CheckCircle,
-  Star,
-  ArrowRight,
-  ChevronDown,
-  BarChart3,
-  Shield,
-  Sparkles,
-  Play,
-} from "lucide-react";
 import DemoChat from "@/components/DemoChat";
 import { auth } from "@/lib/auth";
+import { APP_NAME } from "@/lib/config";
+import {
+  ArrowRight,
+  BarChart3,
+  Bot,
+  CheckCircle,
+  ChevronDown,
+  Code2,
+  Globe,
+  MessageSquare,
+  Play,
+  Shield,
+  Sparkles,
+  Star,
+} from "lucide-react";
+import Link from "next/link";
 
 export default async function LandingPage() {
   const session = await auth();
@@ -26,9 +27,11 @@ export default async function LandingPage() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <Zap className="w-4 h-4 text-white" fill="white" />
+                <Bot className="w-5 h-5 text-white" />
               </div>
-              <span className="text-lg font-bold">ChatBase</span>
+              <span className="text-xl font-bold text-white tracking-tight">
+                {APP_NAME}
+              </span>
             </div>
             <div className="hidden md:flex items-center gap-8">
               <a
@@ -99,15 +102,17 @@ export default async function LandingPage() {
             Powered by GPT-4 + RAG Technology
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6 animate-fade-in-up delay-100">
-            Train an AI chatbot on{" "}
-            <span className="gradient-text">your website</span> in minutes
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in-up delay-100">
+            Build your own <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+              AI Chatbot
+            </span>{" "}
+            in minutes
           </h1>
 
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 animate-fade-in-up delay-200">
-            Paste your URL, and instantly create a chatbot that answers
-            questions based on your content.{" "}
-            <strong className="text-white">No coding required.</strong>
+          <p className="text-xl text-slate-400 mb-10 max-w-2xl mx-auto animate-fade-in-up delay-200">
+            {APP_NAME} makes it easy to train a custom AI on your own data and
+            add it to your website in seconds.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-in-up delay-300">
@@ -154,7 +159,7 @@ export default async function LandingPage() {
                   <div className="w-3 h-3 rounded-full bg-green-500/60" />
                 </div>
                 <div className="flex-1 mx-4 bg-slate-700/50 rounded-lg px-3 py-1 text-xs text-slate-400">
-                  app.chatbase.ai/dashboard
+                  app.{APP_NAME.toLowerCase()}.ai/dashboard
                 </div>
               </div>
               {/* Dashboard preview */}
@@ -416,7 +421,7 @@ export default async function LandingPage() {
               <h2 className="text-4xl font-bold mb-6">See it in action</h2>
               <p className="text-slate-400 text-lg mb-8 leading-relaxed">
                 This demo chatbot is trained on our own documentation. Ask it
-                anything about ChatBase and see how it responds with accurate,
+                anything about {APP_NAME} and see how it responds with accurate,
                 context-aware answers.
               </p>
               <ul className="space-y-3">
@@ -599,8 +604,7 @@ export default async function LandingPage() {
               {
                 name: "Marcus Rodriguez",
                 role: "Founder at DataSync",
-                content:
-                  "Our customers love getting instant answers 24/7. ChatBase paid for itself in week one.",
+                content: `Our customers love getting instant answers 24/7. ${APP_NAME} paid for itself in week one.`,
                 rating: 5,
               },
               {
@@ -702,7 +706,7 @@ export default async function LandingPage() {
                 Ready to build your chatbot?
               </h2>
               <p className="text-indigo-100 text-lg mb-8">
-                Join thousands of companies using ChatBase to answer customer
+                Join thousands of companies using {APP_NAME} to answer customer
                 questions 24/7.
               </p>
               <Link
@@ -726,9 +730,9 @@ export default async function LandingPage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <Zap className="w-3.5 h-3.5 text-white" fill="white" />
+                <Bot className="w-4 h-4 text-white" />
               </div>
-              <span className="font-bold">ChatBase</span>
+              <span className="font-bold">{APP_NAME}</span>
             </div>
             <div className="flex gap-8 text-sm text-slate-500">
               <a href="#" className="hover:text-white transition-colors">
@@ -748,7 +752,7 @@ export default async function LandingPage() {
               </a>
             </div>
             <div className="text-sm text-slate-600">
-              © 2026 ChatBase. All rights reserved.
+              © 2026 {APP_NAME}. All rights reserved.
             </div>
           </div>
         </div>
