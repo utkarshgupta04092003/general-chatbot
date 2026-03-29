@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { fetchWithFallback } from "@/lib/scraper";
+import { getDomain } from "@/lib/utils";
+import { fetchWithFallback, extractLogo } from "@/lib/scraper";
 import { load } from "cheerio";
 import { NextResponse } from "next/server";
 
@@ -165,6 +166,7 @@ export async function POST(req: Request) {
     let rootTitle = "";
     let rootCleanContent = "";
     let rootWordCount = 0;
+    let websiteLogo: string | null = null;
 
     // 1. Fetch Homepage to get initial links and title
     try {
@@ -174,6 +176,9 @@ export async function POST(req: Request) {
         },
         signal: AbortSignal.timeout(CRAWL_CONFIG.TIMEOUT_HOMEPAGE),
       });
+
+      // Extract logo in background
+      websiteLogo = await extractLogo(targetUrl);
 
       if (response.ok) {
         const html = await response.text();
@@ -246,13 +251,26 @@ export async function POST(req: Request) {
       } catch (dbErr) {
         console.error("Failed to persist discovered links", dbErr);
       }
+
+      // Update chatbot website logo if missing
+      if (websiteLogo) {
+        try {
+          await prisma.chatbot.update({
+            where: { id: chatbotId },
+            data: { websiteLogo },
+          });
+        } catch (logoErr) {
+          console.error("Failed to update chatbot logo", logoErr);
+        }
+      }
     }
 
     return NextResponse.json({
       urls: allUrls,
-      rootTitle: rootTitle || targetUrl,
+      rootTitle: rootTitle || getDomain(targetUrl) || targetUrl,
       preview: rootCleanContent.slice(0, CRAWL_CONFIG.PREVIEW_LENGTH),
       wordCount: rootWordCount,
+      websiteLogo: websiteLogo || null,
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to crawl";

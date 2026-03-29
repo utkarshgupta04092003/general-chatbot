@@ -2,7 +2,11 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import ChatWidget from "@/components/ChatWidget";
 
-export default async function WidgetPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function WidgetPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const chatbot = await prisma.chatbot.findUnique({ where: { id } });
   if (!chatbot) notFound();
@@ -14,6 +18,8 @@ export default async function WidgetPage({ params }: { params: Promise<{ id: str
         chatbotName={chatbot.name}
         welcomeMessage={chatbot.welcomeMessage}
         primaryColor={chatbot.primaryColor}
+        assistantLogo={chatbot.assistantLogo}
+        websiteLogo={chatbot.websiteLogo}
       />
     </div>
   );

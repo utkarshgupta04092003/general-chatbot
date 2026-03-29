@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { MarkdownMessage } from "./MarkdownMessage";
+import Image from "next/image";
 
 type Message = {
   role: ChatRole;
@@ -24,6 +25,8 @@ type Props = {
   chatbotName?: string;
   welcomeMessage?: string;
   primaryColor?: string;
+  assistantLogo?: string | null;
+  websiteLogo?: string | null;
 };
 
 export default function ChatWidget({
@@ -31,6 +34,8 @@ export default function ChatWidget({
   chatbotName = "AI Assistant",
   welcomeMessage,
   primaryColor = "#6366f1",
+  assistantLogo,
+  websiteLogo,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -152,8 +157,18 @@ export default function ChatWidget({
             className="flex items-center gap-3 px-4 py-3 text-white"
             style={{ backgroundColor: primaryColor }}
           >
-            <div className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center shrink-0">
-              <MessageSquare className="w-4 h-4 text-white" />
+            <div className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center shrink-0 overflow-hidden relative">
+              {websiteLogo ? (
+                <Image
+                  src={websiteLogo}
+                  alt="Logo"
+                  fill
+                  unoptimized
+                  className="object-cover"
+                />
+              ) : (
+                <MessageSquare className="w-4 h-4 text-white" />
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <div className="font-semibold text-sm">{chatbotName}</div>
@@ -191,10 +206,19 @@ export default function ChatWidget({
               >
                 {msg.role === CHAT_ROLES.ASSISTANT && (
                   <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs shrink-0 mr-2 mt-0.5"
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs shrink-0 mr-2 mt-0.5 overflow-hidden relative"
                     style={{ backgroundColor: primaryColor }}
                   >
-                    🤖
+                    {assistantLogo ? (
+                      <Image
+                        src={assistantLogo}
+                        alt="Bot"
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      "🤖"
+                    )}
                   </div>
                 )}
                 <div
@@ -220,10 +244,19 @@ export default function ChatWidget({
             {loading && (
               <div className="flex justify-start">
                 <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs shrink-0 mr-2 mt-0.5"
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs shrink-0 mr-2 mt-0.5 overflow-hidden relative"
                   style={{ backgroundColor: primaryColor }}
                 >
-                  🤖
+                  {assistantLogo ? (
+                    <Image
+                      src={assistantLogo}
+                      alt="Bot"
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    "🤖"
+                  )}
                 </div>
                 <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm flex gap-1.5">
                   {[0, 1, 2].map((i) => (

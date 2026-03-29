@@ -1,6 +1,7 @@
 "use client";
 
 import { ChatbotSettings } from "./types";
+import Image from "next/image";
 
 type SettingsPreviewProps = {
   selected: ChatbotSettings;
@@ -12,11 +13,21 @@ export function SettingsPreview({ selected }: SettingsPreviewProps) {
       <h2 className="font-semibold mb-4">Widget Preview</h2>
       <div className="bg-slate-900 rounded-xl overflow-hidden border border-white/10">
         <div
-          className="px-4 py-3 flex items-center gap-2"
+          className="px-4 py-3 flex items-center gap-3"
           style={{ backgroundColor: selected.primaryColor }}
         >
-          <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center text-xs">
-            🤖
+          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-xs overflow-hidden relative">
+            {selected.websiteLogo ? (
+              <Image
+                src={selected.websiteLogo}
+                alt="Logo"
+                fill
+                unoptimized
+                className="object-cover"
+              />
+            ) : (
+              "🤖"
+            )}
           </div>
           <div>
             <div className="text-sm font-semibold text-white">
@@ -28,8 +39,25 @@ export function SettingsPreview({ selected }: SettingsPreviewProps) {
           </div>
         </div>
         <div className="p-4 space-y-3">
-          <div className="bg-slate-800 rounded-xl rounded-bl-none px-3 py-2 max-w-xs text-sm text-slate-300">
-            {selected.welcomeMessage}
+          <div className="flex gap-2">
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-white shrink-0 overflow-hidden relative"
+              style={{ backgroundColor: selected.primaryColor }}
+            >
+              {selected.assistantLogo ? (
+                <Image
+                  src={selected.assistantLogo}
+                  alt="Bot"
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                "🤖"
+              )}
+            </div>
+            <div className="bg-slate-800 rounded-xl rounded-bl-none px-3 py-2 max-w-[80%] text-sm text-slate-300">
+              {selected.welcomeMessage}
+            </div>
           </div>
           <div className="flex justify-end">
             <div

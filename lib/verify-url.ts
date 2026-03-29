@@ -1,16 +1,5 @@
 import { load } from "cheerio";
-
-/**
- * Extracts the domain from a URL (e.g., https://example.com/page -> example.com)
- */
-export function getDomain(url: string): string {
-  try {
-    const { hostname } = new URL(url);
-    return hostname;
-  } catch {
-    return "";
-  }
-}
+import { getDomain } from "./utils";
 
 /**
  * Verifies if a URL contains the required meta tag for ownership verification.

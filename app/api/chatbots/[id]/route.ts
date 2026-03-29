@@ -22,6 +22,8 @@ export async function PATCH(
         tone: body.tone,
         systemPrompt: body.systemPrompt,
         primaryColor: body.primaryColor,
+        assistantLogo: body.assistantLogo,
+        websiteLogo: body.websiteLogo,
       },
     });
 

@@ -1,4 +1,5 @@
 import { APP_NAME } from "./config";
+import { getDomain } from "./utils";
 
 export async function fetchWithFallback(
   url: string,
@@ -151,6 +152,41 @@ export async function puppeteerFetch(
     throw error;
   } finally {
     await browser.close();
+  }
+}
+
+export async function extractLogo(url: string): Promise<string | null> {
+  try {
+    console.log(`[Scraper] Extracting logo for ${getDomain(url)}`);
+    const res = await robustFetch(url, { timeout: 5000 });
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    const patterns = [
+      /<link[^>]*rel=["'](?:shortcut )?icon["'][^>]*href=["']([^"']+)["']/i,
+      /<link[^>]*href=["']([^"']+)["'][^>]*rel=["'](?:shortcut )?icon["']/i,
+      /<link[^>]*rel=["']apple-touch-icon["'][^>]*href=["']([^"']+)["']/i,
+      /<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i,
+      /<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image["']/i,
+    ];
+
+    for (const pattern of patterns) {
+      const match = html.match(pattern);
+      if (match && match[1]) {
+        let logoUrl = match[1];
+        if (!logoUrl.startsWith("http")) {
+          const root = new URL(url);
+          logoUrl = new URL(logoUrl, root.origin).toString();
+        }
+        return logoUrl;
+      }
+    }
+
+    // Default fallback to favicon.ico
+    const root = new URL(url);
+    return `${root.origin}/favicon.ico`;
+  } catch {
+    return null;
   }
 }
 

@@ -38,6 +38,7 @@ export async function GET() {
     const chatbots = await prisma.chatbot.findMany({
       where: { userId: session.user.id },
       include: {
+        dataSources: { select: { url: true }, take: 1 },
         _count: { select: { conversations: true, dataSources: true } },
       },
       orderBy: { createdAt: "desc" },

@@ -51,8 +51,12 @@ export function getDomain(url: string): string {
     const { hostname } = new URL(urlWithProtocol);
     return hostname.replace(/^www\./, "");
   } catch {
-    return "default";
+    return "";
   }
+}
+
+export function getSafeFolder(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-");
 }
 
 export const getAIClient = (model: QAModel) => {

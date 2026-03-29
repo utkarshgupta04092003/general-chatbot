@@ -5,6 +5,9 @@ export type ChatbotSettings = {
   tone: string;
   systemPrompt: string;
   primaryColor: string;
+  assistantLogo?: string | null;
+  websiteLogo?: string | null;
+  dataSources?: { url: string }[];
 };
 
 export const TONE_OPTIONS = [
