@@ -19,6 +19,7 @@ model User {
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   verificationToken String?          @default(cuid())
+  deleted           Boolean          @default(false)
   accounts          Account[]
   sessions          Session[]
   chatbots          Chatbot[]
@@ -72,6 +73,7 @@ model Chatbot {
   websiteLogo    String?
   status         String         @default("training") // training, ready
   totalQueries   Int            @default(0)
+  deleted        Boolean        @default(false)
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -87,6 +89,7 @@ model DataSource {
   content   String   @default("")
   wordCount Int      @default(0)
   status    String   @default("pending") // pending, indexed, failed
+  deleted   Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   chatbot   Chatbot  @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
@@ -98,6 +101,7 @@ model Conversation {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   chatbotId String    @db.ObjectId
   sessionId String    @default(cuid())
+  deleted   Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   chatbot   Chatbot   @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
@@ -109,6 +113,7 @@ model Message {
   conversationId String       @db.ObjectId
   role           String // user, assistant
   content        String
+  deleted        Boolean      @default(false)
   createdAt      DateTime     @default(now())
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }
@@ -121,6 +126,7 @@ model VerifiedDomain {
   verificationEmail String?
   verificationCode  String?
   codeExpiresAt     DateTime?
+  deleted           Boolean   @default(false)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)

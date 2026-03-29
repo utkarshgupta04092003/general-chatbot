@@ -15,7 +15,7 @@ export async function PATCH(
     const body = await req.json();
 
     await prisma.chatbot.updateMany({
-      where: { id, userId: session.user.id },
+      where: { id, userId: session.user.id, deleted: false },
       data: {
         name: body.name,
         welcomeMessage: body.welcomeMessage,
@@ -45,7 +45,10 @@ export async function DELETE(
 
     const { id } = await params;
 
-    await prisma.chatbot.deleteMany({ where: { id, userId: session.user.id } });
+    await prisma.chatbot.updateMany({
+      where: { id, userId: session.user.id },
+      data: { deleted: true },
+    });
 
     return NextResponse.json({ success: true });
   } catch (err: unknown) {

@@ -143,12 +143,11 @@ export async function POST(req: Request) {
     }
 
     // Check verification
-    const verifiedDomain = await prisma.verifiedDomain.findUnique({
+    const verifiedDomain = await prisma.verifiedDomain.findFirst({
       where: {
-        userId_domain: {
-          userId: session.user.id,
-          domain,
-        },
+        userId: session.user.id,
+        domain,
+        deleted: false,
       },
     });
 
@@ -243,8 +242,8 @@ export async function POST(req: Request) {
           allUrls.map((url) =>
             prisma.dataSource.upsert({
               where: { chatbotId_url: { chatbotId, url } },
-              update: {},
-              create: { chatbotId, url, status: "pending" },
+              update: { deleted: false },
+              create: { chatbotId, url, status: "pending", deleted: false },
             }),
           ),
         );

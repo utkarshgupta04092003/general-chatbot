@@ -21,9 +21,9 @@ export async function POST(req: Request) {
     }
 
     // Get chatbot config
-    const chatbot = await prisma.chatbot.findUnique({
-      where: { id: chatbotId },
-      include: { dataSources: { take: 5 } },
+    const chatbot = await prisma.chatbot.findFirst({
+      where: { id: chatbotId, deleted: false },
+      include: { dataSources: { where: { deleted: false }, take: 5 } },
     });
 
     if (!chatbot) {
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
     // Get or create conversation
     let conversation = await prisma.conversation.findFirst({
-      where: { chatbotId, sessionId: sessionId ?? "" },
+      where: { chatbotId, sessionId: sessionId ?? "", deleted: false },
     });
 
     if (!conversation) {
@@ -133,7 +133,7 @@ export async function POST(req: Request) {
 
     // Update query count
     await prisma.chatbot.update({
-      where: { id: chatbotId },
+      where: { id: chatbotId, deleted: false },
       data: { totalQueries: { increment: 1 } },
     });
 
@@ -161,7 +161,7 @@ export async function GET(req: Request) {
     }
 
     const conversation = await prisma.conversation.findFirst({
-      where: { chatbotId, sessionId },
+      where: { chatbotId, sessionId, deleted: false },
       include: {
         messages: {
           orderBy: { createdAt: "asc" },

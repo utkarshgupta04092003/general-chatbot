@@ -79,8 +79,8 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      const verifiedDomain = await prisma.verifiedDomain.findUnique({
-        where: { userId_domain: { userId: user.id, domain } },
+      const verifiedDomain = await prisma.verifiedDomain.findFirst({
+        where: { userId: user.id, domain, deleted: false },
       });
 
       if (!verifiedDomain || verifiedDomain.verificationCode !== code) {
@@ -142,7 +142,7 @@ export async function GET() {
     }
 
     const domains = await prisma.verifiedDomain.findMany({
-      where: { userId: user.id },
+      where: { userId: user.id, deleted: false },
     });
 
     return NextResponse.json({

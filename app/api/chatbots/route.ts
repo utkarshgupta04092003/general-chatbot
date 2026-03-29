@@ -36,10 +36,10 @@ export async function GET() {
     }
 
     const chatbots = await prisma.chatbot.findMany({
-      where: { userId: session.user.id },
+      where: { userId: session.user.id, deleted: false },
       include: {
-        dataSources: { select: { url: true }, take: 1 },
-        _count: { select: { conversations: true, dataSources: true } },
+        dataSources: { where: { deleted: false }, select: { url: true }, take: 1 },
+        _count: { select: { conversations: { where: { deleted: false } }, dataSources: { where: { deleted: false } } } },
       },
       orderBy: { createdAt: "desc" },
     });

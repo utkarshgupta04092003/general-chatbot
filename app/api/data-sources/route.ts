@@ -9,7 +9,10 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const sources = await prisma.dataSource.findMany({
-      where: { chatbot: { userId: session.user.id } },
+      where: { 
+        chatbot: { userId: session.user.id, deleted: false },
+        deleted: false 
+      },
       include: {
         chatbot: {
           select: {

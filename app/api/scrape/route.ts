@@ -31,9 +31,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
-      include: { verifiedDomains: true },
+    const user = await prisma.user.findFirst({
+      where: { email: session.user.email, deleted: false },
+      include: { verifiedDomains: { where: { deleted: false } } },
     });
 
     if (!user) {
