@@ -1,5 +1,6 @@
 "use client";
 
+import { ENDPOINTS } from "@/lib/endpoint";
 import { formatDate } from "@/lib/utils";
 import {
   AlertCircle,
@@ -7,6 +8,7 @@ import {
   Clock,
   Copy,
   Globe,
+  List,
   Loader2,
   Plus,
   RefreshCw,
@@ -16,7 +18,6 @@ import {
   Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ENDPOINTS } from "@/lib/endpoint";
 
 type DataSource = {
   id: string;
@@ -44,6 +45,11 @@ export default function DataSourcesPage() {
   const [targetUrl, setTargetUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [selectedChatbotId, setSelectedChatbotId] = useState<string>("all");
+
+  const [scanning, setScanning] = useState(false);
+  const [showUrlSelectionModal, setShowUrlSelectionModal] = useState(false);
+  const [discoveredUrls, setDiscoveredUrls] = useState<string[]>([]);
+  const [selectedUrls, setSelectedUrls] = useState<string[]>([]);
 
   useEffect(() => {
     fetchSources();
@@ -95,7 +101,6 @@ export default function DataSourcesPage() {
   async function handleAddUrl() {
     if (!addUrl.trim()) return;
 
-    // Check if domain is verified
     let domain = "";
     try {
       domain = new URL(addUrl.trim()).hostname;
@@ -110,11 +115,40 @@ export default function DataSourcesPage() {
       return;
     }
 
+    startCrawl(addUrl.trim());
+  }
+
+  async function startCrawl(url: string) {
+    setShowUrlSelectionModal(true);
+    setScanning(true);
+    setError("");
+    setDiscoveredUrls([]);
+    setSelectedUrls([]);
+
+    try {
+      const res = await fetch(ENDPOINTS.CRAWL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to crawl website");
+
+      setDiscoveredUrls(data.urls || []);
+      setSelectedUrls(data.urls || []);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Crawl failed");
+    } finally {
+      setScanning(false);
+    }
+  }
+
+  async function handleAddSelectedUrls() {
+    if (selectedUrls.length === 0) return;
     setAdding(true);
     setError("");
 
     try {
-      // 1. Get chatbot ID
       let targetChatbotId =
         selectedChatbotId !== "all" ? selectedChatbotId : sources[0]?.chatbotId;
       if (!targetChatbotId) {
@@ -127,31 +161,36 @@ export default function DataSourcesPage() {
         }
       }
 
-      // 2. Scrape the URL
+      // Scrape selected URLs
       const scrapeRes = await fetch(ENDPOINTS.SCRAPE, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ urls: [addUrl.trim()] }),
+        body: JSON.stringify({ urls: selectedUrls }),
       });
       const scrapeData = await scrapeRes.json();
       if (!scrapeRes.ok) throw new Error(scrapeData.error || "Scrape failed");
 
-      const page = scrapeData.pages[0];
-      if (page.status === "failed")
-        throw new Error("Failed to extract content from this URL");
+      const validPages = (scrapeData.pages || []).filter(
+        (p: { status: string; content?: string }) =>
+          p.status !== "failed" && p.content,
+      );
+      if (validPages.length === 0) {
+        throw new Error("Failed to extract valid content from these URLs");
+      }
 
-      // 3. Embed the content
+      // Embed the content
       const embedRes = await fetch(ENDPOINTS.EMBED, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chatbotId: targetChatbotId, pages: [page] }),
+        body: JSON.stringify({ chatbotId: targetChatbotId, pages: validPages }),
       });
       const embedData = await embedRes.json();
-      if (!embedRes.ok)
-        throw new Error(embedData.error || "Failed to index page");
+      if (!embedRes.ok) {
+        throw new Error(embedData.error || "Failed to index pages");
+      }
 
-      // 4. Update UI
       setAddUrl("");
+      setShowUrlSelectionModal(false);
       fetchSources();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -173,9 +212,6 @@ export default function DataSourcesPage() {
       if (data.success) {
         setShowVerifyModal(false);
         fetchVerifiedDomains();
-        // Automatically proceed to add the URL after verification
-        setAddUrl(targetUrl);
-        setTimeout(() => handleAddUrl(), 100);
       } else {
         setError(data.error || "Verification failed");
       }
@@ -195,6 +231,135 @@ export default function DataSourcesPage() {
 
   return (
     <div>
+      {/* URL Selection / Scanning Modal */}
+      {showUrlSelectionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200 flex flex-col max-h-[85vh]">
+            <div className="p-6 border-b border-white/5 flex-shrink-0">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
+                  {scanning ? (
+                    <Loader2 className="w-6 h-6 text-indigo-400 animate-spin" />
+                  ) : (
+                    <List className="w-6 h-6 text-indigo-400" />
+                  )}
+                </div>
+                <h2 className="text-xl font-bold text-white">
+                  {scanning ? "Scanning website pages..." : "Select Pages"}
+                </h2>
+              </div>
+              <p className="text-slate-400 text-sm">
+                {scanning
+                  ? "We are automatically discovering pages on this domain..."
+                  : `Discovered ${discoveredUrls.length} pages. Select which ones to add.`}
+              </p>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6">
+              {scanning ? (
+                <div className="flex flex-col items-center justify-center py-12 text-slate-400">
+                  <div className="w-12 h-12 rounded-full border-4 border-slate-800 border-t-indigo-500 animate-spin mb-4" />
+                  <p>Crawling domain, please wait...</p>
+                </div>
+              ) : error ? (
+                <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/20 text-red-300 px-4 py-3 rounded-xl text-sm">
+                  <ShieldAlert className="w-5 h-5 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold">Error</p>
+                    <p className="opacity-80">{error}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between mb-4">
+                    <label className="flex items-center gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={
+                          selectedUrls.length === discoveredUrls.length &&
+                          discoveredUrls.length > 0
+                        }
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedUrls([...discoveredUrls]);
+                          } else {
+                            setSelectedUrls([]);
+                          }
+                        }}
+                        className="w-4 h-4 rounded text-indigo-500 bg-slate-800 border-white/10 focus:ring-offset-slate-900 focus:ring-indigo-500"
+                      />
+                      <span className="text-sm font-medium text-white select-none">
+                        Select All
+                      </span>
+                    </label>
+                    <span className="text-xs text-slate-500">
+                      {selectedUrls.length} selected
+                    </span>
+                  </div>
+
+                  <div className="border border-white/5 rounded-xl divide-y divide-white/5 overflow-hidden">
+                    {discoveredUrls.map((u) => (
+                      <label
+                        key={u}
+                        className="flex items-center gap-3 p-3 hover:bg-white/5 cursor-pointer transition-colors"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedUrls.includes(u)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedUrls((prev) => [...prev, u]);
+                            } else {
+                              setSelectedUrls((prev) =>
+                                prev.filter((sl) => sl !== u),
+                              );
+                            }
+                          }}
+                          className="w-4 h-4 rounded text-indigo-500 bg-slate-800 border-white/10 focus:ring-offset-slate-900 focus:ring-indigo-500"
+                        />
+                        <span
+                          className="text-sm text-slate-300 truncate w-full"
+                          title={u}
+                        >
+                          {u}
+                        </span>
+                      </label>
+                    ))}
+                    {discoveredUrls.length === 0 && (
+                      <div className="p-6 text-center text-slate-500 text-sm">
+                        No pages found. You can try adding the exact URL
+                        directly.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="p-6 border-t border-white/5 bg-slate-900 flex gap-3 flex-shrink-0">
+              <button
+                onClick={() => setShowUrlSelectionModal(false)}
+                className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-xl transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddSelectedUrls}
+                disabled={adding || scanning || selectedUrls.length === 0}
+                className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2"
+              >
+                {adding ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <CheckCircle className="w-4 h-4" />
+                )}
+                {adding ? "Adding..." : "Add Selected Pages"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Verification Modal */}
       {showVerifyModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">

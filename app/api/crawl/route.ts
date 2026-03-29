@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { fetchWithFallback } from "@/lib/scraper";
 import { load } from "cheerio";
 import { NextResponse } from "next/server";
 
@@ -77,7 +78,7 @@ async function fetchSitemap(baseUrl: string): Promise<string[]> {
     seenSitemaps.add(sitemapUrl);
 
     try {
-      const res = await fetch(sitemapUrl, {
+      const res = await fetchWithFallback(sitemapUrl, {
         signal: AbortSignal.timeout(5000),
       });
       if (!res.ok) return;
@@ -167,9 +168,8 @@ export async function POST(req: Request) {
 
     // 1. Fetch Homepage to get initial links and title
     try {
-      const response = await fetch(targetUrl, {
+      const response = await fetchWithFallback(targetUrl, {
         headers: {
-          "User-Agent": "ChatBase-Bot/1.0 (https://chatbase.ai/bot)",
           Accept: "text/html",
         },
         signal: AbortSignal.timeout(CRAWL_CONFIG.TIMEOUT_HOMEPAGE),
@@ -184,6 +184,10 @@ export async function POST(req: Request) {
 
         const homeLinks = extractLinks(html, targetUrl);
         homeLinks.forEach((l) => discoveredUrls.add(l));
+      } else {
+        console.error(
+          `Home fetch failed for ${targetUrl} with status ${response.status}`,
+        );
       }
     } catch (e) {
       console.error("Home fetch failed", e);
@@ -202,9 +206,8 @@ export async function POST(req: Request) {
       for (const nextUrl of toCrawl) {
         if (discoveredUrls.size >= CRAWL_CONFIG.MAX_DISCOVERED_LEVEL1) break;
         try {
-          const res = await fetch(nextUrl, {
+          const res = await fetchWithFallback(nextUrl, {
             headers: {
-              "User-Agent": "ChatBase-Bot/1.0 (https://chatbase.ai/bot)",
               Accept: "text/html",
             },
             signal: AbortSignal.timeout(CRAWL_CONFIG.TIMEOUT_GENERAL),

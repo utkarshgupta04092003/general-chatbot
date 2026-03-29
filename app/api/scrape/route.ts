@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { fetchWithFallback } from "@/lib/scraper";
 import { getDomain } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -52,10 +53,14 @@ export async function POST(req: NextRequest) {
           );
         }
 
-        const response = await fetch(url, {
-          headers: { "User-Agent": "ChatBase-Bot/1.0", Accept: "text/html" },
+        const response = await fetchWithFallback(url, {
+          headers: { Accept: "text/html" },
           signal: AbortSignal.timeout(8000),
         });
+
+        if (!response.ok) {
+          throw new Error(`Fetch failed with status ${response.status}`);
+        }
 
         const html = await response.text();
         const text = cleanText(html);

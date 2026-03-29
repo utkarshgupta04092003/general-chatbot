@@ -22,6 +22,7 @@ export default function OnboardingPage() {
   const [selectedUrls, setSelectedUrls] = useState<Set<string>>(new Set());
   const [scrapedPages, setScrapedPages] = useState<ScrapedPage[]>([]);
   const [loading, setLoading] = useState(false);
+  const [crawling, setCrawling] = useState(false);
   const [error, setError] = useState("");
   const [processStep, setProcessStep] = useState(0);
   const [rootTitle, setRootTitle] = useState("");
@@ -39,17 +40,43 @@ export default function OnboardingPage() {
     setLoading(true);
     setError("");
     try {
-      const domain = url
-        .trim()
-        .replace(/^https?:\/\//, "")
-        .split("/")[0]
-        .replace(/^www\./, "");
-      if (!domain) throw new Error("Invalid URL");
+      if (!url.startsWith("http")) {
+        const fullUrl = "https://" + url.trim();
+        setUrl(fullUrl);
+      }
       setStep(2);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to process URL");
     } finally {
       setLoading(false);
+    }
+  }
+
+  // Trigger crawl when entering step 3
+  async function handleCrawl(force = false) {
+    if (!force && crawledUrls.length > 0) return;
+    setCrawling(true);
+    if (force) {
+      setCrawledUrls([]);
+      setSelectedUrls(new Set());
+    }
+    setError("");
+    try {
+      const crawlRes = await fetch(ENDPOINTS.CRAWL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: url.trim() }),
+      });
+      const crawlData = await crawlRes.json();
+      if (!crawlRes.ok) throw new Error(crawlData.error);
+
+      setCrawledUrls(crawlData.urls);
+      setSelectedUrls(new Set(crawlData.urls));
+      setRootTitle(crawlData.rootTitle);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Website scanning failed");
+    } finally {
+      setCrawling(false);
     }
   }
 
@@ -91,8 +118,8 @@ export default function OnboardingPage() {
     }
   }
 
-  // Verify code and then crawl
-  async function verifyAndCrawl() {
+  // Verify code only
+  async function handleVerifyOnly() {
     if (!verificationCode.trim()) {
       setError("Please enter the verification code");
       return;
@@ -112,22 +139,10 @@ export default function OnboardingPage() {
       const verifyData = await verifyRes.json();
       if (!verifyRes.ok) throw new Error(verifyData.error);
 
-      const crawlRes = await fetch(ENDPOINTS.CRAWL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: url.trim() }),
-      });
-      const crawlData = await crawlRes.json();
-      if (!crawlRes.ok) throw new Error(crawlData.error);
-
-      setCrawledUrls(crawlData.urls);
-      setSelectedUrls(new Set(crawlData.urls));
-      setRootTitle(crawlData.rootTitle);
       setStep(3);
+      handleCrawl();
     } catch (e: unknown) {
-      setError(
-        e instanceof Error ? e.message : "Verification or scanning failed",
-      );
+      setError(e instanceof Error ? e.message : "Verification failed");
     } finally {
       setLoading(false);
     }
@@ -233,7 +248,7 @@ export default function OnboardingPage() {
               codeRequested={codeRequested}
               setCodeRequested={setCodeRequested}
               onRequestCode={requestVerificationCode}
-              onVerify={verifyAndCrawl}
+              onVerify={handleVerifyOnly}
               onBack={() => setStep(1)}
               loading={loading}
               error={error}
@@ -248,7 +263,16 @@ export default function OnboardingPage() {
               setSelectedUrls={setSelectedUrls}
               onBack={() => setStep(2)}
               onContinue={() => setStep(4)}
+              loading={crawling}
+              onRescan={() => handleCrawl(true)}
               error={error}
+              domain={
+                url
+                  .trim()
+                  .replace(/^https?:\/\//, "")
+                  .split("/")[0]
+                  .replace(/^www\./, "") || "website"
+              }
             />
           )}
 
