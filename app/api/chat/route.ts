@@ -1,5 +1,6 @@
 import {
   CHAT_ROLES,
+  ERROR_MESSAGE,
   GPT_5_2,
   GPT_5_MINI,
   TEXT_EMBEDDING_3_SMALL,
@@ -146,14 +147,12 @@ export async function POST(req: Request) {
     const aiResponse = await client.chat.completions.create({
       model: GPT_5_2,
       messages: [
-        { role: "system", content: systemMessage },
+        { role: CHAT_ROLES.SYSTEM, content: systemMessage },
         { role: CHAT_ROLES.USER, content: message },
       ],
     });
 
-    const response =
-      aiResponse.choices[0].message.content ||
-      "I'm sorry, I couldn't generate a response.";
+    const response = aiResponse.choices[0].message.content || ERROR_MESSAGE;
 
     // Extract unique source URLs
     const sources = Array.from(

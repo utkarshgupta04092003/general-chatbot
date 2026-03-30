@@ -68,6 +68,7 @@ model Chatbot {
   welcomeMessage String         @default("Hello! How can I help you today?")
   tone           String         @default("professional")
   systemPrompt   String         @default("You are a helpful AI assistant. Answer questions based on the provided context.")
+  agentType      String         @default("general")
   primaryColor   String         @default("#6366f1")
   assistantLogo  String?
   websiteLogo    String?

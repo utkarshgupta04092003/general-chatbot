@@ -21,6 +21,7 @@ export async function PATCH(
         welcomeMessage: body.welcomeMessage,
         tone: body.tone,
         systemPrompt: body.systemPrompt,
+        agentType: body.agentType,
         primaryColor: body.primaryColor,
         assistantLogo: body.assistantLogo,
         websiteLogo: body.websiteLogo,

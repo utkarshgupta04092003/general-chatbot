@@ -31,3 +31,5 @@ export const FEEDBACK_TEXT = {
   HELPFUL: "helpful",
   UNHELPFUL: "unhelpful",
 } as const;
+
+export const ERROR_MESSAGE = "I'm sorry, I couldn't generate a response.";
