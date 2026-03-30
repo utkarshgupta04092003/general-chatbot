@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDate } from "@/lib/utils";
 import {
   AlertCircle,
   CheckCircle,
@@ -11,7 +12,6 @@ import {
   ShieldCheck,
   Trash2,
 } from "lucide-react";
-import { formatDate } from "@/lib/utils";
 import { DataSource } from "./types";
 
 type DataSourcesListProps = {
@@ -21,6 +21,7 @@ type DataSourcesListProps = {
   verifiedDomains: string[];
   onRefresh: () => void;
   onDelete: (id: string) => void;
+  onResync: (id: string) => void;
 };
 
 export function DataSourcesList({
@@ -30,19 +31,20 @@ export function DataSourcesList({
   verifiedDomains,
   onRefresh,
   onDelete,
+  onResync,
 }: DataSourcesListProps) {
   const filteredSources = sources.filter(
     (s) => selectedChatbotId === "all" || s.chatbotId === selectedChatbotId,
   );
-  
-  const indexedCount = filteredSources.filter((s) => s.status === "indexed").length;
+
+  const indexedCount = filteredSources.filter(
+    (s) => s.status === "indexed",
+  ).length;
 
   return (
     <div className="bg-slate-800/50 border border-white/5 rounded-2xl overflow-hidden">
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
-        <h2 className="font-semibold text-sm">
-          {indexedCount} indexed pages
-        </h2>
+        <h2 className="font-semibold text-sm">{indexedCount} indexed pages</h2>
         <button
           onClick={onRefresh}
           className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
@@ -94,9 +96,7 @@ export function DataSourcesList({
                 </div>
                 <div className="flex items-center gap-2 text-xs text-slate-500 truncate">
                   {source.url}
-                  {verifiedDomains.includes(
-                    new URL(source.url).hostname,
-                  ) && (
+                  {verifiedDomains.includes(new URL(source.url).hostname) && (
                     <span className="flex items-center gap-0.5 text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded-md font-medium">
                       <ShieldCheck className="w-3 h-3" />
                       Verified
@@ -127,12 +127,22 @@ export function DataSourcesList({
               >
                 {source.status}
               </div>
-              <button
-                onClick={() => onDelete(source.id)}
-                className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => onResync(source.id)}
+                  title="Resync Page Content"
+                  className="p-1.5 text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-all"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onDelete(source.id)}
+                  title="Remove Page"
+                  className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           ))}
         </div>

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { AddUrlSection } from "./_components/AddUrlSection";
 import { ChatbotFilter } from "./_components/ChatbotFilter";
 import { DataSourcesList } from "./_components/DataSourcesList";
+import { ResyncModal } from "./_components/ResyncModal";
 import { DataSource } from "./_components/types";
 import { UrlSelectionModal } from "./_components/UrlSelectionModal";
 import { VerificationModal } from "./_components/VerificationModal";
@@ -27,6 +28,9 @@ export default function DataSourcesPage() {
   const [showUrlSelectionModal, setShowUrlSelectionModal] = useState(false);
   const [discoveredUrls, setDiscoveredUrls] = useState<string[]>([]);
   const [selectedUrls, setSelectedUrls] = useState<string[]>([]);
+
+  const [showResyncModal, setShowResyncModal] = useState(false);
+  const [selectedResyncId, setSelectedResyncId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchSources();
@@ -260,6 +264,17 @@ export default function DataSourcesPage() {
         verifiedDomains={verifiedDomains}
         onRefresh={fetchSources}
         onDelete={handleDelete}
+        onResync={(id) => {
+          setSelectedResyncId(id);
+          setShowResyncModal(true);
+        }}
+      />
+
+      <ResyncModal
+        isOpen={showResyncModal}
+        dataSourceId={selectedResyncId || ""}
+        onClose={() => setShowResyncModal(false)}
+        onSuccess={fetchSources}
       />
     </div>
   );

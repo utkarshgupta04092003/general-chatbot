@@ -11,5 +11,6 @@ export const ENDPOINTS = {
   // Dynamic route helpers
   CHATBOT_BY_ID: (id: string) => `/api/chatbots/${id}`,
   DATA_SOURCE_BY_ID: (id: string) => `/api/data-sources/${id}`,
+  DATA_SOURCE_RESYNC: (id: string) => `/api/data-sources/${id}/resync`,
   MESSAGE_FEEDBACK: (id: string) => `/api/messages/${id}/feedback`,
 } as const;
