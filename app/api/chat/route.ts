@@ -1,13 +1,58 @@
-import { CHAT_ROLES, GPT_5_2, TEXT_EMBEDDING_3_SMALL } from "@/lib/config";
+import {
+  CHAT_ROLES,
+  GPT_5_2,
+  GPT_5_MINI,
+  TEXT_EMBEDDING_3_SMALL,
+} from "@/lib/config";
 import { prisma } from "@/lib/prisma";
 import { getAIClient, getDomain } from "@/lib/utils";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { NextResponse } from "next/server";
+import { zodResponseFormat } from "openai/helpers/zod";
+import { z } from "zod";
 
 // Initialize Pinecone client
 const pc = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY!,
 });
+
+const AnalyticsSchema = z.object({
+  category: z.enum(["pricing", "product", "support", "other"]),
+  unanswered: z.boolean(),
+  confidence: z.number().min(0).max(1),
+});
+
+async function getChatAnalytics(message: string, aiResponse: string) {
+  try {
+    const catClient = getAIClient(GPT_5_MINI);
+    const catRes = await catClient.chat.completions.create({
+      model: GPT_5_MINI,
+      messages: [
+        {
+          role: CHAT_ROLES.SYSTEM,
+          content:
+            "Analyze the conversation. Categorize the user intent and determine if the assistant failed to find an answer (unanswered: true).",
+        },
+        {
+          role: CHAT_ROLES.USER,
+          content: `User Question: ${message}\nAI Response: ${aiResponse}`,
+        },
+      ],
+      response_format: zodResponseFormat(AnalyticsSchema, "analytics"),
+    });
+
+    const parsed = JSON.parse(catRes.choices[0].message.content || "{}");
+    return {
+      category: parsed.category || "other",
+      unanswered: !!parsed.unanswered,
+      confidence:
+        typeof parsed.confidence === "number" ? parsed.confidence : 0.9,
+    };
+  } catch (err) {
+    console.error("Structured Analytics Error:", err);
+    return { category: "other", unanswered: false, confidence: 0.9 };
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -42,7 +87,7 @@ export async function POST(req: Request) {
     }
 
     // Save user message
-    await prisma.message.create({
+    const userMessage = await prisma.message.create({
       data: {
         conversationId: conversation.id,
         role: CHAT_ROLES.USER,
@@ -122,12 +167,24 @@ export async function POST(req: Request) {
       finalResponse += `\n\n**Sources:**\n${sources.map((url) => `- [${url}](${url})`).join("\n")}`;
     }
 
+    // Higher Accuracy Analytics: Categorize and detect 'unanswered' using structured output
+    const analytics = await getChatAnalytics(message, response);
+
+    // Save user message category (specifically for this message ID)
+    await prisma.message.update({
+      where: { id: userMessage.id },
+      data: { category: analytics.category },
+    });
+
     // Save assistant message
     const assistantMessage = await prisma.message.create({
       data: {
         conversationId: conversation.id,
         role: CHAT_ROLES.ASSISTANT,
         content: finalResponse,
+        unanswered: analytics.unanswered,
+        confidence: analytics.confidence,
+        sourceUrls: sources,
       },
     });
 

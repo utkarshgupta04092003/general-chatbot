@@ -114,7 +114,11 @@ model Message {
   role           String // user, assistant
   content        String
   deleted        Boolean      @default(false)
-  feedback       String? // like, dislike
+  feedback       String? // helpful, unhelpful
+  confidence     Float?       @default(1.0)
+  unanswered     Boolean      @default(false)
+  category       String? // pricing, product, support, other
+  sourceUrls     String[]
   createdAt      DateTime     @default(now())
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }

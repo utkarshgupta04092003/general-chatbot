@@ -2,6 +2,7 @@
 
 import { APP_NAME } from "@/lib/config";
 import {
+  BarChart3,
   Code,
   CreditCard,
   Database,
@@ -19,6 +20,7 @@ import { useState } from "react";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   {
     href: "/dashboard/conversations",
     label: "Conversations",

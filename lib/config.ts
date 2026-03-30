@@ -24,6 +24,7 @@ export const API_VERSIONS = {
 export const CHAT_ROLES = {
   USER: "user",
   ASSISTANT: "assistant",
+  SYSTEM: "system",
 } as const;
 
 export const FEEDBACK_TEXT = {
