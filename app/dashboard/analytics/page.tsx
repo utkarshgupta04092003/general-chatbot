@@ -14,6 +14,8 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
+import { ANALYTICS_EVENTS } from "@/lib/config";
+import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
 import {
   Area,
@@ -66,10 +68,15 @@ type AnalyticsData = {
 };
 
 export default function AnalyticsPage() {
+  const posthog = usePostHog();
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [chatbotId, setChatbotId] = useState<string | null>(null);
   const [chatbots, setChatbots] = useState<{ id: string; name: string }[]>([]);
+
+  useEffect(() => {
+    posthog.capture(ANALYTICS_EVENTS.ANALYTICS_VIEWED);
+  }, [posthog]);
 
   useEffect(() => {
     fetch("/api/chatbots")

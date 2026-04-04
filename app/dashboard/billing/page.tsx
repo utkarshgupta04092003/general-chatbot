@@ -1,5 +1,7 @@
-import { CheckCircle, Zap, CreditCard } from "lucide-react";
-import Link from "next/link";
+import { ANALYTICS_EVENTS } from "@/lib/config";
+import PostHogClient from "@/lib/posthog";
+import { requireAuth } from "@/lib/session";
+import { CheckCircle, CreditCard } from "lucide-react";
 
 const PLANS = [
   {
@@ -8,7 +10,13 @@ const PLANS = [
     period: "forever",
     description: "Perfect for testing",
     color: "border-white/10",
-    features: ["10 pages indexed", "100 messages/month", "1 chatbot", "Basic analytics", "Community support"],
+    features: [
+      "10 pages indexed",
+      "100 messages/month",
+      "1 chatbot",
+      "Basic analytics",
+      "Community support",
+    ],
     current: true,
     cta: "Current Plan",
     ctaDisabled: true,
@@ -20,7 +28,16 @@ const PLANS = [
     description: "For growing businesses",
     color: "border-indigo-500/50 bg-indigo-600/5",
     popular: true,
-    features: ["500 pages indexed", "5,000 messages/month", "5 chatbots", "Advanced analytics", "Unlimited embeds", "Priority support", "Custom branding", "API access"],
+    features: [
+      "500 pages indexed",
+      "5,000 messages/month",
+      "5 chatbots",
+      "Advanced analytics",
+      "Unlimited embeds",
+      "Priority support",
+      "Custom branding",
+      "API access",
+    ],
     current: false,
     cta: "Upgrade to Pro",
     ctaDisabled: false,
@@ -31,19 +48,39 @@ const PLANS = [
     period: "/month",
     description: "For large organizations",
     color: "border-white/10",
-    features: ["Unlimited pages", "Unlimited messages", "Unlimited chatbots", "Custom AI fine-tuning", "SSO & SAML", "SLA guarantee", "Dedicated support", "White-label"],
+    features: [
+      "Unlimited pages",
+      "Unlimited messages",
+      "Unlimited chatbots",
+      "Custom AI fine-tuning",
+      "SSO & SAML",
+      "SLA guarantee",
+      "Dedicated support",
+      "White-label",
+    ],
     current: false,
     cta: "Contact Sales",
     ctaDisabled: false,
   },
 ];
 
-export default function BillingPage() {
+export default async function BillingPage() {
+  const session = await requireAuth();
+
+  const posthog = PostHogClient();
+  posthog.capture({
+    distinctId: session.user.id,
+    event: ANALYTICS_EVENTS.BILLING_VIEWED,
+  });
+  await posthog.shutdown();
+
   return (
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold">Billing & Plans</h1>
-        <p className="text-slate-400 text-sm mt-1">Manage your subscription and usage.</p>
+        <p className="text-slate-400 text-sm mt-1">
+          Manage your subscription and usage.
+        </p>
       </div>
 
       {/* Current usage */}
@@ -63,12 +100,16 @@ export default function BillingPage() {
             <div key={item.label}>
               <div className="flex items-center justify-between text-sm mb-2">
                 <span className="text-slate-400">{item.label}</span>
-                <span className="text-white font-medium">{item.used}/{item.total}</span>
+                <span className="text-white font-medium">
+                  {item.used}/{item.total}
+                </span>
               </div>
               <div className="w-full bg-slate-700 rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all ${
-                    item.used / item.total > 0.8 ? "bg-red-500" : "bg-indigo-500"
+                    item.used / item.total > 0.8
+                      ? "bg-red-500"
+                      : "bg-indigo-500"
                   }`}
                   style={{ width: `${(item.used / item.total) * 100}%` }}
                 />
@@ -100,7 +141,9 @@ export default function BillingPage() {
               <div className="font-semibold mb-1">{plan.name}</div>
               <div className="flex items-end gap-1 mb-1">
                 <span className="text-3xl font-bold">{plan.price}</span>
-                <span className="text-slate-500 text-sm mb-1">{plan.period}</span>
+                <span className="text-slate-500 text-sm mb-1">
+                  {plan.period}
+                </span>
               </div>
               <p className="text-xs text-slate-500">{plan.description}</p>
             </div>
@@ -118,8 +161,8 @@ export default function BillingPage() {
                 plan.ctaDisabled
                   ? "bg-white/5 text-slate-500 cursor-not-allowed"
                   : plan.popular
-                  ? "bg-indigo-600 hover:bg-indigo-500 text-white"
-                  : "bg-white/5 hover:bg-white/10 border border-white/10 text-white"
+                    ? "bg-indigo-600 hover:bg-indigo-500 text-white"
+                    : "bg-white/5 hover:bg-white/10 border border-white/10 text-white"
               }`}
             >
               {plan.cta}
@@ -135,7 +178,9 @@ export default function BillingPage() {
           <h2 className="font-semibold">Payment History</h2>
         </div>
         <div className="text-center py-8">
-          <p className="text-slate-500 text-sm">No payments yet. You are on the Free plan.</p>
+          <p className="text-slate-500 text-sm">
+            No payments yet. You are on the Free plan.
+          </p>
         </div>
       </div>
     </div>

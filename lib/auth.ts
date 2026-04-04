@@ -1,9 +1,10 @@
-import NextAuth from "next-auth";
+import bcrypt from "bcryptjs";
+import NextAuth, { type DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import bcrypt from "bcryptjs";
+import { ANALYTICS_EVENTS } from "./config";
+import PostHogClient from "./posthog";
 import { prisma } from "./prisma";
-import { type DefaultSession } from "next-auth";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -42,7 +43,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const isValid = await bcrypt.compare(
           credentials.password as string,
-          user.password
+          user.password,
         );
 
         if (!isValid) return null;
@@ -57,6 +58,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     error: "/login",
   },
   callbacks: {
+    async signIn({ user, account }) {
+      if (user?.id) {
+        const posthog = PostHogClient();
+        posthog.capture({
+          distinctId: user.id,
+          event: ANALYTICS_EVENTS.USER_LOGGED_IN,
+          properties: {
+            method: account?.provider || "credentials",
+          },
+        });
+        await posthog.shutdown();
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) token.id = user.id;
       return token;

@@ -1,7 +1,9 @@
 import { auth } from "@/lib/auth";
+import { ANALYTICS_EVENTS } from "@/lib/config";
+import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
+import { extractLogo, fetchWithFallback } from "@/lib/scraper";
 import { getDomain } from "@/lib/utils";
-import { fetchWithFallback, extractLogo } from "@/lib/scraper";
 import { load } from "cheerio";
 import { NextResponse } from "next/server";
 
@@ -115,9 +117,10 @@ async function fetchSitemap(baseUrl: string): Promise<string[]> {
 }
 
 export async function POST(req: Request) {
+  const posthog = PostHogClient();
   try {
     const session = await auth();
-    if (!session?.user?.email) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -247,6 +250,15 @@ export async function POST(req: Request) {
             }),
           ),
         );
+        posthog.capture({
+          distinctId: session.user.id,
+          event: ANALYTICS_EVENTS.DATA_SOURCE_ADDED,
+          properties: {
+            chatbotId,
+            sourceType: "website",
+            urlCount: allUrls.length,
+          },
+        });
       } catch (dbErr) {
         console.error("Failed to persist discovered links", dbErr);
       }
@@ -274,5 +286,7 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to crawl";
     return NextResponse.json({ error: message }, { status: 500 });
+  } finally {
+    await posthog.shutdown();
   }
 }

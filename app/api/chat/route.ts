@@ -1,10 +1,12 @@
 import {
+  ANALYTICS_EVENTS,
   CHAT_ROLES,
   ERROR_MESSAGE,
   GPT_5_2,
   GPT_5_MINI,
   TEXT_EMBEDDING_3_SMALL,
 } from "@/lib/config";
+import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import { getAIClient, getDomain } from "@/lib/utils";
 import { Pinecone } from "@pinecone-database/pinecone";
@@ -56,6 +58,7 @@ async function getChatAnalytics(message: string, aiResponse: string) {
 }
 
 export async function POST(req: Request) {
+  const posthog = PostHogClient();
   try {
     const { chatbotId, message, sessionId } = await req.json();
 
@@ -65,6 +68,19 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
+
+    // Identify user/session for tracking
+    const distinctId = sessionId || `anon-${chatbotId}`;
+
+    // Track message sent
+    posthog.capture({
+      distinctId,
+      event: ANALYTICS_EVENTS.MESSAGE_SENT_TO_BOT,
+      properties: {
+        chatbotId,
+        messageLength: message.length,
+      },
+    });
 
     // Get chatbot config
     const chatbot = await prisma.chatbot.findFirst({
@@ -169,6 +185,19 @@ export async function POST(req: Request) {
     // Higher Accuracy Analytics: Categorize and detect 'unanswered' using structured output
     const analytics = await getChatAnalytics(message, response);
 
+    // Track response received
+    posthog.capture({
+      distinctId,
+      event: ANALYTICS_EVENTS.BOT_RESPONSE_RECEIVED,
+      properties: {
+        chatbotId,
+        category: analytics.category,
+        unanswered: analytics.unanswered,
+        confidence: analytics.confidence,
+        messageLength: finalResponse.length,
+      },
+    });
+
     // Save user message category (specifically for this message ID)
     await prisma.message.update({
       where: { id: userMessage.id },
@@ -201,6 +230,9 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Chat failed";
     return NextResponse.json({ error: message }, { status: 500 });
+  } finally {
+    // Ensure all events are sent before the request finishes in serverless environments
+    await posthog.shutdown();
   }
 }
 

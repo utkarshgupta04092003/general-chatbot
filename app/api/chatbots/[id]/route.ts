@@ -1,4 +1,6 @@
 import { auth } from "@/lib/auth";
+import { ANALYTICS_EVENTS } from "@/lib/config";
+import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -6,6 +8,7 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const posthog = PostHogClient();
   try {
     const session = await auth();
     if (!session?.user?.id)
@@ -28,10 +31,21 @@ export async function PATCH(
       },
     });
 
+    posthog.capture({
+      distinctId: session.user.id,
+      event: ANALYTICS_EVENTS.CHATBOT_SETTINGS_UPDATED,
+      properties: {
+        chatbotId: id,
+        updatedFields: Object.keys(body),
+      },
+    });
+
     return NextResponse.json({ success: true });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Update failed";
     return NextResponse.json({ error: message }, { status: 500 });
+  } finally {
+    await posthog.shutdown();
   }
 }
 
@@ -39,6 +53,7 @@ export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const posthog = PostHogClient();
   try {
     const session = await auth();
     if (!session?.user?.id)
@@ -51,9 +66,19 @@ export async function DELETE(
       data: { deleted: true },
     });
 
+    posthog.capture({
+      distinctId: session.user.id,
+      event: ANALYTICS_EVENTS.CHATBOT_DELETED,
+      properties: {
+        chatbotId: id,
+      },
+    });
+
     return NextResponse.json({ success: true });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Delete failed";
     return NextResponse.json({ error: message }, { status: 500 });
+  } finally {
+    await posthog.shutdown();
   }
 }

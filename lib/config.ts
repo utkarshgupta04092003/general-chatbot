@@ -33,3 +33,31 @@ export const FEEDBACK_TEXT = {
 } as const;
 
 export const ERROR_MESSAGE = "I'm sorry, I couldn't generate a response.";
+
+export const POSTHOG_CONFIG = {
+  apiKey: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+  host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com",
+};
+
+export const ANALYTICS_EVENTS = {
+  USER_SIGNED_UP: "user_signed_up",
+  USER_LOGGED_IN: "user_logged_in",
+  CHATBOT_CREATED: "chatbot_created",
+  CHATBOT_SETTINGS_UPDATED: "chatbot_settings_updated",
+  CHATBOT_DELETED: "chatbot_deleted",
+  MESSAGE_SENT_TO_BOT: "message_sent_to_bot",
+  BOT_RESPONSE_RECEIVED: "bot_response_received",
+  DATA_SOURCE_ADDED: "data_source_added",
+  ONBOARDING_STARTED: "onboarding_started",
+  ONBOARDING_STEP_COMPLETED: "onboarding_step_completed",
+  ONBOARDING_COMPLETED: "onboarding_completed",
+  ANALYTICS_VIEWED: "analytics_viewed",
+  CONVERSATIONS_VIEWED: "conversations_viewed",
+  SETTINGS_VIEWED: "settings_viewed",
+  EMBED_VIEWED: "embed_viewed",
+  BILLING_VIEWED: "billing_viewed",
+  DATA_SOURCES_VIEWED: "data_sources_viewed",
+  CONVERSATION_OPENED: "conversation_opened",
+  DATA_SOURCE_FILTER_CHANGED: "data_source_filter_changed",
+  EMBED_COPIED: "embed_copied",
+} as const;

@@ -1,7 +1,10 @@
 "use client";
 
 import { ENDPOINTS } from "@/lib/endpoint";
+import { ANALYTICS_EVENTS } from "@/lib/config";
+import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
+
 import { AddUrlSection } from "./_components/AddUrlSection";
 import { ChatbotFilter } from "./_components/ChatbotFilter";
 import { DataSourcesList } from "./_components/DataSourcesList";
@@ -11,6 +14,7 @@ import { UrlSelectionModal } from "./_components/UrlSelectionModal";
 import { VerificationModal } from "./_components/VerificationModal";
 
 export default function DataSourcesPage() {
+  const posthog = usePostHog();
   const [sources, setSources] = useState<DataSource[]>([]);
   const [loading, setLoading] = useState(true);
   const [addUrl, setAddUrl] = useState("");
@@ -33,9 +37,24 @@ export default function DataSourcesPage() {
   const [selectedResyncId, setSelectedResyncId] = useState<string | null>(null);
 
   useEffect(() => {
+    posthog.capture(ANALYTICS_EVENTS.DATA_SOURCES_VIEWED);
+  }, [posthog]);
+
+  useEffect(() => {
     fetchSources();
     fetchVerifiedDomains();
   }, []);
+
+  useEffect(() => {
+    if (selectedChatbotId !== "all") {
+      posthog.capture(ANALYTICS_EVENTS.DATA_SOURCE_FILTER_CHANGED, {
+        chatbotId: selectedChatbotId,
+      });
+    }
+  }, [selectedChatbotId, posthog]);
+
+
+
 
   async function fetchVerifiedDomains() {
     try {

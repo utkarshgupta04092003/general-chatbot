@@ -1,7 +1,11 @@
 "use client";
 
+import { ANALYTICS_EVENTS } from "@/lib/config";
+import { ENDPOINTS } from "@/lib/endpoint";
 import { PROCESSING_STEPS, STEPS } from "@/lib/onboarding-constants";
-import { useState } from "react";
+import { ScrapedPage } from "@/lib/onboarding-types";
+import { usePostHog } from "posthog-js/react";
+import { useEffect, useState } from "react";
 import { DomainVerificationStep } from "./_components/DomainVerificationStep";
 import { OnboardingHeader } from "./_components/OnboardingHeader";
 import { PageSelectionStep } from "./_components/PageSelectionStep";
@@ -11,11 +15,9 @@ import { ProcessingStep } from "./_components/ProcessingStep";
 import { StepIndicator } from "./_components/StepIndicator";
 import { SuccessStep } from "./_components/SuccessStep";
 import { UrlInputStep } from "./_components/UrlInputStep";
-import { ENDPOINTS } from "@/lib/endpoint";
-
-import { ScrapedPage } from "@/lib/onboarding-types";
 
 export default function OnboardingPage() {
+  const posthog = usePostHog();
   const [step, setStep] = useState(1);
   const [url, setUrl] = useState("");
   const [crawledUrls, setCrawledUrls] = useState<string[]>([]);
@@ -30,6 +32,21 @@ export default function OnboardingPage() {
   const [verificationEmail, setVerificationEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [codeRequested, setCodeRequested] = useState(false);
+
+  // Track initial onboarding start
+  useEffect(() => {
+    posthog.capture(ANALYTICS_EVENTS.ONBOARDING_STARTED);
+  }, [posthog]);
+
+  // Track step changes
+  useEffect(() => {
+    if (step > 1) {
+      posthog.capture(ANALYTICS_EVENTS.ONBOARDING_STEP_COMPLETED, {
+        step: step - 1,
+        stepName: STEPS[step - 2]?.label || "Unknown",
+      });
+    }
+  }, [step, posthog]);
 
   // Step 1: Scan URL
   async function handleScan() {
@@ -209,6 +226,11 @@ export default function OnboardingPage() {
 
       setProcessStep(PROCESSING_STEPS.length);
       setStep(7);
+      posthog.capture("onboarding_completed", {
+        chatbotId: id,
+        pageCount: scrapedPages.length,
+        totalWords,
+      });
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Processing failed");
       setStep(5);

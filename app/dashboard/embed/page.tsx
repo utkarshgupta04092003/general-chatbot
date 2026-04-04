@@ -1,19 +1,27 @@
 "use client";
 
-import { Loader2, Zap } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ANALYTICS_EVENTS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
-import { Chatbot } from "./_components/types";
+import { Loader2, Zap } from "lucide-react";
+import { usePostHog } from "posthog-js/react";
+import { useEffect, useState } from "react";
+
+import { ChatbotIdSection } from "./_components/ChatbotIdSection";
 import { ChatbotSelector } from "./_components/ChatbotSelector";
 import { EmbedCodeSection } from "./_components/EmbedCodeSection";
-import { ChatbotIdSection } from "./_components/ChatbotIdSection";
+import { Chatbot } from "./_components/types";
 import { WidgetPreview } from "./_components/WidgetPreview";
 
 export default function EmbedPage() {
+  const posthog = usePostHog();
   const [chatbots, setChatbots] = useState<Chatbot[]>([]);
   const [selected, setSelected] = useState<Chatbot | null>(null);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    posthog.capture(ANALYTICS_EVENTS.EMBED_VIEWED);
+  }, [posthog]);
 
   useEffect(() => {
     fetch(ENDPOINTS.CHATBOTS)
@@ -26,7 +34,6 @@ export default function EmbedPage() {
   }, []);
 
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-  
   const embedCode = selected
     ? `<script
   src="${origin}/widget.js"
@@ -44,8 +51,12 @@ export default function EmbedPage() {
 ></iframe>`
     : "";
 
-  async function handleCopy(text: string) {
+  async function handleCopy(text: string, type: "script" | "iframe" | "id") {
     await navigator.clipboard.writeText(text);
+    posthog.capture(ANALYTICS_EVENTS.EMBED_COPIED, {
+      chatbotId: selected?.id,
+      copyType: type,
+    });
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -96,7 +107,7 @@ export default function EmbedPage() {
                 code={embedCode}
                 language="HTML"
                 copied={copied}
-                onCopy={handleCopy}
+                onCopy={(text) => handleCopy(text, "script")}
                 stepNumber={1}
               />
 
@@ -106,13 +117,13 @@ export default function EmbedPage() {
                 code={iframeCode}
                 language="HTML"
                 copied={false} // Independent copy for iframe would be better but keeping simple for now
-                onCopy={handleCopy}
+                onCopy={(text) => handleCopy(text, "iframe")}
                 stepNumber={2}
               />
 
               <ChatbotIdSection
                 chatbotId={selected?.id}
-                onCopy={handleCopy}
+                onCopy={(text) => handleCopy(text, "id")}
               />
             </div>
 

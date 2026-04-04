@@ -2,7 +2,10 @@
 
 import { CheckCircle, Loader2, Save, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ANALYTICS_EVENTS } from "@/lib/config";
+import { usePostHog } from "posthog-js/react";
 import { ENDPOINTS } from "@/lib/endpoint";
+
 import { ChatbotSettings } from "./_components/types";
 import { BasicInfoSection } from "./_components/BasicInfoSection";
 import { ToneSection } from "./_components/ToneSection";
@@ -11,11 +14,16 @@ import { SystemPromptSection } from "./_components/SystemPromptSection";
 import { SettingsPreview } from "./_components/SettingsPreview";
 
 export default function ChatbotSettingsPage() {
+  const posthog = usePostHog();
   const [chatbots, setChatbots] = useState<ChatbotSettings[]>([]);
   const [selected, setSelected] = useState<ChatbotSettings | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    posthog.capture(ANALYTICS_EVENTS.SETTINGS_VIEWED);
+  }, [posthog]);
 
   useEffect(() => {
     fetch(ENDPOINTS.CHATBOTS)
@@ -36,6 +44,17 @@ export default function ChatbotSettingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(selected),
       });
+
+      posthog.capture(ANALYTICS_EVENTS.CHATBOT_SETTINGS_UPDATED, {
+        chatbotId: selected.id,
+        name: selected.name,
+        systemPrompt: selected.systemPrompt,
+        welcomeMessage: selected.welcomeMessage,
+        tone: selected.tone,
+        primaryColor: selected.primaryColor,
+        agentType: selected.agentType,
+      });
+
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } finally {

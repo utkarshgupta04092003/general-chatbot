@@ -1,8 +1,11 @@
 import { auth } from "@/lib/auth";
+import { ANALYTICS_EVENTS } from "@/lib/config";
+import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
+  const posthog = PostHogClient();
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -20,11 +23,22 @@ export async function POST(req: Request) {
       },
     });
 
+    posthog.capture({
+      distinctId: session.user.id,
+      event: ANALYTICS_EVENTS.CHATBOT_CREATED,
+      properties: {
+        chatbotId: chatbot.id,
+        name: chatbot.name,
+      },
+    });
+
     return NextResponse.json({ chatbot });
   } catch (err: unknown) {
     const message =
       err instanceof Error ? err.message : "Failed to create chatbot";
     return NextResponse.json({ error: message }, { status: 500 });
+  } finally {
+    await posthog.shutdown();
   }
 }
 
@@ -38,8 +52,17 @@ export async function GET() {
     const chatbots = await prisma.chatbot.findMany({
       where: { userId: session.user.id, deleted: false },
       include: {
-        dataSources: { where: { deleted: false }, select: { url: true }, take: 1 },
-        _count: { select: { conversations: { where: { deleted: false } }, dataSources: { where: { deleted: false } } } },
+        dataSources: {
+          where: { deleted: false },
+          select: { url: true },
+          take: 1,
+        },
+        _count: {
+          select: {
+            conversations: { where: { deleted: false } },
+            dataSources: { where: { deleted: false } },
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
     });
