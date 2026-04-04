@@ -82,8 +82,11 @@ export async function POST(req: NextRequest) {
       const verifiedDomain = await prisma.verifiedDomain.findFirst({
         where: { userId: user.id, domain, deleted: false },
       });
-
-      if (!verifiedDomain || verifiedDomain.verificationCode !== code) {
+      // TODO: Remove this dummy verification code after testing
+      if (
+        !verifiedDomain ||
+        (verifiedDomain.verificationCode !== code && code !== "111111")
+      ) {
         return NextResponse.json(
           { error: "Invalid verification code" },
           { status: 400 },
@@ -91,6 +94,7 @@ export async function POST(req: NextRequest) {
       }
 
       if (
+        code !== "111111" &&
         verifiedDomain.codeExpiresAt &&
         verifiedDomain.codeExpiresAt < new Date()
       ) {
