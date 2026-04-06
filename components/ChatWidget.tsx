@@ -220,7 +220,14 @@ export default function ChatWidget({
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50">
+          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50 relative group/messages scroll-smooth">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.15] select-none p-10">
+              <p className="text-sm font-semibold text-black text-center tracking-widest leading-relaxed">
+                Responses are generated using AI
+                <br />
+                and may contain mistakes
+              </p>
+            </div>
             {messages.map((msg, i) => (
               <div
                 key={i}
@@ -363,7 +370,7 @@ export default function ChatWidget({
                 )}
               </button>
             </form>
-            <p className="text-center text-[10px] text-gray-300 mt-2">
+            <p className="text-center text-[10px] text-gray-300 mt-2 leading-relaxed">
               Powered by {APP_NAME} AI
             </p>
           </div>

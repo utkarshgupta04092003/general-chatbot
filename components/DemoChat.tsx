@@ -108,7 +108,8 @@ export default function DemoChat() {
       </div>
 
       {/* Messages */}
-      <div className="h-72 overflow-y-auto p-4 space-y-3">
+      <div className="h-72 overflow-y-auto p-4 space-y-3 relative group/demo-messages">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none p-10"></div>
         {messages.map((msg, i) => (
           <div
             key={i}
@@ -189,6 +190,11 @@ export default function DemoChat() {
             )}
           </button>
         </form>
+        <p className="text-center text-[10px] text-slate-500 mt-2 leading-relaxed">
+          Responses are generated using AI and may contain mistakes.
+          <br />
+          Powered by {APP_NAME} AI
+        </p>
       </div>
     </div>
   );
