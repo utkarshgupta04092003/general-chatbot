@@ -150,20 +150,43 @@ export async function POST(req: Request) {
     const systemMessage = `
       ${chatbot.systemPrompt || "You are a helpful AI assistant."}
       
+      TONE: ${chatbot.tone || "professional"}
+      
       INSTRUCTIONS:
       1. Answer the user's question directly and concisely using the provided context.
       2. DO NOT mention "the provided context", "the document", or "the text" in your response. Act as if you naturally know this information.
       3. If the answer is not in the context, politely say you don't have enough information to answer that specific question.
-      4. Maintain a professional and helpful tone.
+      4. Avoid repetitive language and maintain a tone that matches the persona above.
+      5. Write in a natural, human-like way. Avoid using em dashes or overly formal punctuation. Keep the response conversational and easy to read.
       
       Context:
       ${context}
     `;
 
+    // Fetch last 6 messages for context (excluding the current user message)
+    const history = await prisma.message.findMany({
+      where: {
+        conversationId: conversation.id,
+        id: { not: userMessage.id },
+        deleted: false,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+    });
+
+    const contextMessages = history.reverse().map((msg) => ({
+      role: msg.role as "user" | "assistant",
+      content:
+        msg.role === CHAT_ROLES.ASSISTANT
+          ? msg.content.replace(/\n\n\*\*Sources:\*\*[\s\S]*$/, "").trim()
+          : msg.content,
+    }));
+
     const aiResponse = await client.chat.completions.create({
       model: GPT_5_2,
       messages: [
         { role: CHAT_ROLES.SYSTEM, content: systemMessage },
+        ...contextMessages,
         { role: CHAT_ROLES.USER, content: message },
       ],
     });
