@@ -1,5 +1,7 @@
 "use client";
 
+import { PLAN_LIMITS } from "@/lib/config";
+
 import {
   AlertCircle,
   Globe,
@@ -68,8 +70,8 @@ export function UrlInputStep({
           </button>
         </div>
         <p className="text-xs text-slate-500 mt-3">
-          We&apos;ll discover up to 10 pages (free plan). Upgrade for unlimited
-          page scanning.
+          We&apos;ll discover up to {PLAN_LIMITS.FREE.MAX_PAGES} pages (free
+          plan). Upgrade for unlimited page scanning.
         </p>
       </div>
 

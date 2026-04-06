@@ -1,0 +1,180 @@
+"use client";
+
+import { createEnquiry } from "@/app/actions/enquiry";
+import { MOBILE_PLACEHOLDER } from "@/lib/config";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Loader2,
+  Mail,
+  Phone,
+  Send,
+  X,
+} from "lucide-react";
+import { useState } from "react";
+
+type WaitlistModalProps = {
+  plan: string;
+  isOpen: boolean;
+  onClose: () => void;
+};
+
+export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [error, setError] = useState("");
+
+  if (!isOpen) return null;
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const result = await createEnquiry(email, plan, description, mobile);
+      if (result.success) {
+        setStatus("success");
+        setTimeout(() => {
+          onClose();
+          setStatus("idle");
+          setEmail("");
+          setMobile("");
+          setDescription("");
+        }, 3000);
+      } else {
+        setStatus("error");
+        setError(result.error || "Failed to submit enquiry");
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-300"
+        onClick={onClose}
+      />
+
+      {/* Modal Content */}
+      <div className="relative w-full max-w-lg bg-slate-900 border border-white/10 rounded-2xl shadow-2xl p-6 overflow-hidden animate-in zoom-in-95 duration-300">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <Mail className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white">
+                Join the waitlist
+              </h2>
+              <p className="text-xs text-slate-400">
+                Enquiring for {plan} Plan
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-white/5 rounded-lg transition-colors text-slate-400"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {status === "success" ? (
+          <div className="py-8 text-center animate-in zoom-in-95 duration-300">
+            <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="w-8 h-8 text-green-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">
+              We&apos;ve got you!
+            </h3>
+            <p className="text-slate-400 text-sm">
+              Thanks for your interest. We&apos;ll reach out to {email} as soon
+              as the {plan} plan is ready.
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                Phone Number (Optional)
+              </label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <input
+                  type="tel"
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
+                  placeholder={MOBILE_PLACEHOLDER}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                Tell us about your needs (Optional)
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="How many chatbots do you need? Any custom requirements?"
+                rows={4}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
+              />
+            </div>
+
+            {status === "error" && (
+              <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-400">
+                <AlertCircle className="w-5 h-5 shrink-0" />
+                <span className="text-sm">{error}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="group w-full flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/20"
+            >
+              {loading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Send className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              )}
+              {loading ? "Submitting..." : "Submit Enquiry"}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}

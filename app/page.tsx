@@ -1,4 +1,5 @@
 import DemoChat from "@/components/DemoChat";
+import { PricingSection } from "@/components/PricingSection";
 import { auth } from "@/lib/auth";
 import { APP_NAME } from "@/lib/config";
 import {
@@ -463,124 +464,7 @@ export default async function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Free",
-                price: "$0",
-                period: "forever",
-                description: "Perfect for testing",
-                features: [
-                  "10 pages indexed",
-                  "100 messages/month",
-                  "1 chatbot",
-                  "Basic analytics",
-                  "Embed on 1 site",
-                ],
-                cta: "Start Free",
-                popular: false,
-                href: "/signup",
-              },
-              {
-                name: "Pro",
-                price: "$29",
-                period: "/month",
-                description: "For growing businesses",
-                features: [
-                  "500 pages indexed",
-                  "5,000 messages/month",
-                  "5 chatbots",
-                  "Advanced analytics",
-                  "Unlimited embeds",
-                  "Priority support",
-                  "Custom branding",
-                ],
-                cta: "Start Pro Trial",
-                popular: true,
-                href: "/signup",
-              },
-              {
-                name: "Enterprise",
-                price: "$99",
-                period: "/month",
-                description: "For large organizations",
-                features: [
-                  "Unlimited pages",
-                  "Unlimited messages",
-                  "Unlimited chatbots",
-                  "Custom AI model",
-                  "SSO & SAML",
-                  "SLA guarantee",
-                  "Dedicated support",
-                ],
-                cta: "Contact Sales",
-                popular: false,
-                href: "/signup",
-              },
-            ].map((plan) => (
-              <div
-                key={plan.name}
-                className={`relative rounded-2xl p-8 ${
-                  plan.popular
-                    ? "bg-indigo-600 border-2 border-indigo-400 shadow-2xl shadow-indigo-500/30"
-                    : "bg-slate-900 border border-white/5"
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-white text-indigo-600 text-xs font-bold rounded-full">
-                    MOST POPULAR
-                  </div>
-                )}
-                <div className="mb-6">
-                  <div className="text-sm text-slate-400 mb-1">{plan.name}</div>
-                  <div className="flex items-end gap-1 mb-1">
-                    <span className="text-4xl font-bold">{plan.price}</span>
-                    <span
-                      className={`text-sm mb-1.5 ${plan.popular ? "text-indigo-200" : "text-slate-500"}`}
-                    >
-                      {plan.period}
-                    </span>
-                  </div>
-                  <p
-                    className={`text-sm ${plan.popular ? "text-indigo-200" : "text-slate-500"}`}
-                  >
-                    {plan.description}
-                  </p>
-                </div>
-
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className="flex items-center gap-2 text-sm"
-                    >
-                      <CheckCircle
-                        className={`w-4 h-4 shrink-0 ${plan.popular ? "text-indigo-200" : "text-indigo-400"}`}
-                      />
-                      <span
-                        className={
-                          plan.popular ? "text-indigo-100" : "text-slate-300"
-                        }
-                      >
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  href={plan.href}
-                  className={`block text-center py-3 rounded-xl font-medium text-sm transition-all ${
-                    plan.popular
-                      ? "bg-white text-indigo-600 hover:bg-indigo-50"
-                      : "bg-white/5 hover:bg-white/10 border border-white/10 text-white"
-                  }`}
-                >
-                  {plan.cta}
-                </Link>
-              </div>
-            ))}
-          </div>
+          <PricingSection session={session} />
         </div>
       </section>
 

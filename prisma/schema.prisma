@@ -139,3 +139,12 @@ model VerifiedDomain {
 
   @@unique([userId, domain])
 }
+
+model Enquiry {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  email       String
+  mobile      String?  // Optional phone number
+  plan        String   // Starter, Premium
+  description String?
+  createdAt   DateTime @default(now())
+}

@@ -55,9 +55,46 @@ export const ANALYTICS_EVENTS = {
   CONVERSATIONS_VIEWED: "conversations_viewed",
   SETTINGS_VIEWED: "settings_viewed",
   EMBED_VIEWED: "embed_viewed",
-  BILLING_VIEWED: "billing_viewed",
+  USAGE_VIEWED: "usage_viewed",
   DATA_SOURCES_VIEWED: "data_sources_viewed",
   CONVERSATION_OPENED: "conversation_opened",
   DATA_SOURCE_FILTER_CHANGED: "data_source_filter_changed",
   EMBED_COPIED: "embed_copied",
 } as const;
+
+export const REGION: "IN" | "GL" = "IN";
+
+export const CURRENCY_SYMBOL = REGION === "IN" ? "₹" : "$";
+export const MOBILE_PLACEHOLDER =
+  REGION === "IN" ? "+91 99999 99999" : "+1 (555) 000-0000";
+
+export const PLAN_LIMITS = {
+  FREE: {
+    MAX_PAGES: 10,
+    MAX_MESSAGES: 100,
+    MAX_CHATBOTS: 1,
+  },
+  STARTER: {
+    MAX_PAGES: 50,
+    MAX_MESSAGES: 1000,
+    MAX_CHATBOTS: 3,
+  },
+  PREMIUM: {
+    MAX_PAGES: 100,
+    MAX_MESSAGES: 5000,
+    MAX_CHATBOTS: 10,
+  },
+} as const;
+
+export const PLAN_PRICES =
+  REGION === "IN"
+    ? ({
+        FREE: 0,
+        STARTER: 1499,
+        PREMIUM: 4499,
+      } as const)
+    : ({
+        FREE: 0,
+        STARTER: 19,
+        PREMIUM: 49,
+      } as const);

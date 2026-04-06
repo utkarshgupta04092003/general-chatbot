@@ -194,7 +194,9 @@ export default function AnalyticsPage() {
             >
               <m.icon className="w-5 h-5" />
             </div>
-            <div className="text-2xl font-bold text-white mb-1">{m.value}</div>
+            <div className="text-2xl font-bold text-white mb-1">
+              {m.value?.toLocaleString()}
+            </div>
             <div className="text-slate-500 text-xs font-medium uppercase tracking-wider">
               {m.label}
             </div>
@@ -314,7 +316,7 @@ export default function AnalyticsPage() {
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <span className="text-2xl font-bold text-white">
-                {data?.overview.totalUserMessages}
+                {data?.overview.totalUserMessages.toLocaleString()}
               </span>
               <span className="text-[10px] text-slate-500 uppercase">
                 Queries
@@ -334,7 +336,9 @@ export default function AnalyticsPage() {
                   />
                   {c.name}
                 </div>
-                <span className="text-white font-medium">{c.value}</span>
+                <span className="text-white font-medium">
+                  {c.value.toLocaleString()}
+                </span>
               </div>
             ))}
           </div>
@@ -362,7 +366,7 @@ export default function AnalyticsPage() {
                   </div>
                 </div>
                 <div className="text-xl font-bold text-white">
-                  {data?.feedback.helpfulCount}
+                  {data?.feedback.helpfulCount.toLocaleString()}
                 </div>
               </div>
               <div className="flex items-center justify-between">
@@ -380,7 +384,7 @@ export default function AnalyticsPage() {
                   </div>
                 </div>
                 <div className="text-xl font-bold text-white">
-                  {data?.feedback.unhelpfulCount}
+                  {data?.feedback.unhelpfulCount.toLocaleString()}
                 </div>
               </div>
             </div>
@@ -437,7 +441,7 @@ export default function AnalyticsPage() {
                     </GlobalTooltip>
                   </div>
                   <span className="text-xs font-semibold text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full shrink-0 ml-4">
-                    {s.count}
+                    {s.count.toLocaleString()}
                   </span>
                 </div>
               ))
@@ -472,7 +476,7 @@ export default function AnalyticsPage() {
                   </p>
                 </div>
                 <div className="text-xs font-bold text-indigo-500/80 bg-indigo-500/10 px-2.5 py-1 rounded-lg shrink-0">
-                  {q.count} times
+                  {q.count.toLocaleString()} times
                 </div>
               </div>
             ))}
@@ -497,11 +501,11 @@ export default function AnalyticsPage() {
                 </div>
               </div>
               <div className="text-2xl font-bold text-amber-500">
-                {data?.unanswered.count}
+                {data?.unanswered.count.toLocaleString()}
               </div>
             </div>
-            <div className="space-y-3">
-              {data?.unanswered?.list?.slice(0, 5).map((u, i) => (
+            <div className="space-y-3 max-h-[320px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+              {data?.unanswered?.list?.map((u, i) => (
                 <div
                   key={i}
                   className="text-xs p-3 bg-slate-800/50 rounded-xl text-slate-300 border border-white/5"
@@ -538,11 +542,11 @@ export default function AnalyticsPage() {
                 </div>
               </div>
               <div className="text-2xl font-bold text-rose-500">
-                {data?.lowConfidence.count}
+                {data?.lowConfidence.count.toLocaleString()}
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-2">
-              {data?.lowConfidence?.samples?.slice(0, 3).map((s, i) => (
+            <div className="grid grid-cols-1 gap-2 max-h-[240px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+              {data?.lowConfidence?.samples?.map((s, i) => (
                 <div
                   key={i}
                   className="flex items-center justify-between p-2 bg-slate-800/30 rounded-lg text-[10px]"
