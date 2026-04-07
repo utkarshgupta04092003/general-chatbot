@@ -3,8 +3,9 @@
 import {
   AGENT_PROMPT_TEMPLATES,
   AGENT_TYPE_OPTIONS,
-  ChatbotSettings,
-} from "./types";
+  DEFAULT_SYSTEM_PROMPT,
+} from "@/lib/config";
+import { ChatbotSettings } from "./types";
 
 type SystemPromptSectionProps = {
   selected: ChatbotSettings;
@@ -61,7 +62,9 @@ export function SystemPromptSection({
           onChange({ ...selected, systemPrompt: e.target.value })
         }
         rows={20}
-        placeholder="You are a helpful assistant trained on [Company] documentation..."
+        placeholder={
+          DEFAULT_SYSTEM_PROMPT.split("\n").slice(0, 5).join("\n") + "..."
+        }
         className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none font-mono"
       />
     </div>

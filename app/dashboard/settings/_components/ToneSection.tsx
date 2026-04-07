@@ -1,6 +1,7 @@
 "use client";
 
-import { ChatbotSettings, TONE_OPTIONS } from "./types";
+import { TONE_OPTIONS } from "@/lib/config";
+import { ChatbotSettings } from "./types";
 
 type ToneSectionProps = {
   selected: ChatbotSettings;

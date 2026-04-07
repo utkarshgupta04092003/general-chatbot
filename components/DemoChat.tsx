@@ -61,10 +61,15 @@ export default function DemoChat() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length > 1 && scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [messages]);
 
   async function sendMessage() {
@@ -108,7 +113,10 @@ export default function DemoChat() {
       </div>
 
       {/* Messages */}
-      <div className="h-72 overflow-y-auto p-4 space-y-3 relative group/demo-messages">
+      <div
+        ref={scrollRef}
+        className="h-72 overflow-y-auto p-4 space-y-3 relative group/demo-messages"
+      >
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none p-10"></div>
         {messages.map((msg, i) => (
           <div
@@ -144,7 +152,6 @@ export default function DemoChat() {
             </div>
           </div>
         )}
-        <div ref={bottomRef} />
       </div>
 
       {/* Suggested questions */}

@@ -1,17 +1,17 @@
 "use client";
 
-import { CheckCircle, Loader2, Save, Settings } from "lucide-react";
-import { useEffect, useState } from "react";
 import { ANALYTICS_EVENTS } from "@/lib/config";
-import { usePostHog } from "posthog-js/react";
 import { ENDPOINTS } from "@/lib/endpoint";
+import { CheckCircle, Loader2, Save, Settings } from "lucide-react";
+import { usePostHog } from "posthog-js/react";
+import { useEffect, useState } from "react";
 
-import { ChatbotSettings } from "./_components/types";
 import { BasicInfoSection } from "./_components/BasicInfoSection";
-import { ToneSection } from "./_components/ToneSection";
 import { ColorSection } from "./_components/ColorSection";
-import { SystemPromptSection } from "./_components/SystemPromptSection";
 import { SettingsPreview } from "./_components/SettingsPreview";
+import { SystemPromptSection } from "./_components/SystemPromptSection";
+import { ToneSection } from "./_components/ToneSection";
+import { ChatbotSettings } from "./_components/types";
 
 export default function ChatbotSettingsPage() {
   const posthog = usePostHog();

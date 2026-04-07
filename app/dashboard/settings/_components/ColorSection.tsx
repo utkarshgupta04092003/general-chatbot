@@ -1,7 +1,8 @@
 "use client";
 
+import { COLORS } from "@/lib/config";
 import { CheckCircle, Plus } from "lucide-react";
-import { ChatbotSettings, COLORS } from "./types";
+import { ChatbotSettings } from "./types";
 
 type ColorSectionProps = {
   selected: ChatbotSettings;

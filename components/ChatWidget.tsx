@@ -47,7 +47,7 @@ export default function ChatWidget({
   const [loading, setLoading] = useState(false);
   const [fetchingHistory, setFetchingHistory] = useState(false);
   const [sessionId, setSessionId] = useState("");
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // 1. Initialize session
@@ -125,7 +125,12 @@ export default function ChatWidget({
   }
 
   useEffect(() => {
-    if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (open && scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [messages, open]);
 
   async function sendMessage() {
@@ -220,7 +225,10 @@ export default function ChatWidget({
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50 relative group/messages scroll-smooth">
+          <div
+            ref={scrollRef}
+            className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50 relative group/messages scroll-smooth"
+          >
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.15] select-none p-10">
               <p className="text-sm font-semibold text-black text-center tracking-widest leading-relaxed">
                 Responses are generated using AI
@@ -335,7 +343,6 @@ export default function ChatWidget({
                 <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
               </div>
             )}
-            <div ref={bottomRef} />
           </div>
 
           {/* Input */}

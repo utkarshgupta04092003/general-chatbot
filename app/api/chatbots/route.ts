@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { ANALYTICS_EVENTS } from "@/lib/config";
+import { ANALYTICS_EVENTS, DEFAULT_SYSTEM_PROMPT } from "@/lib/config";
 import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
@@ -19,6 +19,7 @@ export async function POST(req: Request) {
         userId: session.user.id,
         name: name || "AI Assistant",
         welcomeMessage: `Hello! I'm ${name || "AI Assistant"}. How can I help you today?`,
+        systemPrompt: DEFAULT_SYSTEM_PROMPT,
         status: "training",
       },
     });
