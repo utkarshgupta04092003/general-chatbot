@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "check-types": "tsc --noEmit",
-    "build": "npm run check-types && next build",
+    "build": "prisma generate && npm run check-types && next build",
     "start": "next start",
     "lint": "eslint"
   },
