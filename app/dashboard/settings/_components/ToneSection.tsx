@@ -8,6 +8,7 @@ type ToneSectionProps = {
   onChange: (settings: ChatbotSettings) => void;
 };
 
+
 export function ToneSection({ selected, onChange }: ToneSectionProps) {
   return (
     <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6">
