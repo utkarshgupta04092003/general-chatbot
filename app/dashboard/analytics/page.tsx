@@ -2,6 +2,8 @@
 
 import { MarkdownMessage } from "@/components/MarkdownMessage";
 import { Tooltip as GlobalTooltip } from "@/components/Tooltip";
+import { ANALYTICS_EVENTS } from "@/lib/config";
+import { ENDPOINTS } from "@/lib/endpoint";
 import { motion } from "framer-motion";
 import {
   AlertCircle,
@@ -14,7 +16,6 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import { ANALYTICS_EVENTS } from "@/lib/config";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
 import {
@@ -79,7 +80,7 @@ export default function AnalyticsPage() {
   }, [posthog]);
 
   useEffect(() => {
-    fetch("/api/chatbots")
+    fetch(ENDPOINTS.CHATBOTS)
       .then((res) => res.json())
       .then((d) => {
         setChatbots(d.chatbots || []);
@@ -97,7 +98,7 @@ export default function AnalyticsPage() {
     async function fetchAnalytics() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/analytics?chatbotId=${chatbotId}`);
+        const res = await fetch(`${ENDPOINTS.ANALYTICS}?chatbotId=${chatbotId}`);
         const d = await res.json();
         setData(d);
       } finally {

@@ -1,6 +1,7 @@
+import { auth } from "@/lib/auth";
+import { CHAT_ROLES, FEEDBACK_TEXT } from "@/lib/config";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
 
 export async function GET(req: Request) {
   try {
@@ -58,10 +59,14 @@ export async function GET(req: Request) {
       topSourcesResult,
     ] = await Promise.all([
       prisma.conversation.count({ where: { chatbotId, deleted: false } }),
-      prisma.message.count({ where: baseMessageWhere }),
-      prisma.message.count({ where: { ...baseMessageWhere, role: "user" } }),
       prisma.message.count({
-        where: { ...baseMessageWhere, role: "assistant" },
+        where: { ...baseMessageWhere, role: CHAT_ROLES.ASSISTANT },
+      }),
+      prisma.message.count({
+        where: { ...baseMessageWhere, role: CHAT_ROLES.USER },
+      }),
+      prisma.message.count({
+        where: { ...baseMessageWhere, role: CHAT_ROLES.ASSISTANT },
       }),
       prisma.conversation.groupBy({
         by: ["sessionId"],
@@ -72,14 +77,26 @@ export async function GET(req: Request) {
         select: { createdAt: true },
       }),
       prisma.message.findMany({
-        where: { ...baseMessageWhere, createdAt: { gte: thirtyDaysAgo } },
+        where: {
+          ...baseMessageWhere,
+          role: CHAT_ROLES.ASSISTANT,
+          createdAt: { gte: thirtyDaysAgo },
+        },
         select: { createdAt: true },
       }),
       prisma.message.count({
-        where: { ...baseMessageWhere, role: "assistant", unanswered: true },
+        where: {
+          ...baseMessageWhere,
+          role: CHAT_ROLES.ASSISTANT,
+          unanswered: true,
+        },
       }),
       prisma.message.findMany({
-        where: { ...baseMessageWhere, role: "assistant", unanswered: true },
+        where: {
+          ...baseMessageWhere,
+          role: CHAT_ROLES.ASSISTANT,
+          unanswered: true,
+        },
         orderBy: { createdAt: "desc" },
         take: 20,
         select: { content: true, createdAt: true },
@@ -87,14 +104,14 @@ export async function GET(req: Request) {
       prisma.message.count({
         where: {
           ...baseMessageWhere,
-          role: "assistant",
+          role: CHAT_ROLES.ASSISTANT,
           confidence: { lt: 0.5 },
         },
       }),
       prisma.message.findMany({
         where: {
           ...baseMessageWhere,
-          role: "assistant",
+          role: CHAT_ROLES.ASSISTANT,
           confidence: { lt: 0.5 },
         },
         orderBy: { createdAt: "desc" },
@@ -102,28 +119,44 @@ export async function GET(req: Request) {
         select: { content: true, confidence: true, createdAt: true },
       }),
       prisma.message.count({
-        where: { ...baseMessageWhere, feedback: "helpful" },
+        where: { ...baseMessageWhere, feedback: FEEDBACK_TEXT.HELPFUL },
       }),
       prisma.message.count({
-        where: { ...baseMessageWhere, feedback: "unhelpful" },
+        where: { ...baseMessageWhere, feedback: FEEDBACK_TEXT.UNHELPFUL },
       }),
       // Individual category counts (safer than groupBy for content strings in Mongo)
       prisma.message.count({
-        where: { ...baseMessageWhere, role: "user", category: "pricing" },
+        where: {
+          ...baseMessageWhere,
+          role: CHAT_ROLES.USER,
+          category: "pricing",
+        },
       }),
       prisma.message.count({
-        where: { ...baseMessageWhere, role: "user", category: "product" },
+        where: {
+          ...baseMessageWhere,
+          role: CHAT_ROLES.USER,
+          category: "product",
+        },
       }),
       prisma.message.count({
-        where: { ...baseMessageWhere, role: "user", category: "support" },
+        where: {
+          ...baseMessageWhere,
+          role: CHAT_ROLES.USER,
+          category: "support",
+        },
       }),
       prisma.message.count({
-        where: { ...baseMessageWhere, role: "user", category: "other" },
+        where: {
+          ...baseMessageWhere,
+          role: CHAT_ROLES.USER,
+          category: "other",
+        },
       }),
       prisma.message.findMany({
         where: {
           ...baseMessageWhere,
-          role: "assistant",
+          role: CHAT_ROLES.ASSISTANT,
           sourceUrls: { isEmpty: false },
         },
         select: { sourceUrls: true },
@@ -134,12 +167,12 @@ export async function GET(req: Request) {
     const topQuestionsResult = await prisma.message
       .groupBy({
         by: ["content"],
-        where: { ...baseMessageWhere, role: "user" },
+        where: { ...baseMessageWhere, role: CHAT_ROLES.USER },
         _count: { content: true },
         orderBy: { _count: { content: "desc" } },
         take: 10,
       })
-      .catch(() => []); // Graceful fallback if groupBy content fails
+      .catch(() => []);
 
     // --- IN-MEMORY PROCESSING ---
 

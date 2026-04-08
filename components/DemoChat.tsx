@@ -1,13 +1,19 @@
 "use client";
 
-import { APP_NAME, CHAT_ROLES, PLAN_LIMITS, PLAN_PRICES } from "@/lib/config";
+import {
+  APP_NAME,
+  CHAT_ROLES,
+  CURRENCY_SYMBOL,
+  PLAN_LIMITS,
+  PLAN_PRICES,
+} from "@/lib/config";
 import { ChatRole } from "@/lib/declaration";
 import { Loader2, MessageSquare, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const DEMO_RESPONSES: Record<string, string> = {
   default: `I'm a demo chatbot trained on ${APP_NAME}'s own documentation. I can answer questions about how ${APP_NAME} works, pricing, features, and setup. Try asking me something!`,
-  pricing: `${APP_NAME} offers 3 plans:\n\n• **Free**: ${PLAN_LIMITS.FREE.MAX_PAGES} pages, ${PLAN_LIMITS.FREE.MAX_MESSAGES.toLocaleString()} messages/month\n• **Starter** ($${PLAN_PRICES.STARTER}/mo): ${PLAN_LIMITS.STARTER.MAX_PAGES} pages, ${PLAN_LIMITS.STARTER.MAX_MESSAGES.toLocaleString()} messages/month, ${PLAN_LIMITS.STARTER.MAX_CHATBOTS} chatbots\n• **Premium** ($${PLAN_PRICES.PREMIUM}/mo): ${PLAN_LIMITS.PREMIUM.MAX_PAGES} pages, ${PLAN_LIMITS.PREMIUM.MAX_MESSAGES.toLocaleString()} messages/month, ${PLAN_LIMITS.PREMIUM.MAX_CHATBOTS} chatbots\n\nNo credit card required for the free plan!`,
+  pricing: `${APP_NAME} offers 3 plans:\n\n• **Free**: ${PLAN_LIMITS.FREE.MAX_PAGES} pages, ${PLAN_LIMITS.FREE.MAX_MESSAGES.toLocaleString()} messages/month\n• **Starter** (${CURRENCY_SYMBOL}${PLAN_PRICES.STARTER}/mo): ${PLAN_LIMITS.STARTER.MAX_PAGES} pages, ${PLAN_LIMITS.STARTER.MAX_MESSAGES.toLocaleString()} messages/month, ${PLAN_LIMITS.STARTER.MAX_CHATBOTS} chatbots\n• **Premium** (${CURRENCY_SYMBOL}${PLAN_PRICES.PREMIUM}/mo): ${PLAN_LIMITS.PREMIUM.MAX_PAGES} pages, ${PLAN_LIMITS.PREMIUM.MAX_MESSAGES.toLocaleString()} messages/month, ${PLAN_LIMITS.PREMIUM.MAX_CHATBOTS} chatbots\n\nNo credit card required for the free plan!`,
   setup: `Setting up ${APP_NAME} takes 3 simple steps:\n1. Paste your website URL\n2. We crawl and index your pages automatically\n3. Copy one line of script and paste it on your site\n\nTotal setup time: under 2 minutes!`,
   embed: `To embed the chatbot on your website, just add this script tag before your closing \`</body>\` tag:\n\n\`<script src="${APP_NAME.toLowerCase()}.ai/widget.js" data-id="YOUR_ID"></script>\`\n\nThat\'s it! No other configuration needed.`,
   accuracy: `${APP_NAME} uses RAG (Retrieval-Augmented Generation) — it only answers from your actual content, so it won't hallucinate or make things up. Accuracy depends on how well your source pages cover the topic.`,
