@@ -1,6 +1,6 @@
+import ChatWidget from "@/components/ChatWidget";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import ChatWidget from "@/components/ChatWidget";
 
 export default async function WidgetPage({
   params,
@@ -13,6 +13,11 @@ export default async function WidgetPage({
 
   return (
     <div className="min-h-screen bg-transparent">
+      <style
+        dangerouslySetInnerHTML={{
+          __html: "html, body { background-color: transparent !important; }",
+        }}
+      />
       <ChatWidget
         chatbotId={chatbot.id}
         chatbotName={chatbot.name}
