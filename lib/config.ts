@@ -1,4 +1,7 @@
 export const APP_NAME = "Chatbase";
+export const CONTACT_EMAIL = "hello@chatbase.com";
+export const SALES_EMAIL = "sales@chatbase.com";
+export const SUPPORT_EMAIL = "support@chatbase.com";
 
 export const GPT_5_2 = "gpt-5.2";
 export const MISTRAL_LARGE_3 = "Mistral-Large-3";
