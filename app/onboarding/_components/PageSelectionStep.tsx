@@ -85,18 +85,32 @@ export function PageSelectionStep({
                 </button>
               </div>
               <div className="flex gap-3">
-                <button
-                  onClick={() => setSelectedUrls(new Set(crawledUrls))}
-                  className="text-xs text-indigo-400 hover:text-indigo-300"
-                >
-                  Select all
-                </button>
-                <button
-                  onClick={() => setSelectedUrls(new Set())}
-                  className="text-xs text-slate-500 hover:text-slate-300"
-                >
-                  Clear
-                </button>
+                {crawledUrls.length > 0 &&
+                selectedUrls.size === crawledUrls.length ? (
+                  <button
+                    onClick={() => setSelectedUrls(new Set())}
+                    className="text-xs text-indigo-400 hover:text-indigo-300"
+                  >
+                    Deselect all
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setSelectedUrls(new Set(crawledUrls))}
+                      className="text-xs text-indigo-400 hover:text-indigo-300"
+                    >
+                      Select all
+                    </button>
+                    {selectedUrls.size > 0 && (
+                      <button
+                        onClick={() => setSelectedUrls(new Set())}
+                        className="text-xs text-slate-500 hover:text-slate-300"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </>
+                )}
               </div>
             </div>
             <div className="divide-y divide-white/5 max-h-80 overflow-y-auto">
