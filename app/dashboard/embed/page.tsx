@@ -69,7 +69,7 @@ export default function EmbedPage() {
     );
 
   return (
-    <div>
+    <div className="min-w-0 overflow-hidden">
       <div className="mb-8">
         <h1 className="text-2xl font-bold">Embed Your Chatbot</h1>
         <p className="text-slate-400 text-sm mt-1">
@@ -91,8 +91,8 @@ export default function EmbedPage() {
             onSelect={setSelected}
           />
 
-          <div className="grid lg:grid-cols-2 gap-6">
-            <div className="space-y-6">
+          <div className="grid lg:grid-cols-2 gap-6 min-w-0">
+            <div className="space-y-6 min-w-0">
               <EmbedCodeSection
                 title="Script Tag (Recommended)"
                 description={

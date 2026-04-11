@@ -3,7 +3,7 @@ import { Code2, Globe, Sparkles } from "lucide-react";
 export function HowItWorks() {
   return (
     <section id="how-it-works" className="py-24 px-4">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-[70rem] mx-auto">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-violet-500/10 border border-violet-500/20 rounded-full text-xs text-violet-300 font-medium mb-4">
             Simple Setup

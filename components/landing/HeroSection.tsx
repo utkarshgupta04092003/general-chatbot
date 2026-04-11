@@ -5,15 +5,15 @@ import Link from "next/link";
 
 export function HeroSection({ session }: { session: Session | null }) {
   return (
-    <section className="relative pt-32 pb-24 px-4 hero-gradient">
+    <section className="relative pt-[8rem] pb-[6rem] px-[1.5rem] md:px-[3rem] hero-gradient overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-1/4 w-96 h-96 bg-indigo-600 rounded-full blur-[160px] opacity-15" />
-        <div className="absolute top-40 right-1/4 w-72 h-72 bg-violet-600 rounded-full blur-[160px] opacity-10" />
-        <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[600px] h-40 bg-cyan-500 rounded-full blur-[120px] opacity-5" />
+        <div className="absolute top-[5rem] left-1/4 w-[24rem] h-[24rem] bg-indigo-600 rounded-full blur-[10rem] opacity-15" />
+        <div className="absolute top-[10rem] right-1/4 w-[18rem] h-[18rem] bg-violet-600 rounded-full blur-[10rem] opacity-10" />
+        <div className="absolute -bottom-[5rem] left-1/2 -translate-x-1/2 w-[37.5rem] h-[2.5rem] bg-cyan-500 rounded-full blur-[7.5rem] opacity-5" />
       </div>
 
-      <div className="max-w-5xl mx-auto text-center relative">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-xs text-indigo-300 font-medium mb-8 animate-fade-in-up">
+      <div className="w-full max-w-[80rem] mx-auto text-center relative">
+        <div className="inline-flex items-center gap-[0.5rem] px-[0.75rem] py-[0.375rem] bg-indigo-500/10 border border-indigo-500/20 rounded-full text-[0.75rem] text-indigo-300 font-medium mb-[2rem] animate-fade-in-up">
           <Sparkles className="w-3 h-3" />
           Powered by GPT-4 + RAG Technology
         </div>
@@ -65,8 +65,8 @@ export function HeroSection({ session }: { session: Session | null }) {
         </div>
 
         {/* Hero browser mockup */}
-        <div className="relative mx-auto max-w-4xl animate-fade-in-up delay-500">
-          <div className="bg-slate-900 rounded-2xl border border-white/10 overflow-hidden shadow-2xl shadow-indigo-500/10">
+        <div className="relative mx-auto w-full max-w-[64rem] animate-fade-in-up delay-500 hidden md:block px-[1.5rem] lg:px-0">
+          <div className="bg-slate-900 rounded-[1rem] border border-white/10 overflow-hidden shadow-2xl shadow-indigo-500/10">
             {/* Browser bar */}
             <div className="flex items-center gap-2 px-4 py-3 bg-slate-800/50 border-b border-white/5">
               <div className="flex gap-1.5">

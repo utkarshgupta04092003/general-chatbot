@@ -105,7 +105,9 @@ export function UrlSelectionModal({
                         if (e.target.checked) {
                           setSelectedUrls([...selectedUrls, u]);
                         } else {
-                          setSelectedUrls(selectedUrls.filter((sl) => sl !== u));
+                          setSelectedUrls(
+                            selectedUrls.filter((sl) => sl !== u),
+                          );
                         }
                       }}
                       className="w-4 h-4 rounded text-indigo-500 bg-slate-800 border-white/10 focus:ring-offset-slate-900 focus:ring-indigo-500"
@@ -120,8 +122,7 @@ export function UrlSelectionModal({
                 ))}
                 {discoveredUrls.length === 0 && (
                   <div className="p-6 text-center text-slate-500 text-sm">
-                    No pages found. You can try adding the exact URL
-                    directly.
+                    No pages found. You can try adding the exact URL directly.
                   </div>
                 )}
               </div>
@@ -129,17 +130,17 @@ export function UrlSelectionModal({
           )}
         </div>
 
-        <div className="p-6 border-t border-white/5 bg-slate-900 flex gap-3 flex-shrink-0">
+        <div className="p-6 border-t border-white/5 bg-slate-900 flex flex-col sm:flex-row gap-3 flex-shrink-0">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-xl transition-all"
+            className="w-full sm:flex-1 py-2.5 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-xl transition-all"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={adding || scanning || selectedUrls.length === 0}
-            className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2"
+            className="w-full sm:flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2"
           >
             {adding ? (
               <Loader2 className="w-4 h-4 animate-spin" />

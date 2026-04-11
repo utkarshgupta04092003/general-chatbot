@@ -55,7 +55,7 @@ export default async function DashboardOverviewPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Overview</h1>
           <p className="text-slate-400 text-sm mt-1">
@@ -72,7 +72,7 @@ export default async function DashboardOverviewPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
           {
             label: "Total Conversations",
@@ -120,9 +120,9 @@ export default async function DashboardOverviewPage() {
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-6 relative min-w-0">
         {/* Chatbots */}
-        <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6">
+        <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6 min-w-0">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-semibold">Your Chatbots</h2>
             <Link
@@ -185,7 +185,7 @@ export default async function DashboardOverviewPage() {
         </div>
 
         {/* Recent Conversations */}
-        <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6">
+        <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6 min-w-0">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-semibold">Recent Conversations</h2>
             <Link
@@ -238,7 +238,7 @@ export default async function DashboardOverviewPage() {
           <TrendingUp className="w-5 h-5 text-indigo-400" />
           <h2 className="font-semibold">Quick Actions</h2>
         </div>
-        <div className="grid sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
             { href: "/onboarding", label: "Add New Chatbot", icon: Plus },
             {

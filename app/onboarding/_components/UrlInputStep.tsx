@@ -44,7 +44,7 @@ export function UrlInputStep({
         <label className="block text-sm font-medium text-slate-300 mb-2">
           Website URL
         </label>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1 flex items-center bg-white/5 border border-white/10 rounded-xl px-4 gap-3 focus-within:ring-2 focus-within:ring-indigo-500 transition-all">
             <Globe className="w-5 h-5 text-slate-400 shrink-0" />
             <input
@@ -75,7 +75,7 @@ export function UrlInputStep({
         </p>
       </div>
 
-      <div className="mt-8 grid grid-cols-3 gap-4">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           {
             icon: Globe,

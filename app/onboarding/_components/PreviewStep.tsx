@@ -31,7 +31,7 @@ export function PreviewStep({
         Here&apos;s what we extracted from your website.
       </p>
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {[
           {
             label: "Pages indexed",

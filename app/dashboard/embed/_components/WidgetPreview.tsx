@@ -11,27 +11,27 @@ export function WidgetPreview({ chatbot }: WidgetPreviewProps) {
   const primaryColor = chatbot?.primaryColor ?? "#6366f1";
 
   return (
-    <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6 sticky top-6">
+    <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-4 sm:p-6 lg:sticky lg:top-6 min-w-0">
       <h2 className="font-semibold mb-4">Widget Preview</h2>
       <div
-        className="bg-slate-900 rounded-xl border border-white/10 relative"
+        className="bg-slate-900 rounded-xl border border-white/10 relative overflow-hidden"
         style={{ height: "400px" }}
       >
         <div className="p-4 h-full flex flex-col">
           {/* Chat header */}
           <div
-            className="rounded-xl px-4 py-3 flex items-center gap-3 mb-3"
+            className="rounded-xl px-4 py-3 flex items-center gap-3 mb-3 shrink-0"
             style={{ backgroundColor: primaryColor }}
           >
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm">
+            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm shrink-0">
               🤖
             </div>
-            <div>
-              <div className="text-sm font-semibold text-white">
+            <div className="min-w-0 flex-1">
+              <div className="text-sm font-semibold text-white truncate">
                 {chatbot?.name || "Chatbot"}
               </div>
               <div className="text-xs text-white/70 flex items-center gap-1">
-                <div className="w-1.5 h-1.5 bg-green-400 rounded-full" />
+                <div className="w-1.5 h-1.5 bg-green-400 rounded-full shrink-0" />
                 Online
               </div>
             </div>

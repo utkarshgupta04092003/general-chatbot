@@ -71,7 +71,7 @@ export function DataSourcesList({
           {filteredSources.map((source) => (
             <div
               key={source.id}
-              className="flex items-center gap-4 px-5 py-4 hover:bg-white/2 transition-colors"
+              className="flex items-center gap-4 px-5 py-4 hover:bg-white/2 transition-colors min-w-0 overflow-hidden"
             >
               <div
                 className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
@@ -97,27 +97,27 @@ export function DataSourcesList({
                 <div className="flex items-center gap-2 text-xs text-slate-500 truncate">
                   {source.url}
                   {verifiedDomains.includes(new URL(source.url).hostname) && (
-                    <span className="flex items-center gap-0.5 text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded-md font-medium">
+                    <span className="flex items-center gap-0.5 text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded-md font-medium shrink-0">
                       <ShieldCheck className="w-3 h-3" />
                       Verified
                     </span>
                   )}
                   {selectedChatbotId === "all" && (
-                    <span className="flex items-center gap-1.5 text-slate-400 bg-slate-800 px-2 py-0.5 rounded-md border border-white/5">
-                      <Plus className="w-2.5 h-2.5 rotate-45" />
+                    <span className="flex items-center gap-1.5 text-slate-400 bg-slate-800 px-2 py-0.5 rounded-md border border-white/5 max-w-[120px] sm:max-w-[180px] truncate shrink-0">
+                      <Plus className="w-2.5 h-2.5 rotate-45 shrink-0" />
                       {source.chatbot.name}
                     </span>
                   )}
                 </div>
               </div>
-              <div className="text-xs text-slate-500 hidden sm:block">
+              <div className="text-xs text-slate-500 hidden xl:block whitespace-nowrap shrink-0">
                 {source.wordCount.toLocaleString()} words
               </div>
-              <div className="text-xs text-slate-500 hidden md:block">
+              <div className="text-xs text-slate-500 hidden 2xl:block whitespace-nowrap shrink-0">
                 {formatDate(source.createdAt)}
               </div>
               <div
-                className={`hidden sm:flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
+                className={`hidden xl:flex items-center gap-1 px-2 py-1 rounded-full text-xs shrink-0 ${
                   source.status === "indexed"
                     ? "bg-green-500/10 text-green-400"
                     : source.status === "failed"
@@ -127,7 +127,7 @@ export function DataSourcesList({
               >
                 {source.status}
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => onResync(source.id)}
                   title="Resync Page Content"

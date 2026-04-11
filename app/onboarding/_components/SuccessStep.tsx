@@ -28,7 +28,7 @@ export function SuccessStep({
         on your content.
       </p>
 
-      <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-md mx-auto mb-10">
         {[
           {
             label: "Pages trained",

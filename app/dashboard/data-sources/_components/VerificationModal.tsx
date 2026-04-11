@@ -1,6 +1,13 @@
 "use client";
 
-import { CheckCircle, Copy, Loader2, Shield, ShieldAlert, ShieldCheck } from "lucide-react";
+import {
+  CheckCircle,
+  Copy,
+  Loader2,
+  Shield,
+  ShieldAlert,
+  ShieldCheck,
+} from "lucide-react";
 
 type VerificationModalProps = {
   isOpen: boolean;
@@ -104,17 +111,17 @@ export function VerificationModal({
           )}
         </div>
 
-        <div className="p-6 bg-white/2 flex gap-3">
+        <div className="p-6 bg-white/2 flex flex-col sm:flex-row gap-3">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-xl transition-all"
+            className="w-full sm:flex-1 py-2.5 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-xl transition-all"
           >
             Cancel
           </button>
           <button
             onClick={onVerify}
             disabled={verifying}
-            className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2"
+            className="w-full sm:flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2"
           >
             {verifying ? (
               <Loader2 className="w-4 h-4 animate-spin" />
