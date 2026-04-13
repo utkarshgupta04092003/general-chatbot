@@ -1,14 +1,16 @@
 "use client";
 
-import { ENDPOINTS } from "@/lib/endpoint";
 import { ANALYTICS_EVENTS } from "@/lib/config";
+import { ENDPOINTS } from "@/lib/endpoint";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
 
+import { getDomain } from "@/lib/utils";
 import { AddUrlSection } from "./_components/AddUrlSection";
 import { ChatbotFilter } from "./_components/ChatbotFilter";
 import { DataSourcesList } from "./_components/DataSourcesList";
 import { ResyncModal } from "./_components/ResyncModal";
+import { SelectChatbotModal } from "./_components/SelectChatbotModal";
 import { DataSource } from "./_components/types";
 import { UrlSelectionModal } from "./_components/UrlSelectionModal";
 import { VerificationModal } from "./_components/VerificationModal";
@@ -21,12 +23,14 @@ export default function DataSourcesPage() {
   const [adding, setAdding] = useState(false);
   const [error, setError] = useState("");
   const [verifiedDomains, setVerifiedDomains] = useState<string[]>([]);
-  const [verificationToken, setVerificationToken] = useState("");
   const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [verifying, setVerifying] = useState(false);
   const [targetUrl, setTargetUrl] = useState("");
-  const [copied, setCopied] = useState(false);
   const [selectedChatbotId, setSelectedChatbotId] = useState<string>("all");
+
+  const [showSelectChatbotModal, setShowSelectChatbotModal] = useState(false);
+  const [targetChatbotIdForAdd, setTargetChatbotIdForAdd] =
+    useState<string>("");
+  const [chatbotDomain, setChatbotDomain] = useState<string | null>(null);
 
   const [scanning, setScanning] = useState(false);
   const [showUrlSelectionModal, setShowUrlSelectionModal] = useState(false);
@@ -53,9 +57,6 @@ export default function DataSourcesPage() {
     }
   }, [selectedChatbotId, posthog]);
 
-
-
-
   async function fetchVerifiedDomains() {
     try {
       const res = await fetch(ENDPOINTS.VERIFY_DOMAIN);
@@ -66,9 +67,6 @@ export default function DataSourcesPage() {
             .filter((d: { verified: boolean; domain: string }) => d.verified)
             .map((d: { domain: string }) => d.domain),
         );
-      }
-      if (data.verificationToken) {
-        setVerificationToken(data.verificationToken);
       }
     } catch (err) {
       console.error("Failed to fetch verified domains", err);
@@ -101,70 +99,68 @@ export default function DataSourcesPage() {
   async function handleAddUrl() {
     if (!addUrl.trim()) return;
 
-    let domain = "";
     try {
-      domain = new URL(addUrl.trim()).hostname;
+      new URL(addUrl.trim());
     } catch {
       setError("Please enter a valid URL");
       return;
     }
 
-    if (!verifiedDomains.includes(domain)) {
-      setTargetUrl(addUrl.trim());
+    if (selectedChatbotId === "all") {
+      setShowSelectChatbotModal(true);
+    } else {
+      checkDomainAndProceed(selectedChatbotId, addUrl.trim());
+    }
+  }
+
+  function checkDomainAndProceed(chatbotId: string, urlStr: string) {
+    const newDomain = getDomain(urlStr);
+    setTargetChatbotIdForAdd(chatbotId);
+
+    const chatbotSources = sources.filter((s) => s.chatbotId === chatbotId);
+    const cDomain =
+      chatbotSources.length > 0 ? getDomain(chatbotSources[0].url) : null;
+
+    if (cDomain && newDomain !== cDomain) {
+      setTargetUrl(urlStr);
+      setChatbotDomain(cDomain);
       setShowVerifyModal(true);
       return;
     }
 
-    startCrawl(addUrl.trim());
-  }
-
-  async function startCrawl(url: string) {
-    setShowUrlSelectionModal(true);
-    setScanning(true);
-    setError("");
-    setDiscoveredUrls([]);
-    setSelectedUrls([]);
-
-    try {
-      const res = await fetch(ENDPOINTS.CRAWL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to crawl website");
-
-      setDiscoveredUrls(data.urls || []);
-      setSelectedUrls(data.urls || []);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Crawl failed");
-    } finally {
-      setScanning(false);
+    if (!verifiedDomains.includes(newDomain)) {
+      setTargetUrl(urlStr);
+      setChatbotDomain(null);
+      setShowVerifyModal(true);
+      return;
     }
+
+    processAddUrls([urlStr], chatbotId);
   }
 
-  async function handleAddSelectedUrls() {
-    if (selectedUrls.length === 0) return;
+  async function processAddUrls(urls: string[], chatbotId: string) {
     setAdding(true);
     setError("");
 
     try {
-      let targetChatbotId =
-        selectedChatbotId !== "all" ? selectedChatbotId : sources[0]?.chatbotId;
+      let targetChatbotId = chatbotId;
+      if (targetChatbotId === "all") {
+        targetChatbotId = sources[0]?.chatbotId;
+      }
       if (!targetChatbotId) {
         const res = await fetch(ENDPOINTS.CHATBOTS);
         const data = await res.json();
         if (data.chatbots?.length > 0) {
           targetChatbotId = data.chatbots[0].id;
         } else {
-          throw new Error("No chatbot found. Please complete onboarding.");
+          throw new Error("No chatbot found. Please create one first.");
         }
       }
 
       const scrapeRes = await fetch(ENDPOINTS.SCRAPE, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ urls: selectedUrls }),
+        body: JSON.stringify({ urls }),
       });
       const scrapeData = await scrapeRes.json();
       if (!scrapeRes.ok) throw new Error(scrapeData.error || "Scrape failed");
@@ -197,38 +193,23 @@ export default function DataSourcesPage() {
     }
   }
 
-  async function handleVerify() {
-    setVerifying(true);
-    setError("");
-    try {
-      const res = await fetch(ENDPOINTS.VERIFY_DOMAIN, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: targetUrl }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setShowVerifyModal(false);
-        fetchVerifiedDomains();
-      } else {
-        setError(data.error || "Verification failed");
-      }
-    } catch {
-      setError("Failed to verify domain");
-    } finally {
-      setVerifying(false);
-    }
+  async function handleAddSelectedUrls() {
+    if (selectedUrls.length === 0) return;
+    const targetChatbotId = targetChatbotIdForAdd || selectedChatbotId;
+    await processAddUrls(selectedUrls, targetChatbotId);
   }
-
-  const copyToClipboard = () => {
-    const code = `<meta name="chatbot-verification" content="${verificationToken}" />`;
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   return (
     <div>
+      <SelectChatbotModal
+        isOpen={showSelectChatbotModal}
+        onClose={() => setShowSelectChatbotModal(false)}
+        onSelect={(chatbotId) => {
+          setShowSelectChatbotModal(false);
+          checkDomainAndProceed(chatbotId, addUrl.trim());
+        }}
+      />
+
       <UrlSelectionModal
         isOpen={showUrlSelectionModal}
         scanning={scanning}
@@ -244,13 +225,16 @@ export default function DataSourcesPage() {
       <VerificationModal
         isOpen={showVerifyModal}
         targetUrl={targetUrl}
-        verificationToken={verificationToken}
+        chatbotDomain={chatbotDomain}
         onClose={() => setShowVerifyModal(false)}
-        onVerify={handleVerify}
-        onCopyToken={copyToClipboard}
-        verifying={verifying}
-        copied={copied}
-        error={error}
+        onSuccess={() => {
+          setShowVerifyModal(false);
+          fetchVerifiedDomains();
+          processAddUrls(
+            [targetUrl],
+            targetChatbotIdForAdd || selectedChatbotId,
+          );
+        }}
       />
 
       <div className="mb-8">
