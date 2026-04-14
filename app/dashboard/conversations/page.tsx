@@ -2,8 +2,7 @@ import { ANALYTICS_EVENTS } from "@/lib/config";
 import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
-import { MessageSquare } from "lucide-react";
-import { ConversationItem } from "./_components/ConversationItem";
+import { ConversationsList } from "./_components/ConversationsList";
 
 export default async function ConversationsPage() {
   const session = await requireAuth();
@@ -34,24 +33,7 @@ export default async function ConversationsPage() {
         </p>
       </div>
 
-      {conversations.length === 0 ? (
-        <div className="text-center py-20 bg-slate-800/30 border border-white/5 rounded-2xl">
-          <MessageSquare className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <h3 className="font-semibold text-slate-300 mb-2">
-            No conversations yet
-          </h3>
-          <p className="text-slate-500 text-sm">
-            Conversations will appear here once visitors start chatting with
-            your bot.
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {conversations.map((conv) => (
-            <ConversationItem key={conv.id} conversation={conv} />
-          ))}
-        </div>
-      )}
+      <ConversationsList conversations={conversations} />
     </div>
   );
 }
