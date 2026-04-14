@@ -15,7 +15,7 @@ type UrlInputStepProps = {
   setUrl: (url: string) => void;
   onScan: () => void;
   loading: boolean;
-  error: string;
+  error: string | React.ReactNode;
 };
 
 export function UrlInputStep({

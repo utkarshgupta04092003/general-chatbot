@@ -4,6 +4,8 @@ import { ANALYTICS_EVENTS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import { PROCESSING_STEPS, STEPS } from "@/lib/onboarding-constants";
 import { ScrapedPage } from "@/lib/onboarding-types";
+import { getDomain } from "@/lib/utils";
+import Link from "next/link";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
 import { DomainVerificationStep } from "./_components/DomainVerificationStep";
@@ -16,6 +18,11 @@ import { StepIndicator } from "./_components/StepIndicator";
 import { SuccessStep } from "./_components/SuccessStep";
 import { UrlInputStep } from "./_components/UrlInputStep";
 
+interface ChatbotWithSources {
+  id: string;
+  dataSources?: { url: string }[];
+}
+
 export default function OnboardingPage() {
   const posthog = usePostHog();
   const [step, setStep] = useState(1);
@@ -25,7 +32,7 @@ export default function OnboardingPage() {
   const [scrapedPages, setScrapedPages] = useState<ScrapedPage[]>([]);
   const [loading, setLoading] = useState(false);
   const [crawling, setCrawling] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | React.ReactNode>("");
   const [processStep, setProcessStep] = useState(0);
   const [rootTitle, setRootTitle] = useState("");
   const [chatbotId, setChatbotId] = useState("");
@@ -57,10 +64,36 @@ export default function OnboardingPage() {
     setLoading(true);
     setError("");
     try {
-      if (!url.startsWith("http")) {
-        const fullUrl = "https://" + url.trim();
-        setUrl(fullUrl);
+      const fullUrl = url.trim().startsWith("http")
+        ? url.trim()
+        : "https://" + url.trim();
+      const currentDomain = getDomain(fullUrl);
+
+      // Fetch existing chatbots to check domain
+      const res = await fetch(ENDPOINTS.CHATBOTS);
+      const data = await res.json();
+      const existingChatbots: ChatbotWithSources[] = data.chatbots || [];
+
+      const duplicate = existingChatbots.find((c) =>
+        c.dataSources?.some((ds) => getDomain(ds.url) === currentDomain),
+      );
+
+      if (duplicate) {
+        setError(
+          <p>
+            You have already created a chatbot for this website. Try{" "}
+            <Link
+              href="/dashboard/data-sources"
+              className="underline font-medium hover:text-white transition-colors"
+            >
+              adding new sources
+            </Link>{" "}
+            instead.
+          </p>,
+        );
+        return;
       }
+      setUrl(fullUrl);
       setStep(2);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to process URL");

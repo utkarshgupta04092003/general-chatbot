@@ -14,7 +14,7 @@ type DomainVerificationStepProps = {
   onVerify: () => void;
   onBack: () => void;
   loading: boolean;
-  error: string;
+  error: string | React.ReactNode;
 };
 
 export function DomainVerificationStep({

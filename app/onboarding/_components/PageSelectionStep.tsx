@@ -20,7 +20,7 @@ type PageSelectionStepProps = {
   onContinue: () => void;
   loading: boolean;
   onRescan: () => void;
-  error: string;
+  error: string | React.ReactNode;
   domain: string;
 };
 
