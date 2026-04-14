@@ -28,6 +28,10 @@ export async function PATCH(
         primaryColor: body.primaryColor,
         assistantLogo: body.assistantLogo,
         websiteLogo: body.websiteLogo,
+        supportEmail: body.supportEmail,
+        supportPhone: body.supportPhone,
+        supportWhatsapp: body.supportWhatsapp,
+        contactPageLink: body.contactPageLink,
       },
     });
 

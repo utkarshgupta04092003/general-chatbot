@@ -56,7 +56,16 @@ export function getDomain(url: string): string {
 }
 
 export function getSafeFolder(name: string): string {
-  return name.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-");
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "-")
+    .replace(/-+/g, "-");
+}
+
+export function ensureAbsoluteUrl(url: string): string {
+  if (!url) return "";
+  if (url.match(/^https?:\/\//)) return url;
+  return `https://${url}`;
 }
 
 export const getAIClient = (model: QAModel) => {

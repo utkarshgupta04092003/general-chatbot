@@ -36,6 +36,7 @@ export const FEEDBACK_TEXT = {
 } as const;
 
 export const ERROR_MESSAGE = "I'm sorry, I couldn't generate a response.";
+export const MIN_CONFIDENCE_THRESHOLD = 0.6;
 
 export const POSTHOG_CONFIG = {
   apiKey: process.env.NEXT_PUBLIC_POSTHOG_KEY,

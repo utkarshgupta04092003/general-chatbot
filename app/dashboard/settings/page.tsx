@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 
 import { BasicInfoSection } from "./_components/BasicInfoSection";
 import { ColorSection } from "./_components/ColorSection";
+import { ContactInfoSection } from "./_components/ContactInfoSection";
 import { SettingsPreview } from "./_components/SettingsPreview";
 import { SystemPromptSection } from "./_components/SystemPromptSection";
 import { ToneSection } from "./_components/ToneSection";
@@ -53,6 +54,10 @@ export default function ChatbotSettingsPage() {
         tone: selected.tone,
         primaryColor: selected.primaryColor,
         agentType: selected.agentType,
+        hasSupportEmail: !!selected.supportEmail,
+        hasSupportPhone: !!selected.supportPhone,
+        hasSupportWhatsapp: !!selected.supportWhatsapp,
+        hasContactPage: !!selected.contactPageLink,
       });
 
       setSaved(true);
@@ -114,6 +119,7 @@ export default function ChatbotSettingsPage() {
               <BasicInfoSection selected={selected} onChange={setSelected} />
               <ToneSection selected={selected} onChange={setSelected} />
               <ColorSection selected={selected} onChange={setSelected} />
+              <ContactInfoSection selected={selected} onChange={setSelected} />
             </div>
 
             <div className="space-y-6">

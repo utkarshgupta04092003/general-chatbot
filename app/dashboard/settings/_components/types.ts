@@ -8,5 +8,9 @@ export type ChatbotSettings = {
   agentType: string;
   assistantLogo?: string | null;
   websiteLogo?: string | null;
+  supportEmail?: string | null;
+  supportPhone?: string | null;
+  supportWhatsapp?: string | null;
+  contactPageLink?: string | null;
   dataSources?: { url: string }[];
 };

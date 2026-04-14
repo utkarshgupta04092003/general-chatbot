@@ -62,24 +62,28 @@ model VerificationToken {
 }
 
 model Chatbot {
-  id             String         @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String         @db.ObjectId
-  name           String         @default("AI Assistant")
-  welcomeMessage String         @default("Hello! How can I help you today?")
-  tone           String         @default("professional")
-  systemPrompt   String         @default("You are a helpful AI assistant. Answer questions based on the provided context.")
-  agentType      String         @default("general")
-  primaryColor   String         @default("#6366f1")
-  assistantLogo  String?
-  websiteLogo    String?
-  status         String         @default("training") // training, ready
-  totalQueries   Int            @default(0)
-  deleted        Boolean        @default(false)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  dataSources    DataSource[]
-  conversations  Conversation[]
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String         @db.ObjectId
+  name            String         @default("AI Assistant")
+  welcomeMessage  String         @default("Hello! How can I help you today?")
+  tone            String         @default("professional")
+  systemPrompt    String         @default("You are a helpful AI assistant. Answer questions based on the provided context.")
+  agentType       String         @default("general")
+  primaryColor    String         @default("#6366f1")
+  assistantLogo   String?
+  websiteLogo     String?
+  supportEmail    String?
+  supportPhone    String?
+  supportWhatsapp String?
+  contactPageLink String?
+  status          String         @default("training") // training, ready
+  totalQueries    Int            @default(0)
+  deleted         Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dataSources     DataSource[]
+  conversations   Conversation[]
 }
 
 model DataSource {
@@ -143,8 +147,8 @@ model VerifiedDomain {
 model Enquiry {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   email       String
-  mobile      String?  // Optional phone number
-  plan        String   // Starter, Premium
+  mobile      String? // Optional phone number
+  plan        String // Starter, Premium
   description String?
   createdAt   DateTime @default(now())
 }

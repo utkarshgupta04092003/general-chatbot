@@ -4,11 +4,12 @@ import {
   ERROR_MESSAGE,
   GPT_5_2,
   GPT_5_MINI,
+  MIN_CONFIDENCE_THRESHOLD,
   TEXT_EMBEDDING_3_SMALL,
 } from "@/lib/config";
 import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
-import { getAIClient, getDomain } from "@/lib/utils";
+import { ensureAbsoluteUrl, getAIClient, getDomain } from "@/lib/utils";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { NextResponse } from "next/server";
 import { zodResponseFormat } from "openai/helpers/zod";
@@ -178,7 +179,10 @@ export async function POST(req: Request) {
       role: msg.role as "user" | "assistant",
       content:
         msg.role === CHAT_ROLES.ASSISTANT
-          ? msg.content.replace(/\n\n\*\*Sources:\*\*[\s\S]*$/, "").trim()
+          ? msg.content
+              .replace(/\n\n\*\*Still need help\?\*\*[\s\S]*$/, "")
+              .replace(/\n\n\*\*Sources:\*\*[\s\S]*$/, "")
+              .trim()
           : msg.content,
     }));
 
@@ -207,6 +211,37 @@ export async function POST(req: Request) {
 
     // Higher Accuracy Analytics: Categorize and detect 'unanswered' using structured output
     const analytics = await getChatAnalytics(message, response);
+    if (
+      analytics.unanswered ||
+      analytics.confidence < MIN_CONFIDENCE_THRESHOLD
+    ) {
+      const contactLinks = [];
+      if (chatbot.supportEmail) {
+        contactLinks.push(
+          `Email: [${chatbot.supportEmail}](mailto:${chatbot.supportEmail})`,
+        );
+      }
+      if (chatbot.supportPhone) {
+        const cleanPhone = chatbot.supportPhone.replace(/[^0-9+]/g, "");
+        contactLinks.push(
+          `Phone: [${chatbot.supportPhone}](tel:${cleanPhone})`,
+        );
+      }
+      if (chatbot.supportWhatsapp) {
+        // Ensure whatsapp numbers have no spaces/symbols
+        const cleanWa = chatbot.supportWhatsapp.replace(/[^0-9]/g, "");
+        contactLinks.push(
+          `WhatsApp: [${chatbot.supportWhatsapp}](https://wa.me/${cleanWa})`,
+        );
+      }
+      if (chatbot.contactPageLink) {
+        const absoluteUrl = ensureAbsoluteUrl(chatbot.contactPageLink);
+        contactLinks.push(`Contact Page: [Link](${absoluteUrl})`);
+      }
+      if (contactLinks.length > 0) {
+        finalResponse += `\n\n**Still need help?** You can reach our support team here:\n${contactLinks.map((l) => `- ${l}`).join("\n")}`;
+      }
+    }
 
     // Track response received
     posthog.capture({
