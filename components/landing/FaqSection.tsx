@@ -2,7 +2,7 @@ import { ChevronDown } from "lucide-react";
 
 export function FaqSection() {
   return (
-    <section id="faq" className="py-24 px-4 bg-slate-900/30">
+    <section id="faq" className="py-24 px-4 bg-card/30">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">
@@ -38,13 +38,13 @@ export function FaqSection() {
           ].map((faq) => (
             <details
               key={faq.q}
-              className="group bg-slate-900 border border-white/5 rounded-xl overflow-hidden"
+              className="group bg-card border border-border rounded-xl overflow-hidden"
             >
-              <summary className="flex items-center justify-between p-6 cursor-pointer font-medium text-white hover:text-indigo-300 transition-colors">
+              <summary className="flex items-center justify-between p-6 cursor-pointer font-medium text-foreground hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">
                 {faq.q}
-                <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
+                <ChevronDown className="w-5 h-5 text-muted-foreground group-open:rotate-180 transition-transform" />
               </summary>
-              <div className="px-6 pb-6 text-slate-400 text-sm leading-relaxed">
+              <div className="px-6 pb-6 text-muted-foreground text-sm leading-relaxed">
                 {faq.a}
               </div>
             </details>

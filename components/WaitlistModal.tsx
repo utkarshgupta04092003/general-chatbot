@@ -64,29 +64,29 @@ export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-300"
+        className="absolute inset-0 bg-background/60 backdrop-blur-sm animate-in fade-in duration-300"
         onClick={onClose}
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-lg bg-slate-900 border border-white/10 rounded-2xl shadow-2xl p-6 overflow-hidden animate-in zoom-in-95 duration-300">
+      <div className="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl p-6 overflow-hidden animate-in zoom-in-95 duration-300">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <Mail className="w-5 h-5 text-white" />
+              <Mail className="w-5 h-5 text-foreground" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-xl font-bold text-foreground">
                 Join the waitlist
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-muted-foreground">
                 Enquiring for {plan} Plan
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white/5 rounded-lg transition-colors text-slate-400"
+            className="p-2 hover:bg-accent/50 bg-muted/30 rounded-lg transition-colors text-muted-foreground"
           >
             <X className="w-5 h-5" />
           </button>
@@ -97,10 +97,10 @@ export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
             <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 className="w-8 h-8 text-green-400" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               We&apos;ve got you!
             </h3>
-            <p className="text-slate-400 text-sm">
+            <p className="text-muted-foreground text-sm">
               Thanks for your interest. We&apos;ll reach out to {email} as soon
               as the {plan} plan is ready.
             </p>
@@ -108,40 +108,40 @@ export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-muted-foreground mb-1.5">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                  className="w-full hover:bg-accent/50 bg-muted/30 border border-border rounded-xl pl-10 pr-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-muted-foreground mb-1.5">
                 Phone Number (Optional)
               </label>
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                   type="tel"
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
                   placeholder={MOBILE_PLACEHOLDER}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                  className="w-full hover:bg-accent/50 bg-muted/30 border border-border rounded-xl pl-10 pr-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-muted-foreground mb-1.5">
                 Tell us about your needs (Optional)
               </label>
               <textarea
@@ -149,7 +149,7 @@ export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="How many chatbots do you need? Any custom requirements?"
                 rows={4}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
+                className="w-full hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
               />
             </div>
 

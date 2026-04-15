@@ -13,7 +13,7 @@ export function DemoSection() {
               Live Demo
             </div>
             <h2 className="text-4xl font-bold mb-6">See it in action</h2>
-            <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+            <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
               This demo chatbot is trained on our own documentation. Ask it
               anything about {APP_NAME} and see how it responds with accurate,
               context-aware answers.
@@ -27,7 +27,7 @@ export function DemoSection() {
               ].map((point) => (
                 <li
                   key={point}
-                  className="flex items-center gap-3 text-slate-300"
+                  className="flex items-center gap-3 text-muted-foreground"
                 >
                   <CheckCircle className="w-5 h-5 text-green-400 shrink-0" />
                   {point}

@@ -33,7 +33,7 @@ export function TestimonialsSection() {
           ].map((testimonial) => (
             <div
               key={testimonial.name}
-              className="bg-slate-900 border border-white/5 rounded-2xl p-6"
+              className="bg-card border border-border rounded-2xl p-6"
             >
               <div className="flex gap-0.5 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
@@ -44,12 +44,14 @@ export function TestimonialsSection() {
                   />
                 ))}
               </div>
-              <p className="text-slate-300 text-sm leading-relaxed mb-4">
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
                 &ldquo;{testimonial.content}&rdquo;
               </p>
               <div>
                 <div className="font-medium text-sm">{testimonial.name}</div>
-                <div className="text-xs text-slate-500">{testimonial.role}</div>
+                <div className="text-xs text-muted-foreground">
+                  {testimonial.role}
+                </div>
               </div>
             </div>
           ))}

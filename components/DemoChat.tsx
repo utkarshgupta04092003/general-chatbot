@@ -99,14 +99,14 @@ export default function DemoChat() {
   }
 
   return (
-    <div className="bg-slate-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+    <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-2xl">
       {/* Chat header */}
       <div className="flex items-center gap-3 px-4 py-3 bg-indigo-600">
         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-          <MessageSquare className="w-4 h-4 text-white" />
+          <MessageSquare className="w-4 h-4 text-foreground" />
         </div>
         <div>
-          <div className="text-sm font-semibold text-white">
+          <div className="text-sm font-semibold text-foreground">
             {APP_NAME} Assistant
           </div>
           <div className="flex items-center gap-1.5">
@@ -133,7 +133,7 @@ export default function DemoChat() {
               className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed chat-message ${
                 msg.role === CHAT_ROLES.USER
                   ? "bg-indigo-600 text-white rounded-br-sm"
-                  : "bg-slate-800 text-slate-200 rounded-bl-sm"
+                  : "bg-muted text-foreground rounded-bl-sm"
               }`}
             >
               {msg.content.split("\n").map((line, j) => (
@@ -147,7 +147,7 @@ export default function DemoChat() {
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1.5">
+            <div className="bg-muted rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1.5">
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
@@ -168,7 +168,7 @@ export default function DemoChat() {
             onClick={() => {
               setInput(q);
             }}
-            className="text-xs px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-slate-400 hover:text-white transition-all"
+            className="text-xs px-3 py-1.5 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-full text-muted-foreground hover:text-foreground transition-all"
           >
             {q}
           </button>
@@ -176,7 +176,7 @@ export default function DemoChat() {
       </div>
 
       {/* Input */}
-      <div className="p-4 pt-2 border-t border-white/5">
+      <div className="p-4 pt-2 border-t border-border">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -189,7 +189,7 @@ export default function DemoChat() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask something..."
-            className="flex-1 px-4 py-2.5 bg-slate-800 border border-white/5 rounded-xl text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="flex-1 px-4 py-2.5 bg-muted border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
           <button
             type="submit"
@@ -197,13 +197,13 @@ export default function DemoChat() {
             className="w-10 h-10 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 rounded-xl flex items-center justify-center transition-all"
           >
             {loading ? (
-              <Loader2 className="w-4 h-4 text-white animate-spin" />
+              <Loader2 className="w-4 h-4 text-foreground animate-spin" />
             ) : (
-              <Send className="w-4 h-4 text-white" />
+              <Send className="w-4 h-4 text-foreground" />
             )}
           </button>
         </form>
-        <p className="text-center text-[10px] text-slate-500 mt-2 leading-relaxed">
+        <p className="text-center text-[10px] text-muted-foreground mt-2 leading-relaxed">
           Responses are generated using AI and may contain mistakes.
           <br />
           Powered by {APP_NAME} AI

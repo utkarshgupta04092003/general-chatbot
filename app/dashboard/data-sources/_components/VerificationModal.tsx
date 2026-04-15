@@ -107,15 +107,17 @@ export function VerificationModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
-        <div className="p-6 border-b border-white/5">
+      <div className="bg-card border border-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
+        <div className="p-6 border-b border-border">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-              <Shield className="w-6 h-6 text-indigo-400" />
+              <Shield className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
             </div>
-            <h2 className="text-xl font-bold text-white">Verify Ownership</h2>
+            <h2 className="text-xl font-bold text-foreground">
+              Verify Ownership
+            </h2>
           </div>
-          <p className="text-slate-400 text-sm">
+          <p className="text-muted-foreground text-sm">
             To comply with safety regulations, you must verify that you own or
             are authorized to use <b>{domain}</b>.
           </p>
@@ -139,10 +141,10 @@ export function VerificationModal({
 
           {step === "email" && (
             <div className="space-y-3">
-              <label className="text-sm font-semibold text-white">
+              <label className="text-sm font-semibold text-foreground">
                 Enter your domain email
               </label>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-muted-foreground">
                 Please provide an email address suffix with{" "}
                 <code className="text-indigo-300">@{domain}</code> to receive a
                 6-digit OTP.
@@ -152,19 +154,19 @@ export function VerificationModal({
                 placeholder={`e.g., admin@${domain}`}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="w-full bg-muted border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
               />
             </div>
           )}
 
           {step === "code" && (
             <div className="space-y-3">
-              <label className="text-sm font-semibold text-white">
+              <label className="text-sm font-semibold text-foreground">
                 Enter Verification Code
               </label>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-muted-foreground">
                 We sent a 6-digit code to{" "}
-                <span className="text-white font-medium">{email}</span>.
+                <span className="text-foreground font-medium">{email}</span>.
               </p>
               <input
                 type="text"
@@ -173,7 +175,7 @@ export function VerificationModal({
                 onChange={(e) =>
                   setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
                 }
-                className="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 text-sm tracking-[0.5em] text-center text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="w-full bg-muted border border-border rounded-xl px-4 py-3 text-sm tracking-[0.5em] text-center text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
               />
             </div>
           )}
@@ -184,7 +186,7 @@ export function VerificationModal({
                 <CheckCircle className="w-6 h-6 text-green-400" />
               </div>
               <p className="font-semibold text-green-400">Domain Verified!</p>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-muted-foreground">
                 You can now add {domain} to your chatbot.
               </p>
             </div>
@@ -205,7 +207,7 @@ export function VerificationModal({
           {step !== "success" && (
             <button
               onClick={handleCancel}
-              className="w-full sm:flex-1 py-2.5 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-xl transition-all"
+              className="w-full sm:flex-1 py-2.5 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 text-foreground text-sm font-medium rounded-xl transition-all"
             >
               Cancel
             </button>

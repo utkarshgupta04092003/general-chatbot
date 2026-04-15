@@ -11,9 +11,9 @@ type SettingsPreviewProps = {
 
 export function SettingsPreview({ selected }: SettingsPreviewProps) {
   return (
-    <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6">
+    <div className="bg-muted/50 border border-border rounded-2xl p-6">
       <h2 className="font-semibold mb-4">Widget Preview</h2>
-      <div className="bg-slate-900 rounded-xl overflow-hidden border border-white/10">
+      <div className="bg-card rounded-xl overflow-hidden border border-border">
         <div
           className="px-4 py-3 flex items-center gap-3"
           style={{ backgroundColor: selected.primaryColor }}
@@ -43,7 +43,7 @@ export function SettingsPreview({ selected }: SettingsPreviewProps) {
         <div className="p-4 space-y-3">
           <div className="flex gap-2">
             <div
-              className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-white shrink-0 overflow-hidden relative"
+              className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-foreground shrink-0 overflow-hidden relative"
               style={{ backgroundColor: selected.primaryColor }}
             >
               {selected.assistantLogo ? (
@@ -57,9 +57,9 @@ export function SettingsPreview({ selected }: SettingsPreviewProps) {
                 "🤖"
               )}
             </div>
-            <div className="bg-slate-800 rounded-xl rounded-bl-none px-3 py-2 max-w-[80%] text-sm text-slate-300">
+            <div className="bg-muted rounded-xl rounded-bl-none px-3 py-2 max-w-[80%] text-sm text-muted-foreground">
               <div>{selected.welcomeMessage}</div>
-              <div className="flex items-center gap-1.5 mt-2 pt-1 border-t border-white/5 opacity-40">
+              <div className="flex items-center gap-1.5 mt-2 pt-1 border-t border-border opacity-40">
                 <div title={FEEDBACK_TEXT.HELPFUL}>
                   <ThumbsUp className="w-3 h-3" />
                 </div>

@@ -84,7 +84,7 @@ export default function OnboardingPage() {
             You have already created a chatbot for this website. Try{" "}
             <Link
               href="/dashboard/data-sources"
-              className="underline font-medium hover:text-white transition-colors"
+              className="underline font-medium hover:text-foreground transition-colors"
             >
               adding new sources
             </Link>{" "}
@@ -277,7 +277,7 @@ export default function OnboardingPage() {
   const totalTokens = Math.ceil(totalWords * 1.3);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <OnboardingHeader step={step} totalSteps={STEPS.length} />
       <StepIndicator steps={STEPS} currentStep={step} />
 

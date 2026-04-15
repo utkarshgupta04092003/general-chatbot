@@ -7,19 +7,21 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-300 py-24 px-4 font-sans">
+    <div className="min-h-screen bg-background text-muted-foreground py-24 px-4 font-sans">
       <div className="max-w-3xl mx-auto">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
-        <h1 className="text-4xl font-bold text-white mb-8">Terms of Service</h1>
-        <div className="space-y-6 text-base leading-relaxed text-slate-400">
+        <h1 className="text-4xl font-bold text-foreground mb-8">
+          Terms of Service
+        </h1>
+        <div className="space-y-6 text-base leading-relaxed text-muted-foreground">
           <p>Last updated: {new Date().toLocaleDateString()}</p>
 
-          <h2 className="text-2xl font-semibold text-white mt-8 mb-4">
+          <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">
             Usage rules
           </h2>
           <p>
@@ -31,7 +33,7 @@ export default function TermsPage() {
             jurisdiction, including but not limited to copyright laws.
           </p>
 
-          <h2 className="text-2xl font-semibold text-white mt-8 mb-4">
+          <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">
             Liability
           </h2>
           <p>
@@ -42,7 +44,7 @@ export default function TermsPage() {
             warranty of any kind, either express or implied.
           </p>
 
-          <h2 className="text-2xl font-semibold text-white mt-8 mb-4">
+          <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">
             Limits
           </h2>
           <p>

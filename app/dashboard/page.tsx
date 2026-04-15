@@ -57,8 +57,8 @@ export default async function DashboardOverviewPage() {
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white">Overview</h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-foreground">Overview</h1>
+          <p className="text-muted-foreground text-sm mt-1">
             Welcome back! Here&apos;s how your chatbots are doing.
           </p>
         </div>
@@ -105,29 +105,29 @@ export default async function DashboardOverviewPage() {
         ].map((stat) => (
           <div
             key={stat.label}
-            className="bg-slate-800/50 border border-white/5 rounded-2xl p-5"
+            className="bg-muted/50 border border-border rounded-2xl p-5"
           >
             <div
               className={`w-10 h-10 ${stat.bg} rounded-xl flex items-center justify-center mb-4`}
             >
               <stat.icon className={`w-5 h-5 ${stat.color}`} />
             </div>
-            <div className="text-2xl font-bold text-white mb-1">
+            <div className="text-2xl font-bold text-foreground mb-1">
               {stat.value.toLocaleString()}
             </div>
-            <div className="text-sm text-slate-500">{stat.label}</div>
+            <div className="text-sm text-muted-foreground">{stat.label}</div>
           </div>
         ))}
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6 relative min-w-0">
         {/* Chatbots */}
-        <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6 min-w-0">
+        <div className="bg-muted/50 border border-border rounded-2xl p-6 min-w-0">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-semibold">Your Chatbots</h2>
             <Link
               href="/onboarding"
-              className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+              className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 flex items-center gap-1"
             >
               <Plus className="w-3 h-3" /> Add new
             </Link>
@@ -135,9 +135,11 @@ export default async function DashboardOverviewPage() {
           {chatbots.length === 0 ? (
             <div className="text-center py-10">
               <div className="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-7 h-7 text-indigo-400" />
+                <Zap className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
               </div>
-              <p className="text-slate-400 text-sm mb-4">No chatbots yet</p>
+              <p className="text-muted-foreground text-sm mb-4">
+                No chatbots yet
+              </p>
               <Link
                 href="/onboarding"
                 className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm rounded-xl transition-all"
@@ -150,16 +152,16 @@ export default async function DashboardOverviewPage() {
               {chatbots.map((bot) => (
                 <div
                   key={bot.id}
-                  className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-xl hover:bg-slate-700/50 transition-colors"
+                  className="flex items-center gap-3 p-3 bg-accent/30 rounded-xl hover:bg-accent/50 transition-colors"
                 >
                   <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center shrink-0">
                     <MessageSquare className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-white truncate">
+                    <div className="text-sm font-medium text-foreground truncate">
                       {bot.name}
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-muted-foreground">
                       {bot._count.conversations} conversations ·{" "}
                       {bot._count.dataSources} pages
                     </div>
@@ -185,12 +187,12 @@ export default async function DashboardOverviewPage() {
         </div>
 
         {/* Recent Conversations */}
-        <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6 min-w-0">
+        <div className="bg-muted/50 border border-border rounded-2xl p-6 min-w-0">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-semibold">Recent Conversations</h2>
             <Link
               href="/dashboard/conversations"
-              className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+              className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 flex items-center gap-1"
             >
               View all <ArrowRight className="w-3 h-3" />
             </Link>
@@ -198,7 +200,7 @@ export default async function DashboardOverviewPage() {
           {recentConversations.length === 0 ? (
             <div className="text-center py-10">
               <MessageSquare className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-              <p className="text-slate-500 text-sm">
+              <p className="text-muted-foreground text-sm">
                 No conversations yet. Embed your chatbot and start chatting!
               </p>
             </div>
@@ -207,21 +209,21 @@ export default async function DashboardOverviewPage() {
               {recentConversations.map((conv) => {
                 const firstMsg = conv.messages[0];
                 return (
-                  <div key={conv.id} className="p-3 bg-slate-700/30 rounded-xl">
+                  <div key={conv.id} className="p-3 bg-accent/30 rounded-xl">
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-xs text-indigo-400 font-medium">
+                      <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
                         {conv.chatbotName}
                       </span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-muted-foreground">
                         {formatRelativeTime(conv.createdAt)}
                       </span>
                     </div>
                     {firstMsg && (
-                      <p className="text-sm text-slate-300 truncate">
+                      <p className="text-sm text-muted-foreground truncate">
                         {firstMsg.content}
                       </p>
                     )}
-                    <div className="text-xs text-slate-500 mt-1">
+                    <div className="text-xs text-muted-foreground mt-1">
                       {conv.messages.length} messages
                     </div>
                   </div>
@@ -233,9 +235,9 @@ export default async function DashboardOverviewPage() {
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-6 bg-gradient-to-r from-indigo-600/10 to-violet-600/10 border border-indigo-500/20 rounded-2xl p-6">
+      <div className="mt-6 bg-muted/50 border border-border rounded-2xl p-6">
         <div className="flex items-center gap-3 mb-4">
-          <TrendingUp className="w-5 h-5 text-indigo-400" />
+          <TrendingUp className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
           <h2 className="font-semibold">Quick Actions</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -251,9 +253,9 @@ export default async function DashboardOverviewPage() {
             <Link
               key={action.href}
               href={action.href}
-              className="flex items-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-sm text-slate-300 hover:text-white transition-all"
+              className="flex items-center gap-2 px-4 py-3 bg-background hover:bg-accent/50 border border-border rounded-xl text-sm text-muted-foreground hover:text-foreground transition-all"
             >
-              <action.icon className="w-4 h-4 text-indigo-400" />
+              <action.icon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
               {action.label}
             </Link>
           ))}

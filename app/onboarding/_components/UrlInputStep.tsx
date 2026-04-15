@@ -28,7 +28,7 @@ export function UrlInputStep({
   return (
     <div className="animate-fade-in-up">
       <h1 className="text-3xl font-bold mb-2">Enter your website URL</h1>
-      <p className="text-slate-400 mb-8">
+      <p className="text-muted-foreground mb-8">
         We&apos;ll scan your site and find all public pages to train your
         chatbot.
       </p>
@@ -40,20 +40,20 @@ export function UrlInputStep({
         </div>
       )}
 
-      <div className="bg-slate-900 border border-white/5 rounded-2xl p-6">
-        <label className="block text-sm font-medium text-slate-300 mb-2">
+      <div className="bg-card border border-border rounded-2xl p-6">
+        <label className="block text-sm font-medium text-muted-foreground mb-2">
           Website URL
         </label>
         <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 flex items-center bg-white/5 border border-white/10 rounded-xl px-4 gap-3 focus-within:ring-2 focus-within:ring-indigo-500 transition-all">
-            <Globe className="w-5 h-5 text-slate-400 shrink-0" />
+          <div className="flex-1 flex items-center hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 gap-3 focus-within:ring-2 focus-within:ring-indigo-500 transition-all">
+            <Globe className="w-5 h-5 text-muted-foreground shrink-0" />
             <input
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && onScan()}
               placeholder="https://yourwebsite.com"
-              className="flex-1 py-3 bg-transparent text-white placeholder:text-slate-500 focus:outline-none"
+              className="flex-1 py-3 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
             />
           </div>
           <button
@@ -69,7 +69,7 @@ export function UrlInputStep({
             {loading ? "Scanning..." : "Scan Website"}
           </button>
         </div>
-        <p className="text-xs text-slate-500 mt-3">
+        <p className="text-xs text-muted-foreground mt-3">
           We&apos;ll discover up to {PLAN_LIMITS.FREE.MAX_PAGES} pages (free
           plan). Upgrade for unlimited page scanning.
         </p>
@@ -95,11 +95,11 @@ export function UrlInputStep({
         ].map((item) => (
           <div
             key={item.label}
-            className="bg-slate-900/50 border border-white/5 rounded-xl p-4 text-center"
+            className="bg-card/50 border border-border rounded-xl p-4 text-center"
           >
-            <item.icon className="w-6 h-6 text-indigo-400 mx-auto mb-2" />
+            <item.icon className="w-6 h-6 text-indigo-600 dark:text-indigo-400 mx-auto mb-2" />
             <div className="text-sm font-medium mb-1">{item.label}</div>
-            <div className="text-xs text-slate-500">{item.desc}</div>
+            <div className="text-xs text-muted-foreground">{item.desc}</div>
           </div>
         ))}
       </div>

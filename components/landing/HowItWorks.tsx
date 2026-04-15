@@ -9,7 +9,7 @@ export function HowItWorks() {
             Simple Setup
           </div>
           <h2 className="text-4xl font-bold mb-4">Ready in 3 simple steps</h2>
-          <p className="text-slate-400 text-lg">
+          <p className="text-muted-foreground text-lg">
             No engineering team required. Set up in under 2 minutes.
           </p>
         </div>
@@ -49,17 +49,17 @@ export function HowItWorks() {
               className="relative group"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="bg-slate-900 border border-white/5 rounded-2xl p-8 hover:border-white/10 transition-all h-full">
+              <div className="bg-card border border-border rounded-2xl p-8 hover:border-border transition-all h-full">
                 <div className="text-slate-600 text-sm font-mono mb-4">
                   {item.step}
                 </div>
                 <div
                   className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center mb-6 shadow-lg ${item.glow}`}
                 >
-                  <item.icon className="w-6 h-6 text-white" />
+                  <item.icon className="w-6 h-6 text-foreground" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-                <p className="text-slate-400 leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed">
                   {item.description}
                 </p>
               </div>

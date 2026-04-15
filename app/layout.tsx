@@ -1,4 +1,5 @@
 import PHProvider from "@/components/providers/posthog-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { APP_NAME } from "@/lib/config";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -26,7 +27,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <PHProvider>{children}</PHProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <PHProvider>{children}</PHProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

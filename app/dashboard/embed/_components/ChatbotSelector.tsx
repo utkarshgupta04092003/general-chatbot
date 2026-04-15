@@ -24,7 +24,7 @@ export function ChatbotSelector({
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 max-w-[12rem] truncate ${
             selectedId === bot.id
               ? "bg-indigo-600 text-white"
-              : "bg-slate-800 text-slate-400 hover:text-white"
+              : "bg-muted text-muted-foreground hover:text-foreground"
           }`}
         >
           {bot.name}

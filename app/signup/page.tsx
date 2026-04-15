@@ -65,18 +65,23 @@ export default function SignupPage() {
       <div className="relative w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-white">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-foreground"
+          >
             <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-indigo-500/20">
-              <Bot className="w-7 h-7 text-white" />
+              <Bot className="w-7 h-7 text-foreground" />
             </div>
           </Link>
-          <h1 className="text-2xl font-bold text-white">Create an account</h1>
-          <p className="text-slate-400 text-sm mt-2">
+          <h1 className="text-2xl font-bold text-foreground">
+            Create an account
+          </h1>
+          <p className="text-muted-foreground text-sm mt-2">
             Get started with {APP_NAME} today
           </p>
         </div>
 
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
+        <div className="hover:bg-accent/50 bg-muted/30 backdrop-blur-xl border border-border rounded-2xl p-8 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm px-4 py-3 rounded-xl">
@@ -85,7 +90,7 @@ export default function SignupPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-muted-foreground mb-1.5">
                 Full Name
               </label>
               <input
@@ -93,12 +98,12 @@ export default function SignupPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="John Smith"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-muted-foreground mb-1.5">
                 Email address
               </label>
               <input
@@ -107,12 +112,12 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="john@company.com"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-muted-foreground mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -122,12 +127,12 @@ export default function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min. 6 characters"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all pr-12"
+                  className="w-full px-4 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all pr-12"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -155,10 +160,10 @@ export default function SignupPage() {
 
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-transparent px-2 text-slate-500">
+                <span className="bg-transparent px-2 text-muted-foreground">
                   or continue with
                 </span>
               </div>
@@ -167,7 +172,7 @@ export default function SignupPage() {
             <button
               type="button"
               onClick={() => signIn("google", { callbackUrl: "/onboarding" })}
-              className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-xl transition-all flex items-center justify-center gap-3"
+              className="w-full py-3 px-4 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border text-foreground font-medium rounded-xl transition-all flex items-center justify-center gap-3"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
@@ -191,11 +196,11 @@ export default function SignupPage() {
             </button>
           </form>
 
-          <p className="text-center mt-6 text-sm text-slate-400">
+          <p className="text-center mt-6 text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="text-indigo-400 hover:text-indigo-300 font-medium"
+              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 font-medium"
             >
               Sign in
             </Link>
@@ -204,11 +209,11 @@ export default function SignupPage() {
 
         <p className="text-center text-xs text-slate-600 mt-4">
           By signing up you agree to our{" "}
-          <span className="text-slate-500 cursor-pointer hover:text-slate-400">
+          <span className="text-muted-foreground cursor-pointer hover:text-muted-foreground">
             Terms of Service
           </span>{" "}
           and{" "}
-          <span className="text-slate-500 cursor-pointer hover:text-slate-400">
+          <span className="text-muted-foreground cursor-pointer hover:text-muted-foreground">
             Privacy Policy
           </span>
         </p>

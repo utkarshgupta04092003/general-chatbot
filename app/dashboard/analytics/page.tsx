@@ -98,7 +98,9 @@ export default function AnalyticsPage() {
     async function fetchAnalytics() {
       setLoading(true);
       try {
-        const res = await fetch(`${ENDPOINTS.ANALYTICS}?chatbotId=${chatbotId}`);
+        const res = await fetch(
+          `${ENDPOINTS.ANALYTICS}?chatbotId=${chatbotId}`,
+        );
         const d = await res.json();
         setData(d);
       } finally {
@@ -119,7 +121,7 @@ export default function AnalyticsPage() {
 
   if (chatbots.length === 0 && !loading) {
     return (
-      <div className="p-8 text-center text-slate-400">
+      <div className="p-8 text-center text-muted-foreground">
         No chatbots found. Create one to see analytics.
       </div>
     );
@@ -135,17 +137,17 @@ export default function AnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white mb-1">
+          <h1 className="text-2xl font-bold text-foreground mb-1">
             Analytics Dashboard
           </h1>
-          <p className="text-slate-400 text-sm">
+          <p className="text-muted-foreground text-sm">
             Derive actionable insights from your AI
           </p>
         </div>
         <select
           value={chatbotId || ""}
           onChange={(e) => setChatbotId(e.target.value)}
-          className="bg-slate-900 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 min-w-[200px]"
+          className="bg-card border border-border rounded-xl px-4 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50 min-w-[200px]"
         >
           {chatbots.map((cb) => (
             <option key={cb.id} value={cb.id}>
@@ -188,17 +190,17 @@ export default function AnalyticsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="bg-slate-900/50 border border-white/5 p-5 rounded-2xl hover:border-white/10 transition-all group"
+            className="bg-card/50 border border-border p-5 rounded-2xl hover:border-border transition-all group"
           >
             <div
-              className={`w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center ${m.color} mb-4`}
+              className={`w-10 h-10 rounded-xl bg-muted flex items-center justify-center ${m.color} mb-4`}
             >
               <m.icon className="w-5 h-5" />
             </div>
-            <div className="text-2xl font-bold text-white mb-1">
+            <div className="text-2xl font-bold text-foreground mb-1">
               {m.value?.toLocaleString()}
             </div>
-            <div className="text-slate-500 text-xs font-medium uppercase tracking-wider">
+            <div className="text-muted-foreground text-xs font-medium uppercase tracking-wider">
               {m.label}
             </div>
           </motion.div>
@@ -207,8 +209,8 @@ export default function AnalyticsPage() {
 
       {/* 2. CHARTS */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-6">
+        <div className="bg-card/50 border border-border rounded-2xl p-6">
+          <h2 className="text-lg font-semibold text-foreground mb-6">
             Conversations Per Day
           </h2>
           <div className="h-64">
@@ -251,8 +253,8 @@ export default function AnalyticsPage() {
             </ResponsiveContainer>
           </div>
         </div>
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-6">
+        <div className="bg-card/50 border border-border rounded-2xl p-6">
+          <h2 className="text-lg font-semibold text-foreground mb-6">
             Messages Per Day
           </h2>
           <div className="h-64">
@@ -287,8 +289,8 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* 3. CATEGORY DISTRIBUTION PIE */}
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-6">
+        <div className="bg-card/50 border border-border rounded-2xl p-6">
+          <h2 className="text-lg font-semibold text-foreground mb-6">
             Category Distribution
           </h2>
           <div className="h-64 relative">
@@ -316,10 +318,10 @@ export default function AnalyticsPage() {
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-2xl font-bold text-white">
+              <span className="text-2xl font-bold text-foreground">
                 {data?.overview.totalUserMessages.toLocaleString()}
               </span>
-              <span className="text-[10px] text-slate-500 uppercase">
+              <span className="text-[10px] text-muted-foreground uppercase">
                 Queries
               </span>
             </div>
@@ -330,14 +332,14 @@ export default function AnalyticsPage() {
                 key={c.name}
                 className="flex items-center justify-between text-xs"
               >
-                <div className="flex items-center gap-2 text-slate-400 capitalize">
+                <div className="flex items-center gap-2 text-muted-foreground capitalize">
                   <div
                     className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: COLORS[i % COLORS.length] }}
                   />
                   {c.name}
                 </div>
-                <span className="text-white font-medium">
+                <span className="text-foreground font-medium">
                   {c.value.toLocaleString()}
                 </span>
               </div>
@@ -346,9 +348,9 @@ export default function AnalyticsPage() {
         </div>
 
         {/* 4. FEEDBACK STATS */}
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 flex flex-col justify-between">
+        <div className="bg-card/50 border border-border rounded-2xl p-6 flex flex-col justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-white mb-6">
+            <h2 className="text-lg font-semibold text-foreground mb-6">
               Feedback Insights
             </h2>
             <div className="space-y-6">
@@ -358,15 +360,15 @@ export default function AnalyticsPage() {
                     <ThumbsUp className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-white">
+                    <div className="text-sm font-medium text-foreground">
                       Helpful
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-muted-foreground">
                       Positive responses
                     </div>
                   </div>
                 </div>
-                <div className="text-xl font-bold text-white">
+                <div className="text-xl font-bold text-foreground">
                   {data?.feedback.helpfulCount.toLocaleString()}
                 </div>
               </div>
@@ -376,15 +378,15 @@ export default function AnalyticsPage() {
                     <ThumbsDown className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-white">
+                    <div className="text-sm font-medium text-foreground">
                       Unhelpful
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-muted-foreground">
                       Corrective needed
                     </div>
                   </div>
                 </div>
-                <div className="text-xl font-bold text-white">
+                <div className="text-xl font-bold text-foreground">
                   {data?.feedback.unhelpfulCount.toLocaleString()}
                 </div>
               </div>
@@ -392,14 +394,14 @@ export default function AnalyticsPage() {
           </div>
           <div className="mt-auto pt-8">
             <div className="flex justify-between items-end mb-2">
-              <span className="text-sm text-slate-400 font-medium">
+              <span className="text-sm text-muted-foreground font-medium">
                 Approval Rating
               </span>
-              <span className="text-2xl font-bold text-indigo-400">
+              <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                 {Math.round((data?.feedback.ratio || 0) * 100)}%
               </span>
             </div>
-            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${(data?.feedback.ratio || 0) * 100}%` }}
@@ -410,13 +412,13 @@ export default function AnalyticsPage() {
         </div>
 
         {/* 5. TOP SOURCES */}
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 overflow-hidden">
-          <h2 className="text-lg font-semibold text-white mb-6">
+        <div className="bg-card/50 border border-border rounded-2xl p-6 overflow-hidden">
+          <h2 className="text-lg font-semibold text-foreground mb-6">
             Top Data Sources
           </h2>
           <div className="space-y-4">
             {data?.topSources && data.topSources.length === 0 ? (
-              <div className="text-center py-10 text-slate-500 text-sm italic">
+              <div className="text-center py-10 text-muted-foreground text-sm italic">
                 No source data
               </div>
             ) : (
@@ -426,7 +428,7 @@ export default function AnalyticsPage() {
                   className="flex items-center justify-between group/row"
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <span className="text-[10px] font-mono text-slate-500 w-4 shrink-0">
+                    <span className="text-[10px] font-mono text-muted-foreground w-4 shrink-0">
                       {i + 1}
                     </span>
                     <GlobalTooltip content={s.url}>
@@ -434,14 +436,14 @@ export default function AnalyticsPage() {
                         href={s.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-xs text-slate-300 truncate hover:text-indigo-400 flex items-center gap-1 transition-colors min-w-0"
+                        className="text-xs text-muted-foreground truncate hover:text-indigo-600 dark:text-indigo-400 flex items-center gap-1 transition-colors min-w-0"
                       >
                         {s.url}
                         <ExternalLink className="w-2 h-2 opacity-0 group-hover/row:opacity-100 shrink-0" />
                       </a>
                     </GlobalTooltip>
                   </div>
-                  <span className="text-xs font-semibold text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full shrink-0 ml-4">
+                  <span className="text-xs font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded-full shrink-0 ml-4">
                     {s.count.toLocaleString()}
                   </span>
                 </div>
@@ -453,12 +455,12 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 6. TOP QUESTIONS */}
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden">
-          <div className="p-6 border-b border-white/5 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">
+        <div className="bg-card/50 border border-border rounded-2xl overflow-hidden">
+          <div className="p-6 border-b border-border flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-foreground">
               Top User Questions
             </h2>
-            <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
               Trending
             </span>
           </div>
@@ -466,13 +468,13 @@ export default function AnalyticsPage() {
             {data?.topQuestions?.map((q, i) => (
               <div
                 key={q.question}
-                className="p-4 hover:bg-white/5 transition-colors group flex items-center justify-between"
+                className="p-4 hover:bg-accent/50 bg-muted/30 transition-colors group flex items-center justify-between"
               >
                 <div className="flex items-center gap-4 min-w-0 pr-4">
                   <span className="text-xs text-slate-600 font-mono italic">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <p className="text-sm text-slate-200 truncate pr-2 italic">
+                  <p className="text-sm text-foreground truncate pr-2 italic">
                     &quot;{q.question}&quot;
                   </p>
                 </div>
@@ -486,17 +488,17 @@ export default function AnalyticsPage() {
 
         {/* 7. UNANSWERED / LOW CONFIDENCE */}
         <div className="space-y-6">
-          <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6">
+          <div className="bg-card/50 border border-border rounded-2xl p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500">
                   <AlertCircle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-white">
+                  <h2 className="text-lg font-semibold text-foreground">
                     Unanswered Queries
                   </h2>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted-foreground">
                     Bots couldn&apos;t find information
                   </p>
                 </div>
@@ -509,13 +511,13 @@ export default function AnalyticsPage() {
               {data?.unanswered?.list?.map((u, i) => (
                 <div
                   key={i}
-                  className="text-xs p-3 bg-slate-800/50 rounded-xl text-slate-300 border border-white/5"
+                  className="text-xs p-3 bg-muted/50 rounded-xl text-muted-foreground border border-border"
                 >
                   <MarkdownMessage
                     content={u.content}
                     linkColor="text-indigo-400"
-                    codeBg="bg-slate-700"
-                    preBg="bg-slate-700"
+                    codeBg="bg-accent"
+                    preBg="bg-accent"
                   />
                 </div>
               ))}
@@ -527,17 +529,17 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
-          <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6">
+          <div className="bg-card/50 border border-border rounded-2xl p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500">
                   <TrendingUp className="w-5 h-5 rotate-180" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-white">
+                  <h2 className="text-lg font-semibold text-foreground">
                     Low Confidence
                   </h2>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted-foreground">
                     Responses below 50% threshold
                   </p>
                 </div>
@@ -550,9 +552,9 @@ export default function AnalyticsPage() {
               {data?.lowConfidence?.samples?.map((s, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between p-2 bg-slate-800/30 rounded-lg text-[10px]"
+                  className="flex items-center justify-between p-2 bg-muted/30 rounded-lg text-[10px]"
                 >
-                  <span className="text-slate-400 truncate max-w-[80%] italic pr-2">
+                  <span className="text-muted-foreground truncate max-w-[80%] italic pr-2">
                     &quot;{s.content}&quot;
                   </span>
                   <span className="text-rose-400 font-mono">

@@ -97,27 +97,27 @@ export function ResyncModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
+          className="absolute inset-0 bg-background/80 backdrop-blur-sm"
         />
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-2xl bg-slate-900 border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+          className="relative w-full max-w-2xl bg-card border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         >
           {/* Header */}
-          <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-slate-900/50">
+          <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-card/50">
             <div className="flex items-center gap-2">
               <RefreshCw
-                className={`w-5 h-5 text-indigo-400 ${loading ? "animate-spin" : ""}`}
+                className={`w-5 h-5 text-indigo-600 dark:text-indigo-400 ${loading ? "animate-spin" : ""}`}
               />
-              <h2 className="text-lg font-semibold text-white">
+              <h2 className="text-lg font-semibold text-foreground">
                 Resync Data Source
               </h2>
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-full transition-all"
+              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent/50 bg-muted/30 rounded-full transition-all"
             >
               <X className="w-5 h-5" />
             </button>
@@ -128,10 +128,10 @@ export function ResyncModal({
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20">
                 <Loader2 className="w-10 h-10 text-indigo-500 animate-spin mb-4" />
-                <p className="text-slate-300 font-medium italic">
+                <p className="text-muted-foreground font-medium italic">
                   Refetching page content...
                 </p>
-                <p className="text-slate-500 text-sm mt-1">
+                <p className="text-muted-foreground text-sm mt-1">
                   Downloading and cleaning latest HTML
                 </p>
               </div>
@@ -142,18 +142,18 @@ export function ResyncModal({
               </div>
             ) : preview ? (
               <div className="space-y-6">
-                <div className="p-4 bg-slate-800/50 rounded-xl border border-white/5">
-                  <div className="text-xs text-indigo-400 font-mono mb-1 uppercase tracking-wider">
+                <div className="p-4 bg-muted/50 rounded-xl border border-border">
+                  <div className="text-xs text-indigo-600 dark:text-indigo-400 font-mono mb-1 uppercase tracking-wider">
                     Source URL
                   </div>
-                  <div className="text-sm text-white truncate font-medium">
+                  <div className="text-sm text-foreground truncate font-medium">
                     {preview.url}
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                    <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
                       New Content Preview
                     </div>
                     {isContentChanged ? (
@@ -166,14 +166,14 @@ export function ResyncModal({
                       </span>
                     )}
                   </div>
-                  <div className="p-4 bg-slate-950 rounded-xl border border-white/5 h-64 overflow-y-auto text-xs text-slate-400 leading-relaxed font-mono whitespace-pre-wrap">
+                  <div className="p-4 bg-background rounded-xl border border-border h-64 overflow-y-auto text-xs text-muted-foreground leading-relaxed font-mono whitespace-pre-wrap">
                     {preview.content}
                   </div>
                 </div>
 
                 <div className="p-4 bg-indigo-500/5 border border-indigo-500/10 rounded-xl flex gap-3">
-                  <CheckCircle className="w-5 h-5 text-indigo-400 shrink-0" />
-                  <div className="text-xs text-slate-400">
+                  <CheckCircle className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                  <div className="text-xs text-muted-foreground">
                     Updating the index will delete old vectors from Pinecone and
                     create{" "}
                     {Math.ceil(preview.content.split(/\s+/).length / 450)} new
@@ -185,11 +185,11 @@ export function ResyncModal({
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-4 bg-slate-950/50 border-t border-white/5 flex items-center justify-end gap-3">
+          <div className="px-6 py-4 bg-background/50 border-t border-border flex items-center justify-end gap-3">
             <button
               onClick={onClose}
               disabled={updating}
-              className="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
             >
               Cancel
             </button>

@@ -7,15 +7,15 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-300 py-24 px-4 font-sans">
+    <div className="min-h-screen bg-background text-muted-foreground py-24 px-4 font-sans">
       <div className="max-w-3xl mx-auto">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
-        <h1 className="text-4xl font-bold text-white mb-8">About Us</h1>
+        <h1 className="text-4xl font-bold text-foreground mb-8">About Us</h1>
         <div className="space-y-6 text-lg leading-relaxed">
           <p>
             We are dedicated to building simple, powerful tools that empower

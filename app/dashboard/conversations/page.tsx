@@ -28,7 +28,7 @@ export default async function ConversationsPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold">Conversations</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-muted-foreground text-sm mt-1">
           All chats your visitors have had with your chatbots.
         </p>
       </div>

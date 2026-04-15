@@ -24,7 +24,7 @@ export function ChatbotFilter({
         className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
           selectedChatbotId === "all"
             ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
-            : "bg-slate-800 text-slate-400 hover:text-white"
+            : "bg-muted text-muted-foreground hover:text-foreground"
         }`}
       >
         All Sources
@@ -38,7 +38,7 @@ export function ChatbotFilter({
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
               selectedChatbotId === id
                 ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
-                : "bg-slate-800 text-slate-400 hover:text-white"
+                : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
             {name}

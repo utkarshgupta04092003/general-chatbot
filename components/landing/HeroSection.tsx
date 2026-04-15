@@ -15,10 +15,10 @@ export function HeroSection({ session }: { session: Session | null }) {
       <div className="w-full max-w-[80rem] mx-auto text-center relative">
         <div className="inline-flex items-center gap-[0.5rem] px-[0.75rem] py-[0.375rem] bg-indigo-500/10 border border-indigo-500/20 rounded-full text-[0.75rem] text-indigo-300 font-medium mb-[2rem] animate-fade-in-up">
           <Sparkles className="w-3 h-3" />
-          Powered by GPT-4 + RAG Technology
+          Powered by GPT-5 + RAG Technology
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight animate-fade-in-up delay-100">
+        <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight animate-fade-in-up delay-100">
           Build your own <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
             AI Chatbot
@@ -26,7 +26,7 @@ export function HeroSection({ session }: { session: Session | null }) {
           in minutes
         </h1>
 
-        <p className="text-xl text-slate-400 mb-10 max-w-2xl mx-auto animate-fade-in-up delay-200">
+        <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-fade-in-up delay-200">
           {APP_NAME} makes it easy to train a custom AI on your own data and add
           it to your website in seconds.
         </p>
@@ -41,9 +41,9 @@ export function HeroSection({ session }: { session: Session | null }) {
           </Link>
           <Link
             href="#demo"
-            className="flex items-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-xl transition-all"
+            className="flex items-center gap-2 px-8 py-4 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border text-foreground font-medium rounded-xl transition-all"
           >
-            <Play className="w-4 h-4 text-indigo-400" />
+            <Play className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
             See Demo
           </Link>
         </div>
@@ -59,22 +59,24 @@ export function HeroSection({ session }: { session: Session | null }) {
               <div className="text-3xl font-bold gradient-text">
                 {stat.value}
               </div>
-              <div className="text-sm text-slate-500 mt-1">{stat.label}</div>
+              <div className="text-sm text-muted-foreground mt-1">
+                {stat.label}
+              </div>
             </div>
           ))}
         </div>
 
         {/* Hero browser mockup */}
         <div className="relative mx-auto w-full max-w-[64rem] animate-fade-in-up delay-500 hidden md:block px-[1.5rem] lg:px-0">
-          <div className="bg-slate-900 rounded-[1rem] border border-white/10 overflow-hidden shadow-2xl shadow-indigo-500/10">
+          <div className="bg-card rounded-[1rem] border border-border overflow-hidden shadow-2xl shadow-indigo-500/10">
             {/* Browser bar */}
-            <div className="flex items-center gap-2 px-4 py-3 bg-slate-800/50 border-b border-white/5">
+            <div className="flex items-center gap-2 px-4 py-3 bg-muted/50 border-b border-border">
               <div className="flex gap-1.5">
                 <div className="w-3 h-3 rounded-full bg-red-500/60" />
                 <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
                 <div className="w-3 h-3 rounded-full bg-green-500/60" />
               </div>
-              <div className="flex-1 mx-4 bg-slate-700/50 rounded-lg px-3 py-1 text-xs text-slate-400">
+              <div className="flex-1 mx-4 bg-accent/50 rounded-lg px-3 py-1 text-xs text-muted-foreground">
                 app.{APP_NAME.toLowerCase()}.ai/dashboard
               </div>
             </div>
@@ -90,10 +92,10 @@ export function HeroSection({ session }: { session: Session | null }) {
                 ].map((item, i) => (
                   <div
                     key={item}
-                    className={`px-3 py-2 rounded-lg text-sm flex items-center gap-2 ${i === 0 ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-white"}`}
+                    className={`px-3 py-2 rounded-lg text-sm flex items-center gap-2 ${i === 0 ? "bg-indigo-600 text-white" : "text-muted-foreground hover:text-foreground"}`}
                   >
                     <div
-                      className={`w-1.5 h-1.5 rounded-full ${i === 0 ? "bg-white" : "bg-slate-600"}`}
+                      className={`w-1.5 h-1.5 rounded-full ${i === 0 ? "bg-white" : "bg-secondary"}`}
                     />
                     {item}
                   </div>
@@ -113,18 +115,21 @@ export function HeroSection({ session }: { session: Session | null }) {
                       color: "text-green-400",
                     },
                   ].map((stat) => (
-                    <div key={stat.label} className="bg-white/5 rounded-xl p-4">
+                    <div
+                      key={stat.label}
+                      className="hover:bg-accent/50 bg-muted/30 rounded-xl p-4"
+                    >
                       <div className={`text-2xl font-bold ${stat.color}`}>
                         {stat.value}
                       </div>
-                      <div className="text-xs text-slate-500 mt-1">
+                      <div className="text-xs text-muted-foreground mt-1">
                         {stat.label}
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="bg-white/5 rounded-xl p-4">
-                  <div className="text-xs text-slate-400 mb-3">
+                <div className="hover:bg-accent/50 bg-muted/30 rounded-xl p-4">
+                  <div className="text-xs text-muted-foreground mb-3">
                     Recent Conversations
                   </div>
                   {[
@@ -134,7 +139,7 @@ export function HeroSection({ session }: { session: Session | null }) {
                   ].map((msg) => (
                     <div key={msg} className="flex items-center gap-2 py-1.5">
                       <div className="w-1 h-1 rounded-full bg-indigo-400" />
-                      <span className="text-xs text-slate-500 truncate">
+                      <span className="text-xs text-muted-foreground truncate">
                         {msg}
                       </span>
                     </div>
@@ -148,7 +153,7 @@ export function HeroSection({ session }: { session: Session | null }) {
           <div className="absolute -right-4 -bottom-4 bg-white rounded-2xl shadow-2xl shadow-black/30 w-48 p-3">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center">
-                <MessageSquare className="w-3 h-3 text-white" />
+                <MessageSquare className="w-3 h-3 text-foreground" />
               </div>
               <span className="text-xs font-semibold text-slate-700">
                 AI Assistant

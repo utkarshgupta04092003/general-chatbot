@@ -37,7 +37,10 @@ export function BasicInfoSection({
       const folder = getSafeFolder(domainName);
 
       formData.append("folder", folder);
-      formData.append("filename", type === "assistant" ? "assistantLogo" : "websiteLogo");
+      formData.append(
+        "filename",
+        type === "assistant" ? "assistantLogo" : "websiteLogo",
+      );
 
       const res = await fetch("/api/upload", {
         method: "POST",
@@ -59,17 +62,17 @@ export function BasicInfoSection({
   }
 
   return (
-    <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6">
+    <div className="bg-muted/50 border border-border rounded-2xl p-6">
       <h2 className="font-semibold mb-5">Basic Information</h2>
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Assistant Logo */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-slate-300">
+            <label className="block text-sm font-medium text-muted-foreground">
               Assistant Logo
             </label>
             <div className="flex items-center gap-4">
-              <div className="relative w-16 h-16 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
+              <div className="relative w-16 h-16 rounded-xl hover:bg-accent/50 bg-muted/30 border border-border flex items-center justify-center overflow-hidden shrink-0">
                 {selected.assistantLogo ? (
                   <Image
                     src={selected.assistantLogo}
@@ -78,16 +81,16 @@ export function BasicInfoSection({
                     className="object-cover"
                   />
                 ) : (
-                  <User className="w-6 h-6 text-slate-500" />
+                  <User className="w-6 h-6 text-muted-foreground" />
                 )}
                 {uploading === "assistant" && (
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                    <Loader2 className="w-4 h-4 text-white animate-spin" />
+                    <Loader2 className="w-4 h-4 text-foreground animate-spin" />
                   </div>
                 )}
               </div>
               <label className="flex-1 cursor-pointer">
-                <div className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-medium text-slate-300 transition-all flex items-center justify-center gap-2">
+                <div className="px-4 py-2 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-xs font-medium text-muted-foreground transition-all flex items-center justify-center gap-2">
                   <Upload className="w-3.5 h-3.5" />
                   {uploading === "assistant" ? "Uploading..." : "Change Logo"}
                 </div>
@@ -104,11 +107,11 @@ export function BasicInfoSection({
 
           {/* Website Logo */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-slate-300">
+            <label className="block text-sm font-medium text-muted-foreground">
               Website Logo (Scraped)
             </label>
             <div className="flex items-center gap-4">
-              <div className="relative w-16 h-16 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
+              <div className="relative w-16 h-16 rounded-xl hover:bg-accent/50 bg-muted/30 border border-border flex items-center justify-center overflow-hidden shrink-0">
                 {selected.websiteLogo ? (
                   <Image
                     src={selected.websiteLogo}
@@ -118,16 +121,16 @@ export function BasicInfoSection({
                     className="object-cover"
                   />
                 ) : (
-                  <Globe className="w-6 h-6 text-slate-500" />
+                  <Globe className="w-6 h-6 text-muted-foreground" />
                 )}
                 {uploading === "website" && (
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                    <Loader2 className="w-4 h-4 text-white animate-spin" />
+                    <Loader2 className="w-4 h-4 text-foreground animate-spin" />
                   </div>
                 )}
               </div>
               <label className="flex-1 cursor-pointer">
-                <div className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-medium text-slate-300 transition-all flex items-center justify-center gap-2">
+                <div className="px-4 py-2 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-xs font-medium text-muted-foreground transition-all flex items-center justify-center gap-2">
                   <Upload className="w-3.5 h-3.5" />
                   {uploading === "website" ? "Uploading..." : "Replace Logo"}
                 </div>
@@ -144,18 +147,18 @@ export function BasicInfoSection({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">
+          <label className="block text-sm font-medium text-muted-foreground mb-1.5">
             Chatbot Name
           </label>
           <input
             type="text"
             value={selected.name}
             onChange={(e) => onChange({ ...selected, name: e.target.value })}
-            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full px-4 py-2.5 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">
+          <label className="block text-sm font-medium text-muted-foreground mb-1.5">
             Welcome Message
           </label>
           <textarea
@@ -164,7 +167,7 @@ export function BasicInfoSection({
               onChange({ ...selected, welcomeMessage: e.target.value })
             }
             rows={3}
-            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
+            className="w-full px-4 py-2.5 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
           />
         </div>
       </div>

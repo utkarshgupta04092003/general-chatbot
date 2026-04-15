@@ -70,7 +70,7 @@ export default function ChatbotSettingsPage() {
   if (loading)
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+        <Loader2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-spin" />
       </div>
     );
 
@@ -78,8 +78,10 @@ export default function ChatbotSettingsPage() {
     return (
       <div className="text-center py-20">
         <Settings className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-        <h3 className="font-semibold text-slate-300 mb-2">No chatbots yet</h3>
-        <p className="text-slate-500 text-sm">
+        <h3 className="font-semibold text-muted-foreground mb-2">
+          No chatbots yet
+        </h3>
+        <p className="text-muted-foreground text-sm">
           Create a chatbot first to configure its settings.
         </p>
       </div>
@@ -89,21 +91,21 @@ export default function ChatbotSettingsPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold">Chatbot Settings</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-muted-foreground text-sm mt-1">
           Customize how your chatbot looks and behaves.
         </p>
       </div>
 
       {chatbots.length > 1 && (
-        <div className="flex gap-2 mb-6 flex-wrap">
+        <div className="flex gap-2 mb-6 overflow-x-auto scrollbar-hide pb-1">
           {chatbots.map((bot) => (
             <button
               key={bot.id}
               onClick={() => setSelected(bot)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 cursor-pointer whitespace-nowrap ${
                 selected?.id === bot.id
                   ? "bg-indigo-600 text-white"
-                  : "bg-slate-800 text-slate-400 hover:text-white"
+                  : "bg-muted text-muted-foreground hover:text-foreground"
               }`}
             >
               {bot.name}

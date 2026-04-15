@@ -4,29 +4,29 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/5 py-16 px-4 bg-slate-950">
+    <footer className="border-t border-border py-16 px-4 bg-background">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8 md:gap-12 mb-12">
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <Bot className="w-5 h-5 text-white" />
+                <Bot className="w-5 h-5 text-foreground" />
               </div>
               <span className="font-bold text-lg">{APP_NAME}</span>
             </div>
-            <p className="text-sm text-slate-500 max-w-xs">
+            <p className="text-sm text-muted-foreground max-w-xs">
               Build your own AI Chatbot in minutes. Train on your data and embed
               it anywhere.
             </p>
           </div>
 
           <div>
-            <h3 className="font-semibold text-white mb-4">Product</h3>
-            <ul className="space-y-3 text-sm text-slate-500">
+            <h3 className="font-semibold text-foreground mb-4">Product</h3>
+            <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
                 <Link
                   href="#features"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   Features
                 </Link>
@@ -34,7 +34,7 @@ export function Footer() {
               <li>
                 <Link
                   href="#pricing"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   Pricing
                 </Link>
@@ -42,7 +42,7 @@ export function Footer() {
               <li>
                 <Link
                   href="#demo"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   Demo
                 </Link>
@@ -51,12 +51,12 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-white mb-4">Company</h3>
-            <ul className="space-y-3 text-sm text-slate-500">
+            <h3 className="font-semibold text-foreground mb-4">Company</h3>
+            <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
                 <Link
                   href="/about"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   About
                 </Link>
@@ -64,7 +64,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/contact"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   Contact
                 </Link>
@@ -73,12 +73,12 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-white mb-4">Resources</h3>
-            <ul className="space-y-3 text-sm text-slate-500">
+            <h3 className="font-semibold text-foreground mb-4">Resources</h3>
+            <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
                 <Link
                   href="/support"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   Help / Support
                 </Link>
@@ -95,12 +95,12 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-white mb-4">Legal</h3>
-            <ul className="space-y-3 text-sm text-slate-500">
+            <h3 className="font-semibold text-foreground mb-4">Legal</h3>
+            <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
                 <Link
                   href="/privacy"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   Privacy Policy
                 </Link>
@@ -108,7 +108,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/terms"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   Terms of Service
                 </Link>
@@ -116,7 +116,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/refund"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   Refund Policy
                 </Link>
@@ -125,7 +125,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-sm text-slate-600">
             © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
           </div>

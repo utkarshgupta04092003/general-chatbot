@@ -23,18 +23,18 @@ export function StepIndicator({ steps, currentStep }: StepIndicatorProps) {
                 ? "bg-indigo-600 text-white"
                 : currentStep === s.id
                   ? "bg-indigo-600/30 border-2 border-indigo-500 text-indigo-300"
-                  : "bg-slate-800 text-slate-600"
+                  : "bg-muted text-slate-600"
             }`}
           >
             {currentStep > s.id ? <CheckCircle className="w-4 h-4" /> : s.id}
           </div>
           <span
-            className={`text-xs hidden sm:block ${currentStep === s.id ? "text-white" : "text-slate-600"}`}
+            className={`text-xs hidden sm:block ${currentStep === s.id ? "text-foreground" : "text-slate-600"}`}
           >
             {s.label}
           </span>
           {s.id < steps.length && (
-            <div className="w-8 h-px bg-slate-800 hidden sm:block" />
+            <div className="w-8 h-px bg-muted hidden sm:block" />
           )}
         </div>
       ))}

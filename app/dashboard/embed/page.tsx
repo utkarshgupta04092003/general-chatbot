@@ -64,7 +64,7 @@ export default function EmbedPage() {
   if (loading)
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+        <Loader2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-spin" />
       </div>
     );
 
@@ -72,16 +72,20 @@ export default function EmbedPage() {
     <div className="min-w-0 overflow-hidden">
       <div className="mb-8">
         <h1 className="text-2xl font-bold">Embed Your Chatbot</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-muted-foreground text-sm mt-1">
           Add your chatbot to any website with a single line of code.
         </p>
       </div>
 
       {chatbots.length === 0 ? (
-        <div className="text-center py-20 bg-slate-800/30 border border-white/5 rounded-2xl">
+        <div className="text-center py-20 bg-muted/30 border border-border rounded-2xl">
           <Zap className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <h3 className="font-semibold text-slate-300 mb-2">No chatbots yet</h3>
-          <p className="text-slate-500 text-sm">Create a chatbot first.</p>
+          <h3 className="font-semibold text-muted-foreground mb-2">
+            No chatbots yet
+          </h3>
+          <p className="text-muted-foreground text-sm">
+            Create a chatbot first.
+          </p>
         </div>
       ) : (
         <>

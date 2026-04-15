@@ -74,6 +74,7 @@ export default function DataSourcesPage() {
   }
 
   async function fetchSources() {
+    setLoading(true);
     try {
       const res = await fetch(ENDPOINTS.DATA_SOURCES);
       const data = await res.json();
@@ -239,7 +240,7 @@ export default function DataSourcesPage() {
 
       <div className="mb-8">
         <h1 className="text-2xl font-bold">Data Sources</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-muted-foreground text-sm mt-1">
           Manage the pages your chatbots are trained on.
         </p>
       </div>

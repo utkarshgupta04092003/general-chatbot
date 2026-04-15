@@ -24,22 +24,22 @@ export function PermissionStep({
   return (
     <div className="animate-fade-in-up">
       <h1 className="text-3xl font-bold mb-2">Review & Confirm</h1>
-      <p className="text-slate-400 mb-8">
+      <p className="text-muted-foreground mb-8">
         Please confirm before we extract content from the selected pages.
       </p>
 
-      <div className="bg-slate-900 border border-white/5 rounded-2xl p-6 mb-6">
+      <div className="bg-card border border-border rounded-2xl p-6 mb-6">
         <div className="flex items-start gap-4 mb-6">
           <div className="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-5 h-5 text-indigo-400" />
+            <ShieldCheck className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
           </div>
           <div>
-            <h3 className="font-semibold mb-1 text-white">
+            <h3 className="font-semibold mb-1 text-foreground">
               Data Extraction Notice
             </h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               We will extract text content from{" "}
-              <strong className="text-white">
+              <strong className="text-foreground">
                 {selectedUrls.size} selected pages
               </strong>{" "}
               to train your AI chatbot. Only publicly accessible text content
@@ -55,7 +55,7 @@ export function PermissionStep({
         ].map((point) => (
           <div key={point} className="flex items-center gap-2 py-1.5">
             <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />
-            <span className="text-sm text-slate-300">{point}</span>
+            <span className="text-sm text-muted-foreground">{point}</span>
           </div>
         ))}
       </div>
@@ -66,12 +66,14 @@ export function PermissionStep({
           {Array.from(selectedUrls)
             .slice(0, 3)
             .map((u) => (
-              <li key={u} className="text-slate-400 truncate">
+              <li key={u} className="text-muted-foreground truncate">
                 • {u}
               </li>
             ))}
           {selectedUrls.size > 3 && (
-            <li className="text-slate-500">+ {selectedUrls.size - 3} more</li>
+            <li className="text-muted-foreground">
+              + {selectedUrls.size - 3} more
+            </li>
           )}
         </ul>
       </div>
@@ -79,7 +81,7 @@ export function PermissionStep({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm transition-all text-white"
+          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm transition-all text-foreground"
         >
           <ArrowLeft className="w-4 h-4" /> Cancel
         </button>

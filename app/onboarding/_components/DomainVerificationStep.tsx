@@ -40,7 +40,7 @@ export function DomainVerificationStep({
   return (
     <div className="animate-fade-in-up">
       <h1 className="text-3xl font-bold mb-2">Verify your domain</h1>
-      <p className="text-slate-400 mb-8">
+      <p className="text-muted-foreground mb-8">
         For security, please verify ownership of <b>{domain}</b>.
       </p>
 
@@ -51,10 +51,10 @@ export function DomainVerificationStep({
         </div>
       )}
 
-      <div className="bg-slate-900 border border-white/5 rounded-2xl p-6 mb-6">
+      <div className="bg-card border border-border rounded-2xl p-6 mb-6">
         {!codeRequested ? (
           <div className="space-y-4">
-            <p className="text-sm text-slate-300">
+            <p className="text-sm text-muted-foreground">
               Enter an email address associated with this domain to receive a
               verification code.
             </p>
@@ -64,7 +64,7 @@ export function DomainVerificationStep({
                 value={verificationEmail}
                 onChange={(e) => setVerificationEmail(e.target.value)}
                 placeholder={`admin@${domain}`}
-                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none text-white"
+                className="flex-1 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none text-foreground"
               />
               <button
                 onClick={onRequestCode}
@@ -81,7 +81,7 @@ export function DomainVerificationStep({
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="text-sm text-slate-300 italic mb-2 text-indigo-300 flex items-center gap-2">
+            <p className="text-sm text-muted-foreground italic mb-2 text-indigo-300 flex items-center gap-2">
               Verification code sent to {verificationEmail}
             </p>
             <div className="flex gap-3">
@@ -90,7 +90,7 @@ export function DomainVerificationStep({
                 value={verificationCode}
                 onChange={(e) => setVerificationCode(e.target.value)}
                 placeholder="Enter 6-digit code"
-                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none text-white"
+                className="flex-1 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none text-foreground"
               />
               <button
                 onClick={onVerify}
@@ -107,7 +107,7 @@ export function DomainVerificationStep({
             </div>
             <button
               onClick={() => setCodeRequested(false)}
-              className="text-xs text-slate-500 hover:text-indigo-400 mt-2 underline"
+              className="text-xs text-muted-foreground hover:text-indigo-600 dark:text-indigo-400 mt-2 underline"
             >
               Use different email
             </button>
@@ -118,7 +118,7 @@ export function DomainVerificationStep({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm transition-all text-white"
+          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm transition-all text-foreground"
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>

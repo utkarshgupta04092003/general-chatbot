@@ -181,7 +181,7 @@ export default function ChatWidget({
         >
           {/* Header */}
           <div
-            className="flex items-center gap-3 px-4 py-3 text-white"
+            className="flex items-center gap-3 px-4 py-3 text-foreground"
             style={{ backgroundColor: primaryColor }}
           >
             <div className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center shrink-0 overflow-hidden relative">
@@ -194,14 +194,14 @@ export default function ChatWidget({
                   className="object-cover"
                 />
               ) : (
-                <MessageSquare className="w-4 h-4 text-white" />
+                <MessageSquare className="w-4 h-4 text-foreground" />
               )}
             </div>
             <div className="flex-1 min-w-0">
               <div className="font-semibold text-sm">{chatbotName}</div>
               <div className="flex items-center gap-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                <span className="text-xs text-white/70">
+                <span className="text-xs text-foreground/70">
                   Always here to help
                 </span>
               </div>
@@ -210,13 +210,13 @@ export default function ChatWidget({
               <button
                 onClick={handleReset}
                 title="Reset Chat"
-                className="text-white/70 hover:text-white transition-colors"
+                className="text-foreground/70 hover:text-foreground transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setOpen(false)}
-                className="text-white/70 hover:text-white transition-colors"
+                className="text-foreground/70 hover:text-foreground transition-colors"
                 title="Minimize"
               >
                 <Minimize2 className="w-4 h-4" />
@@ -243,7 +243,7 @@ export default function ChatWidget({
               >
                 {msg.role === CHAT_ROLES.ASSISTANT && (
                   <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs shrink-0 mr-2 mt-0.5 overflow-hidden relative"
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-foreground text-xs shrink-0 mr-2 mt-0.5 overflow-hidden relative"
                     style={{ backgroundColor: primaryColor }}
                   >
                     {assistantLogo ? (
@@ -261,7 +261,7 @@ export default function ChatWidget({
                 <div
                   className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed break-words overflow-hidden relative group ${
                     msg.role === CHAT_ROLES.USER
-                      ? "text-white rounded-br-sm"
+                      ? "text-foreground rounded-br-sm"
                       : "bg-white text-gray-700 shadow-sm rounded-bl-sm"
                   }`}
                   style={
@@ -313,7 +313,7 @@ export default function ChatWidget({
             {loading && (
               <div className="flex justify-start">
                 <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs shrink-0 mr-2 mt-0.5 overflow-hidden relative"
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-foreground text-xs shrink-0 mr-2 mt-0.5 overflow-hidden relative"
                   style={{ backgroundColor: primaryColor }}
                 >
                   {assistantLogo ? (
@@ -367,7 +367,7 @@ export default function ChatWidget({
               <button
                 type="submit"
                 disabled={!input.trim() || loading}
-                className="w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 transition-all text-white"
+                className="w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 transition-all text-foreground"
                 style={{ backgroundColor: primaryColor }}
               >
                 {loading ? (
@@ -387,7 +387,7 @@ export default function ChatWidget({
       {/* Floating button */}
       <button
         onClick={() => setOpen(!open)}
-        className="w-14 h-14 rounded-full text-white shadow-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+        className="w-14 h-14 rounded-full text-foreground shadow-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95"
         style={{ backgroundColor: primaryColor }}
         aria-label="Open chat"
       >

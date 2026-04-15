@@ -39,12 +39,12 @@ export function ConversationsList({
 
   if (conversations.length === 0) {
     return (
-      <div className="text-center py-20 bg-slate-800/30 border border-white/5 rounded-2xl">
+      <div className="text-center py-20 bg-muted/30 border border-border rounded-2xl">
         <MessageSquare className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-        <h3 className="font-semibold text-slate-300 mb-2">
+        <h3 className="font-semibold text-muted-foreground mb-2">
           No conversations yet
         </h3>
-        <p className="text-slate-500 text-sm">
+        <p className="text-muted-foreground text-sm">
           Conversations will appear here once visitors start chatting with your
           bot.
         </p>
@@ -60,7 +60,7 @@ export function ConversationsList({
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
             selectedChatbotId === "all"
               ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
-              : "bg-slate-800 text-slate-400 hover:text-white"
+              : "bg-muted text-muted-foreground hover:text-foreground"
           }`}
         >
           All Conversations
@@ -72,7 +72,7 @@ export function ConversationsList({
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
               selectedChatbotId === id
                 ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
-                : "bg-slate-800 text-slate-400 hover:text-white"
+                : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
             {name}
@@ -82,12 +82,12 @@ export function ConversationsList({
 
       <div className="space-y-4">
         {filtered.length === 0 ? (
-          <div className="text-center py-20 bg-slate-800/30 border border-white/5 rounded-2xl">
+          <div className="text-center py-20 bg-muted/30 border border-border rounded-2xl">
             <MessageSquare className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-            <h3 className="font-semibold text-slate-300 mb-2">
+            <h3 className="font-semibold text-muted-foreground mb-2">
               No conversations for this chatbot
             </h3>
-            <p className="text-slate-500 text-sm">
+            <p className="text-muted-foreground text-sm">
               Conversations will appear here once visitors start chatting.
             </p>
           </div>

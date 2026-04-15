@@ -11,19 +11,19 @@ export function ChatbotIdSection({ chatbotId, onCopy }: ChatbotIdSectionProps) {
   if (!chatbotId) return null;
 
   return (
-    <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-4 sm:p-5">
-      <h3 className="text-sm font-medium text-slate-300 mb-2">
+    <div className="bg-muted/50 border border-border rounded-2xl p-4 sm:p-5">
+      <h3 className="text-sm font-medium text-muted-foreground mb-2">
         Your Chatbot ID
       </h3>
       <div className="flex items-center gap-3 min-w-0">
-        <code className="flex-1 px-3 py-2 bg-white/5 rounded-lg text-sm font-mono text-indigo-300 truncate min-w-0">
+        <code className="flex-1 px-3 py-2 bg-muted/30 hover:bg-accent/50 rounded-lg text-sm font-mono text-indigo-600 dark:text-indigo-400 truncate min-w-0">
           {chatbotId}
         </code>
         <button
           onClick={() => onCopy(chatbotId)}
-          className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors shrink-0"
+          className="p-2 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 rounded-lg transition-colors shrink-0"
         >
-          <Copy className="w-4 h-4 text-slate-400" />
+          <Copy className="w-4 h-4 text-muted-foreground" />
         </button>
       </div>
     </div>

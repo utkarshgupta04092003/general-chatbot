@@ -45,13 +45,13 @@ export default async function UsagePage() {
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold">Usage</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-muted-foreground text-sm mt-1">
           Monitor your resource consumption and payment history.
         </p>
       </div>
 
       {/* Current usage */}
-      <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6 mb-8">
+      <div className="bg-muted/50 border border-border rounded-2xl p-6 mb-8">
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-semibold">Current Usage</h2>
           <span className="px-3 py-1 bg-indigo-500/10 text-indigo-300 text-xs font-medium rounded-full border border-indigo-500/20">
@@ -81,19 +81,19 @@ export default async function UsagePage() {
             return (
               <div key={item.label} className="group">
                 <div className="flex items-center justify-between text-sm mb-2.5">
-                  <span className="text-slate-400 group-hover:text-slate-300 transition-colors">
+                  <span className="text-muted-foreground group-hover:text-muted-foreground transition-colors">
                     {item.label}
                   </span>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-white font-semibold">
+                    <span className="text-foreground font-semibold">
                       {item.used.toLocaleString()}
                     </span>
-                    <span className="text-slate-500 text-[10px]">
+                    <span className="text-muted-foreground text-[10px]">
                       / {item.total.toLocaleString()}
                     </span>
                   </div>
                 </div>
-                <div className="relative w-full bg-slate-700/50 rounded-full h-2.5 overflow-hidden">
+                <div className="relative w-full bg-accent/50 rounded-full h-2.5 overflow-hidden">
                   <div
                     className={`absolute left-0 top-0 h-full rounded-full transition-all duration-500 ease-out ${
                       percentage > 90
@@ -112,13 +112,13 @@ export default async function UsagePage() {
       </div>
 
       {/* Payment history placeholder */}
-      <div className="bg-slate-800/50 border border-white/5 rounded-2xl p-6">
+      <div className="bg-muted/50 border border-border rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-4">
-          <CreditCard className="w-5 h-5 text-slate-400" />
+          <CreditCard className="w-5 h-5 text-muted-foreground" />
           <h2 className="font-semibold">Payment History</h2>
         </div>
         <div className="text-center py-8">
-          <p className="text-slate-500 text-sm">
+          <p className="text-muted-foreground text-sm">
             No payments yet. You are on the Free plan.
           </p>
         </div>

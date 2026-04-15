@@ -94,7 +94,7 @@ export function PricingSection({ session }: PricingSectionProps) {
             className={`relative flex flex-col rounded-2xl p-8 h-full transition-all hover:scale-[1.02] duration-300 ${
               plan.popular
                 ? "bg-indigo-600 border-2 border-indigo-400 shadow-2xl shadow-indigo-500/30"
-                : "bg-slate-900 border border-white/5"
+                : "bg-card border border-border"
             }`}
           >
             {plan.popular && (
@@ -107,7 +107,7 @@ export function PricingSection({ session }: PricingSectionProps) {
                 className={`absolute top-4 right-4 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border shadow-sm ${
                   plan.name === "Starter"
                     ? "bg-white text-indigo-600 border-white shadow-indigo-500/10"
-                    : "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
+                    : "bg-indigo-500/10 border-indigo-500/20 text-indigo-600 dark:text-indigo-400"
                 }`}
               >
                 Coming Soon
@@ -115,17 +115,19 @@ export function PricingSection({ session }: PricingSectionProps) {
             )}
 
             <div className="mb-6">
-              <div className="text-sm text-slate-400 mb-1">{plan.name}</div>
+              <div className="text-sm text-muted-foreground mb-1">
+                {plan.name}
+              </div>
               <div className="flex items-end gap-1 mb-1">
                 <span className="text-4xl font-bold">{plan.price}</span>
                 <span
-                  className={`text-sm mb-1.5 ${plan.popular ? "text-indigo-200" : "text-slate-500"}`}
+                  className={`text-sm mb-1.5 ${plan.popular ? "text-indigo-200" : "text-muted-foreground"}`}
                 >
                   {plan.period}
                 </span>
               </div>
               <p
-                className={`text-sm ${plan.popular ? "text-indigo-200" : "text-slate-500"}`}
+                className={`text-sm ${plan.popular ? "text-indigo-200" : "text-muted-foreground"}`}
               >
                 {plan.description}
               </p>
@@ -135,11 +137,11 @@ export function PricingSection({ session }: PricingSectionProps) {
               {plan.features.map((feature) => (
                 <li key={feature} className="flex items-center gap-2 text-sm">
                   <CheckCircle
-                    className={`w-4 h-4 shrink-0 ${plan.popular ? "text-indigo-200" : "text-indigo-400"}`}
+                    className={`w-4 h-4 shrink-0 ${plan.popular ? "text-indigo-200" : "text-indigo-600 dark:text-indigo-400"}`}
                   />
                   <span
                     className={
-                      plan.popular ? "text-indigo-100" : "text-slate-300"
+                      plan.popular ? "text-indigo-100" : "text-muted-foreground"
                     }
                   >
                     {feature}
@@ -155,7 +157,7 @@ export function PricingSection({ session }: PricingSectionProps) {
                   className={`block text-center py-3 rounded-xl font-medium text-sm transition-all shadow-lg ${
                     plan.popular
                       ? "bg-white text-indigo-600 hover:bg-indigo-50 shadow-white/10"
-                      : "bg-white/5 hover:bg-white/10 border border-white/10 text-white shadow-black/10"
+                      : "hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border text-white shadow-black/10"
                   }`}
                 >
                   {plan.cta}
@@ -163,10 +165,10 @@ export function PricingSection({ session }: PricingSectionProps) {
               ) : (
                 <button
                   onClick={() => handleNotifyClick(plan.name)}
-                  className={`w-full text-center py-3 rounded-xl font-medium text-sm transition-all border border-white/10 cursor-pointer ${
+                  className={`w-full text-center py-3 rounded-xl font-medium text-sm transition-all border border-border cursor-pointer ${
                     plan.popular
                       ? "bg-white text-indigo-600 hover:bg-indigo-50"
-                      : "bg-transparent hover:bg-white/5 text-slate-400 hover:text-white"
+                      : "bg-transparent hover:bg-accent/50 bg-muted/30 text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {plan.cta}

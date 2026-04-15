@@ -47,12 +47,14 @@ export function SelectChatbotModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
-        <div className="flex items-center justify-between p-5 border-b border-white/5">
-          <h2 className="font-semibold text-white">Select Target Chatbot</h2>
+      <div className="bg-card border border-border rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
+        <div className="flex items-center justify-between p-5 border-b border-border">
+          <h2 className="font-semibold text-foreground">
+            Select Target Chatbot
+          </h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors"
+            className="p-1 hover:bg-accent/50 rounded-lg text-muted-foreground hover:text-foreground transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -60,11 +62,11 @@ export function SelectChatbotModal({
 
         <div className="p-5 max-h-[300px] overflow-y-auto">
           {loading ? (
-            <div className="text-center py-4 text-slate-500 text-sm">
+            <div className="text-center py-4 text-muted-foreground text-sm">
               Loading chatbots...
             </div>
           ) : chatbots.length === 0 ? (
-            <div className="text-center py-4 text-slate-500 text-sm">
+            <div className="text-center py-4 text-muted-foreground text-sm">
               No chatbots found. Please create one first.
             </div>
           ) : (
@@ -73,7 +75,7 @@ export function SelectChatbotModal({
                 <button
                   key={bot.id}
                   onClick={() => onSelect(bot.id)}
-                  className="px-4 py-3 bg-slate-800/50 hover:bg-indigo-500/10 border border-white/5 hover:border-indigo-500/30 rounded-xl text-sm font-medium text-left transition-all text-white"
+                  className="px-4 py-3 bg-muted/50 hover:bg-indigo-500/10 border border-border hover:border-indigo-500/30 rounded-xl text-sm font-medium text-left transition-all text-foreground"
                 >
                   {bot.name}
                 </button>

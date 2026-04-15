@@ -20,13 +20,13 @@ export function ProcessingStep({
   return (
     <div className="animate-fade-in-up text-center">
       <div className="w-20 h-20 bg-indigo-600/20 rounded-full flex items-center justify-center mx-auto mb-8 relative">
-        <Sparkles className="w-10 h-10 text-indigo-400" />
+        <Sparkles className="w-10 h-10 text-indigo-600 dark:text-indigo-400" />
         <div className="absolute inset-0 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
       </div>
-      <h1 className="text-3xl font-bold mb-2 text-white">
+      <h1 className="text-3xl font-bold mb-2 text-foreground">
         Training your chatbot...
       </h1>
-      <p className="text-slate-400 mb-12">
+      <p className="text-muted-foreground mb-12">
         This takes about 30 seconds. Please don&apos;t close this tab.
       </p>
 
@@ -48,19 +48,19 @@ export function ProcessingStep({
                   ? "bg-green-500"
                   : i === processStep
                     ? "bg-indigo-600"
-                    : "bg-slate-700"
+                    : "bg-accent"
               }`}
             >
               {i < processStep ? (
-                <CheckCircle className="w-4 h-4 text-white" />
+                <CheckCircle className="w-4 h-4 text-foreground" />
               ) : i === processStep ? (
-                <Loader2 className="w-4 h-4 text-white animate-spin" />
+                <Loader2 className="w-4 h-4 text-foreground animate-spin" />
               ) : (
                 <div className="w-2 h-2 bg-slate-500 rounded-full" />
               )}
             </div>
             <span
-              className={`text-sm ${i <= processStep ? "text-white" : "text-slate-500"}`}
+              className={`text-sm ${i <= processStep ? "text-foreground" : "text-muted-foreground"}`}
             >
               {s.label}
             </span>
@@ -68,7 +68,7 @@ export function ProcessingStep({
         ))}
       </div>
 
-      <div className="max-w-sm mx-auto bg-slate-800 rounded-full h-2">
+      <div className="max-w-sm mx-auto bg-muted rounded-full h-2">
         <div
           className="bg-gradient-to-r from-indigo-600 to-violet-600 h-2 rounded-full transition-all duration-500"
           style={{
@@ -76,7 +76,7 @@ export function ProcessingStep({
           }}
         />
       </div>
-      <div className="text-sm text-slate-500 mt-3">
+      <div className="text-sm text-muted-foreground mt-3">
         {Math.round(
           Math.min((processStep / processingSteps.length) * 100, 100),
         )}

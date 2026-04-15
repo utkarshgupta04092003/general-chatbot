@@ -15,7 +15,7 @@ import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
 export default async function LandingPage() {
   const session = await auth();
   return (
-    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <Navbar session={session} />
       <HeroSection session={session} />
       <SocialProof />
@@ -24,7 +24,7 @@ export default async function LandingPage() {
       <DemoSection />
 
       {/* Pricing */}
-      <section id="pricing" className="py-24 px-4 bg-slate-900/30">
+      <section id="pricing" className="py-24 px-4 bg-card/30">
         <div className="max-w-[70rem] mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-xs text-indigo-300 font-medium mb-4">
@@ -33,7 +33,7 @@ export default async function LandingPage() {
             <h2 className="text-4xl font-bold mb-4">
               Start free, scale as you grow
             </h2>
-            <p className="text-slate-400 text-lg">
+            <p className="text-muted-foreground text-lg">
               No credit card required to get started.
             </p>
           </div>

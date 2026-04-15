@@ -41,7 +41,7 @@ export function PageSelectionStep({
       <h1 className="text-3xl font-bold mb-2">
         {loading ? `Scanning ${domain}...` : "Select pages to train on"}
       </h1>
-      <p className="text-slate-400 mb-8">
+      <p className="text-muted-foreground mb-8">
         {loading
           ? `We are automatically discovering pages on ${domain}. This might take a few seconds.`
           : `We found ${crawledUrls.length} pages. Select which ones to include.`}
@@ -54,11 +54,11 @@ export function PageSelectionStep({
         </div>
       )}
 
-      <div className="bg-slate-900 border border-white/5 rounded-2xl overflow-hidden mb-6 min-h-[300px] flex flex-col">
+      <div className="bg-card border border-border rounded-2xl overflow-hidden mb-6 min-h-[300px] flex flex-col">
         {loading ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-12 text-slate-400">
+          <div className="flex-1 flex flex-col items-center justify-center p-12 text-muted-foreground">
             <Loader2 className="w-12 h-12 text-indigo-500 animate-spin mb-4" />
-            <p className="text-lg font-medium text-white mb-2">
+            <p className="text-lg font-medium text-foreground mb-2">
               {`Scanning ${domain}...`}
             </p>
             <p className="text-sm text-center max-w-xs transition-opacity duration-1000 opacity-80 backdrop-blur-sm animate-pulse">
@@ -67,7 +67,7 @@ export function PageSelectionStep({
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between px-5 py-3 border-b border-white/5 bg-slate-800/50">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/50">
               <div className="flex items-center gap-4">
                 <span className="text-sm font-medium">
                   {selectedUrls.size} of {crawledUrls.length} selected
@@ -75,7 +75,7 @@ export function PageSelectionStep({
                 <button
                   onClick={onRescan}
                   disabled={loading}
-                  className="flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+                  className="flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors"
                   title="Rescan website"
                 >
                   <RefreshCw
@@ -89,7 +89,7 @@ export function PageSelectionStep({
                 selectedUrls.size === crawledUrls.length ? (
                   <button
                     onClick={() => setSelectedUrls(new Set())}
-                    className="text-xs text-indigo-400 hover:text-indigo-300"
+                    className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300"
                   >
                     Deselect all
                   </button>
@@ -97,14 +97,14 @@ export function PageSelectionStep({
                   <>
                     <button
                       onClick={() => setSelectedUrls(new Set(crawledUrls))}
-                      className="text-xs text-indigo-400 hover:text-indigo-300"
+                      className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300"
                     >
                       Select all
                     </button>
                     {selectedUrls.size > 0 && (
                       <button
                         onClick={() => setSelectedUrls(new Set())}
-                        className="text-xs text-slate-500 hover:text-slate-300"
+                        className="text-xs text-muted-foreground hover:text-muted-foreground"
                       >
                         Clear
                       </button>
@@ -117,7 +117,7 @@ export function PageSelectionStep({
               {crawledUrls.map((u) => (
                 <label
                   key={u}
-                  className="flex items-center gap-3 px-5 py-3.5 hover:bg-white/3 cursor-pointer transition-colors"
+                  className="flex items-center gap-3 px-5 py-3.5 hover:bg-muted/50 cursor-pointer transition-colors"
                 >
                   <div
                     onClick={(e) => {
@@ -127,17 +127,19 @@ export function PageSelectionStep({
                     className="shrink-0"
                   >
                     {selectedUrls.has(u) ? (
-                      <CheckSquare className="w-5 h-5 text-indigo-400" />
+                      <CheckSquare className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                     ) : (
                       <Square className="w-5 h-5 text-slate-600" />
                     )}
                   </div>
-                  <Globe className="w-4 h-4 text-slate-500 shrink-0" />
-                  <span className="text-sm text-slate-300 truncate">{u}</span>
+                  <Globe className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <span className="text-sm text-muted-foreground truncate">
+                    {u}
+                  </span>
                 </label>
               ))}
               {crawledUrls.length === 0 && (
-                <div className="p-12 text-center text-slate-500 italic">
+                <div className="p-12 text-center text-muted-foreground italic">
                   No pages discovered. Try going back and checking the URL.
                 </div>
               )}
@@ -149,7 +151,7 @@ export function PageSelectionStep({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm transition-all text-white"
+          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm transition-all text-foreground"
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
