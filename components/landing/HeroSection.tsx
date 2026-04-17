@@ -13,7 +13,7 @@ export function HeroSection({ session }: { session: Session | null }) {
       </div>
 
       <div className="w-full max-w-[80rem] mx-auto text-center relative">
-        <div className="inline-flex items-center gap-[0.5rem] px-[0.75rem] py-[0.375rem] bg-indigo-500/10 border border-indigo-500/20 rounded-full text-[0.75rem] text-indigo-300 font-medium mb-[2rem] animate-fade-in-up">
+        <div className="inline-flex items-center gap-[0.5rem] px-[0.75rem] py-[0.375rem] bg-indigo-500/10 border border-indigo-500/20 rounded-full text-[0.75rem] text-indigo-500 font-medium mb-[2rem] animate-fade-in-up">
           <Sparkles className="w-3 h-3" />
           Powered by GPT-5 + RAG Technology
         </div>
@@ -153,7 +153,7 @@ export function HeroSection({ session }: { session: Session | null }) {
           <div className="absolute -right-4 -bottom-4 bg-white rounded-2xl shadow-2xl shadow-black/30 w-48 p-3">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center">
-                <MessageSquare className="w-3 h-3 text-foreground" />
+                <MessageSquare className="w-3 h-3 text-white" />
               </div>
               <span className="text-xs font-semibold text-slate-700">
                 AI Assistant

@@ -115,10 +115,14 @@ export function PricingSection({ session }: PricingSectionProps) {
             )}
 
             <div className="mb-6">
-              <div className="text-sm text-muted-foreground mb-1">
+              <div
+                className={`text-sm ${plan.popular ? "text-white" : "text-muted-foreground"} mb-1`}
+              >
                 {plan.name}
               </div>
-              <div className="flex items-end gap-1 mb-1">
+              <div
+                className={`flex items-end gap-1 mb-1 ${plan.popular ? "text-white" : ""} mb-1`}
+              >
                 <span className="text-4xl font-bold">{plan.price}</span>
                 <span
                   className={`text-sm mb-1.5 ${plan.popular ? "text-indigo-200" : "text-muted-foreground"}`}
@@ -157,7 +161,7 @@ export function PricingSection({ session }: PricingSectionProps) {
                   className={`block text-center py-3 rounded-xl font-medium text-sm transition-all shadow-lg ${
                     plan.popular
                       ? "bg-white text-indigo-600 hover:bg-indigo-50 shadow-white/10"
-                      : "hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border text-white shadow-black/10"
+                      : "hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border text-muted-foreground hover:text-foreground shadow-black/10"
                   }`}
                 >
                   {plan.cta}

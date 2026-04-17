@@ -103,16 +103,16 @@ export default function DemoChat() {
       {/* Chat header */}
       <div className="flex items-center gap-3 px-4 py-3 bg-indigo-600">
         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-          <MessageSquare className="w-4 h-4 text-foreground" />
+          <MessageSquare className="w-4 h-4 text-white" />
         </div>
         <div>
-          <div className="text-sm font-semibold text-foreground">
+          <div className="text-sm font-semibold text-white">
             {APP_NAME} Assistant
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
             <span className="text-xs text-indigo-200">
-              Online · Trained on {APP_NAME.toLowerCase()}.ai
+              Online · Trained on {APP_NAME.toLowerCase()}
             </span>
           </div>
         </div>
@@ -194,19 +194,17 @@ export default function DemoChat() {
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="w-10 h-10 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 rounded-xl flex items-center justify-center transition-all"
+            className="w-10 h-10 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-80 rounded-xl flex items-center justify-center transition-all"
           >
             {loading ? (
-              <Loader2 className="w-4 h-4 text-foreground animate-spin" />
+              <Loader2 className="w-4 h-4 text-white animate-spin" />
             ) : (
-              <Send className="w-4 h-4 text-foreground" />
+              <Send className="w-4 h-4 text-white" />
             )}
           </button>
         </form>
         <p className="text-center text-[10px] text-muted-foreground mt-2 leading-relaxed">
           Responses are generated using AI and may contain mistakes.
-          <br />
-          Powered by {APP_NAME} AI
         </p>
       </div>
     </div>
