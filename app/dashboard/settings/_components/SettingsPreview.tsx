@@ -13,7 +13,9 @@ export function SettingsPreview({ selected }: SettingsPreviewProps) {
   return (
     <div className="bg-muted/50 border border-border rounded-2xl p-6">
       <h2 className="font-semibold mb-4">Widget Preview</h2>
-      <div className="bg-card rounded-xl overflow-hidden border border-border">
+      <div
+        className={`rounded-xl overflow-hidden border border-border transition-colors ${selected.theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white"}`}
+      >
         <div
           className="px-4 py-3 flex items-center gap-3"
           style={{ backgroundColor: selected.primaryColor }}
@@ -57,9 +59,13 @@ export function SettingsPreview({ selected }: SettingsPreviewProps) {
                 "🤖"
               )}
             </div>
-            <div className="bg-muted rounded-xl rounded-bl-none px-3 py-2 max-w-[80%] text-sm text-muted-foreground">
+            <div
+              className={`rounded-xl rounded-bl-none px-3 py-2 max-w-[80%] text-sm transition-colors ${selected.theme === "dark" ? "bg-slate-800 text-slate-200" : "bg-muted text-muted-foreground"}`}
+            >
               <div>{selected.welcomeMessage}</div>
-              <div className="flex items-center gap-1.5 mt-2 pt-1 border-t border-border opacity-40">
+              <div
+                className={`flex items-center gap-1.5 mt-2 pt-1 border-t opacity-40 ${selected.theme === "dark" ? "border-slate-700" : "border-border"}`}
+              >
                 <div title={FEEDBACK_TEXT.HELPFUL}>
                   <ThumbsUp className="w-3 h-3" />
                 </div>

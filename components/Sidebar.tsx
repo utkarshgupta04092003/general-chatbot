@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  MessageCircle,
   MessageSquare,
   Settings,
   X,
@@ -19,18 +20,42 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 
-const navItems = [
-  { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+const navSections = [
   {
-    href: "/dashboard/conversations",
-    label: "Conversations",
-    icon: MessageSquare,
+    label: "Main",
+    items: [
+      { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+      {
+        href: "/dashboard/conversations",
+        label: "Conversations",
+        icon: MessageSquare,
+      },
+      {
+        href: "/dashboard/data-sources",
+        icon: Database,
+        label: "Data Sources",
+      },
+    ],
   },
-  { href: "/dashboard/data-sources", icon: Database, label: "Data Sources" },
-  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/dashboard/embed", label: "Embed", icon: Code },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
-  { href: "/dashboard/usage", label: "Usage", icon: CreditCard },
+  {
+    label: "Configure",
+    items: [
+      { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
+      { href: "/dashboard/embed", label: "Embed", icon: Code },
+      { href: "/dashboard/settings", label: "Settings", icon: Settings },
+    ],
+  },
+  {
+    label: "Support",
+    items: [
+      {
+        href: "/dashboard/contact",
+        label: "Fallback Contact",
+        icon: MessageCircle,
+      },
+      { href: "/dashboard/usage", label: "Usage", icon: CreditCard },
+    ],
+  },
 ];
 
 function SidebarContent({
@@ -54,25 +79,32 @@ function SidebarContent({
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
-        {navItems.map((item) => {
-          const active = pathname === item.href;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                active
-                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/25"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent/50 bg-muted/30"
-              }`}
-            >
-              <item.icon className="w-4 h-4 shrink-0" />
-              {item.label}
-            </Link>
-          );
-        })}
+      <nav className="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
+        {navSections.map((section) => (
+          <div key={section.label} className="space-y-1">
+            <h3 className="px-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
+              {section.label}
+            </h3>
+            {section.items.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    active
+                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/25"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50 bg-muted/30"
+                  }`}
+                >
+                  <item.icon className="w-4 h-4 shrink-0" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+        ))}
       </nav>
 
       {/* User / Sign out */}

@@ -12,5 +12,6 @@ export type ChatbotSettings = {
   supportPhone?: string | null;
   supportWhatsapp?: string | null;
   contactPageLink?: string | null;
+  theme: string;
   dataSources?: { url: string }[];
 };

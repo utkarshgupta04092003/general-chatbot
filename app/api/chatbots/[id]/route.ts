@@ -32,6 +32,7 @@ export async function PATCH(
         supportPhone: body.supportPhone,
         supportWhatsapp: body.supportWhatsapp,
         contactPageLink: body.contactPageLink,
+        theme: body.theme,
       },
     });
 

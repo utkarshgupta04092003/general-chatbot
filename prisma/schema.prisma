@@ -76,6 +76,7 @@ model Chatbot {
   supportPhone    String?
   supportWhatsapp String?
   contactPageLink String?
+  theme           String         @default("light") // light, dark
   status          String         @default("training") // training, ready
   totalQueries    Int            @default(0)
   deleted         Boolean        @default(false)

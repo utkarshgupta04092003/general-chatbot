@@ -2,29 +2,20 @@
 
 import { ANALYTICS_EVENTS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
-import { CheckCircle, Loader2, Save, Settings } from "lucide-react";
+import { CheckCircle, Loader2, MessageCircle, Save } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
 
-import { BasicInfoSection } from "./_components/BasicInfoSection";
-import { ColorSection } from "./_components/ColorSection";
-import { SettingsPreview } from "./_components/SettingsPreview";
-import { SystemPromptSection } from "./_components/SystemPromptSection";
-import { ThemeSection } from "./_components/ThemeSection";
-import { ToneSection } from "./_components/ToneSection";
-import { ChatbotSettings } from "./_components/types";
+import { ContactInfoSection } from "../settings/_components/ContactInfoSection";
+import { ChatbotSettings } from "../settings/_components/types";
 
-export default function ChatbotSettingsPage() {
+export default function ContactSettingsPage() {
   const posthog = usePostHog();
   const [chatbots, setChatbots] = useState<ChatbotSettings[]>([]);
   const [selected, setSelected] = useState<ChatbotSettings | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    posthog.capture(ANALYTICS_EVENTS.SETTINGS_VIEWED);
-  }, [posthog]);
 
   useEffect(() => {
     fetch(ENDPOINTS.CHATBOTS)
@@ -48,17 +39,7 @@ export default function ChatbotSettingsPage() {
 
       posthog.capture(ANALYTICS_EVENTS.CHATBOT_SETTINGS_UPDATED, {
         chatbotId: selected.id,
-        name: selected.name,
-        systemPrompt: selected.systemPrompt,
-        welcomeMessage: selected.welcomeMessage,
-        tone: selected.tone,
-        primaryColor: selected.primaryColor,
-        agentType: selected.agentType,
-        hasSupportEmail: !!selected.supportEmail,
-        hasSupportPhone: !!selected.supportPhone,
-        hasSupportWhatsapp: !!selected.supportWhatsapp,
-        hasContactPage: !!selected.contactPageLink,
-        theme: selected.theme,
+        context: "contact_page",
       });
 
       setSaved(true);
@@ -78,12 +59,12 @@ export default function ChatbotSettingsPage() {
   if (chatbots.length === 0)
     return (
       <div className="text-center py-20">
-        <Settings className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+        <MessageCircle className="w-12 h-12 text-slate-600 mx-auto mb-4" />
         <h3 className="font-semibold text-muted-foreground mb-2">
           No chatbots yet
         </h3>
         <p className="text-muted-foreground text-sm">
-          Create a chatbot first to configure its settings.
+          Create a chatbot first to configure its fallback contact options.
         </p>
       </div>
     );
@@ -91,9 +72,10 @@ export default function ChatbotSettingsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Chatbot Settings</h1>
+        <h1 className="text-2xl font-bold">Fallback Contact Options</h1>
         <p className="text-muted-foreground text-sm mt-1">
-          Customize how your chatbot looks and behaves.
+          Configure what information is shown to users when the AI assistant
+          cannot answer their query.
         </p>
       </div>
 
@@ -116,20 +98,8 @@ export default function ChatbotSettingsPage() {
       )}
 
       {selected && (
-        <>
-          <div className="grid lg:grid-cols-2 gap-6">
-            <div className="space-y-6">
-              <BasicInfoSection selected={selected} onChange={setSelected} />
-              <ToneSection selected={selected} onChange={setSelected} />
-              <ColorSection selected={selected} onChange={setSelected} />
-              <ThemeSection selected={selected} onChange={setSelected} />
-            </div>
-
-            <div className="space-y-6">
-              <SystemPromptSection selected={selected} onChange={setSelected} />
-              <SettingsPreview selected={selected} />
-            </div>
-          </div>
+        <div className="max-w-4xl">
+          <ContactInfoSection selected={selected} onChange={setSelected} />
 
           <div className="mt-6 flex justify-end">
             <button
@@ -147,7 +117,7 @@ export default function ChatbotSettingsPage() {
               {saved ? "Saved!" : saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

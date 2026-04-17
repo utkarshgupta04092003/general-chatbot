@@ -25,6 +25,7 @@ export default async function WidgetPage({
         primaryColor={chatbot.primaryColor}
         assistantLogo={chatbot.assistantLogo}
         websiteLogo={chatbot.websiteLogo}
+        theme={chatbot.theme}
       />
     </div>
   );

@@ -54,7 +54,7 @@ export default async function UsagePage() {
       <div className="bg-muted/50 border border-border rounded-2xl p-6 mb-8">
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-semibold">Current Usage</h2>
-          <span className="px-3 py-1 bg-indigo-500/10 text-indigo-300 text-xs font-medium rounded-full border border-indigo-500/20">
+          <span className="px-3 py-1 bg-indigo-500/10 text-indigo-500 text-xs font-medium rounded-full border border-indigo-500/20">
             Free Plan
           </span>
         </div>
