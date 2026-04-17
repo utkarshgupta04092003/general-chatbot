@@ -52,9 +52,9 @@ export function ProcessingStep({
               }`}
             >
               {i < processStep ? (
-                <CheckCircle className="w-4 h-4 text-foreground" />
+                <CheckCircle className="w-4 h-4 text-white" />
               ) : i === processStep ? (
-                <Loader2 className="w-4 h-4 text-foreground animate-spin" />
+                <Loader2 className="w-4 h-4 text-white animate-spin" />
               ) : (
                 <div className="w-2 h-2 bg-slate-500 rounded-full" />
               )}

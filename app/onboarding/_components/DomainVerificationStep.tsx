@@ -69,7 +69,7 @@ export function DomainVerificationStep({
               <button
                 onClick={onRequestCode}
                 disabled={loading}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl font-medium transition-all"
+                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white disabled:opacity-50 rounded-xl font-medium transition-all"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -95,7 +95,7 @@ export function DomainVerificationStep({
               <button
                 onClick={onVerify}
                 disabled={loading}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl font-medium transition-all flex items-center gap-2"
+                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl font-medium transition-all flex items-center gap-2 text-white"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />

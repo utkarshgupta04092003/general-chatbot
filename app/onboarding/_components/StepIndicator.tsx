@@ -22,8 +22,8 @@ export function StepIndicator({ steps, currentStep }: StepIndicatorProps) {
               currentStep > s.id
                 ? "bg-indigo-600 text-white"
                 : currentStep === s.id
-                  ? "bg-indigo-600/30 border-2 border-indigo-500 text-indigo-300"
-                  : "bg-muted text-slate-600"
+                  ? "bg-indigo-300/30 border-2 border-indigo-500 text-indigo-500"
+                  : "bg-muted text-slate-600 border-2 border-grey-500"
             }`}
           >
             {currentStep > s.id ? <CheckCircle className="w-4 h-4" /> : s.id}
