@@ -1,8 +1,9 @@
 "use client";
 
+import { NoChatbotEmptyState } from "@/components/dashboard/NoChatbotEmptyState";
 import { ANALYTICS_EVENTS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
-import { Loader2, Zap } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
 
@@ -61,13 +62,6 @@ export default function EmbedPage() {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  if (loading)
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-spin" />
-      </div>
-    );
-
   return (
     <div className="min-w-0 overflow-hidden">
       <div className="mb-8">
@@ -77,16 +71,12 @@ export default function EmbedPage() {
         </p>
       </div>
 
-      {chatbots.length === 0 ? (
-        <div className="text-center py-20 bg-muted/30 border border-border rounded-2xl">
-          <Zap className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <h3 className="font-semibold text-muted-foreground mb-2">
-            No chatbots yet
-          </h3>
-          <p className="text-muted-foreground text-sm">
-            Create a chatbot first.
-          </p>
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-spin" />
         </div>
+      ) : chatbots.length === 0 ? (
+        <NoChatbotEmptyState />
       ) : (
         <>
           <ChatbotSelector

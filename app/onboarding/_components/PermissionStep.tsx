@@ -60,7 +60,7 @@ export function PermissionStep({
         ))}
       </div>
 
-      <div className="bg-indigo-500/5 border border-indigo-500/20 rounded-xl p-4 text-sm text-indigo-300 mb-6">
+      <div className="bg-indigo-500/5 border border-indigo-500/20 rounded-xl p-4 text-sm text-indigo-500 mb-6">
         <strong>Pages to be indexed:</strong>
         <ul className="mt-2 space-y-1">
           {Array.from(selectedUrls)

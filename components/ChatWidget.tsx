@@ -1,6 +1,11 @@
 "use client";
 
-import { APP_NAME, CHAT_ROLES, FEEDBACK_TEXT } from "@/lib/config";
+import {
+  APP_NAME,
+  CHAT_ROLES,
+  FEEDBACK_TEXT,
+  RESPONSE_ERROR_MESSAGE,
+} from "@/lib/config";
 import { ChatRole, FeedbackType } from "@/lib/declaration";
 import { ENDPOINTS } from "@/lib/endpoint";
 import {
@@ -157,7 +162,7 @@ export default function ChatWidget({
         {
           id: data.messageId,
           role: CHAT_ROLES.ASSISTANT,
-          content: data.response || "Sorry, I couldn't process that.",
+          content: data.response || RESPONSE_ERROR_MESSAGE,
         },
       ]);
     } catch {
@@ -165,7 +170,7 @@ export default function ChatWidget({
         ...prev,
         {
           role: CHAT_ROLES.ASSISTANT,
-          content: "Sorry, something went wrong. Please try again.",
+          content: RESPONSE_ERROR_MESSAGE,
         },
       ]);
     } finally {

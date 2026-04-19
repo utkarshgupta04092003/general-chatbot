@@ -15,7 +15,7 @@ export default async function ConversationsPage() {
   await posthog.shutdown();
 
   const conversations = await prisma.conversation.findMany({
-    where: { chatbot: { userId: session.user.id } },
+    where: { chatbot: { userId: session.user.id, deleted: false } },
     include: {
       messages: { orderBy: { createdAt: "asc" } },
       chatbot: { select: { name: true, id: true } },

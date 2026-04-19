@@ -1,5 +1,6 @@
 "use server";
 
+import { RESPONSE_ERROR_MESSAGE } from "@/lib/config";
 import { prisma } from "@/lib/prisma";
 
 export async function createEnquiry(
@@ -28,7 +29,7 @@ export async function createEnquiry(
     console.error("Enquiry error:", error);
     return {
       success: false,
-      error: "Something went wrong. Please try again later.",
+      error: RESPONSE_ERROR_MESSAGE,
     };
   }
 }

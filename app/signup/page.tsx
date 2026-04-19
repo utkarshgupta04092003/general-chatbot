@@ -1,6 +1,6 @@
 "use client";
 
-import { APP_NAME } from "@/lib/config";
+import { APP_NAME, RESPONSE_ERROR_MESSAGE } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import { Bot, Eye, EyeOff, Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -48,7 +48,7 @@ export default function SignupPage() {
         router.push("/onboarding");
       }
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError(RESPONSE_ERROR_MESSAGE);
     } finally {
       setLoading(false);
     }

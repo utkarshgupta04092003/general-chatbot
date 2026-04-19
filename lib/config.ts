@@ -35,7 +35,8 @@ export const FEEDBACK_TEXT = {
   UNHELPFUL: "unhelpful",
 } as const;
 
-export const ERROR_MESSAGE = "I'm sorry, I couldn't generate a response.";
+export const RESPONSE_ERROR_MESSAGE =
+  "Sorry, something went wrong. Please try again.";
 export const MIN_CONFIDENCE_THRESHOLD = 0.6;
 
 export const POSTHOG_CONFIG = {

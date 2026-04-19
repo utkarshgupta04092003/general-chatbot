@@ -63,6 +63,12 @@ export function DomainVerificationStep({
                 type="email"
                 value={verificationEmail}
                 onChange={(e) => setVerificationEmail(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !loading) {
+                    e.preventDefault();
+                    onRequestCode();
+                  }
+                }}
                 placeholder={`admin@${domain}`}
                 className="flex-1 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none text-foreground"
               />
@@ -89,6 +95,12 @@ export function DomainVerificationStep({
                 type="text"
                 value={verificationCode}
                 onChange={(e) => setVerificationCode(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !loading) {
+                    e.preventDefault();
+                    onVerify();
+                  }
+                }}
                 placeholder="Enter 6-digit code"
                 className="flex-1 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none text-foreground"
               />

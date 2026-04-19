@@ -1,10 +1,10 @@
 import {
   ANALYTICS_EVENTS,
   CHAT_ROLES,
-  ERROR_MESSAGE,
   GPT_5_2,
   GPT_5_MINI,
   MIN_CONFIDENCE_THRESHOLD,
+  RESPONSE_ERROR_MESSAGE,
   TEXT_EMBEDDING_3_SMALL,
 } from "@/lib/config";
 import PostHogClient from "@/lib/posthog";
@@ -154,6 +154,7 @@ export async function POST(req: Request) {
       3. If the answer is not in the context, politely say you don't have enough information to answer that specific question.
       4. Avoid repetitive language and maintain a tone that matches the persona above.
       5. Write in a natural, human-like way. Avoid using em dashes or overly formal punctuation. Keep the response conversational and easy to read.
+      6. In the response don't add these type of text: 'If you share the link or a screenshot of the page, I can summarize what it says and what the site offers.'
       
       Context:
       ${context}
@@ -190,7 +191,8 @@ export async function POST(req: Request) {
       ],
     });
 
-    const response = aiResponse.choices[0].message.content || ERROR_MESSAGE;
+    const response =
+      aiResponse.choices[0].message.content || RESPONSE_ERROR_MESSAGE;
 
     // Extract unique source URLs
     const sources = Array.from(
@@ -303,7 +305,12 @@ export async function GET(req: Request) {
     }
 
     const conversation = await prisma.conversation.findFirst({
-      where: { chatbotId, sessionId, deleted: false },
+      where: {
+        chatbotId,
+        sessionId,
+        deleted: false,
+        chatbot: { deleted: false },
+      },
       include: {
         messages: {
           orderBy: { createdAt: "asc" },

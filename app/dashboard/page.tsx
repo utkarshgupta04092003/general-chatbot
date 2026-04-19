@@ -18,7 +18,7 @@ export default async function DashboardOverviewPage() {
   const session = await requireAuth();
 
   const chatbots = await prisma.chatbot.findMany({
-    where: { userId: session.user.id },
+    where: { userId: session.user.id, deleted: false },
     include: {
       _count: { select: { conversations: true, dataSources: true } },
       conversations: {

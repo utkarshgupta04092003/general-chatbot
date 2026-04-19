@@ -9,7 +9,7 @@ import {
   ShieldAlert,
   ShieldCheck,
 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type VerificationModalProps = {
   isOpen: boolean;
@@ -31,6 +31,30 @@ export function VerificationModal({
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const handleCancel = useCallback(() => {
+    setStep("email");
+    setEmail("");
+    setCode("");
+    setError("");
+    onClose();
+  }, [onClose]);
+
+  function handleFinish() {
+    setStep("email");
+    setEmail("");
+    setCode("");
+    setError("");
+    onSuccess();
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleCancel();
+    };
+    if (isOpen) window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, handleCancel]);
 
   if (!isOpen) return null;
 
@@ -89,25 +113,15 @@ export function VerificationModal({
     }
   }
 
-  function handleFinish() {
-    setStep("email");
-    setEmail("");
-    setCode("");
-    setError("");
-    onSuccess();
-  }
-
-  function handleCancel() {
-    setStep("email");
-    setEmail("");
-    setCode("");
-    setError("");
-    onClose();
-  }
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-card border border-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
+    <div
+      onClick={handleCancel}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-card border border-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200"
+      >
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">

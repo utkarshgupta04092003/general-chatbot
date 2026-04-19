@@ -1,8 +1,9 @@
 "use client";
 
+import { NoChatbotEmptyState } from "@/components/dashboard/NoChatbotEmptyState";
 import { ANALYTICS_EVENTS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
-import { CheckCircle, Loader2, Save, Settings } from "lucide-react";
+import { CheckCircle, Loader2, Save, Trash2 } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
 
@@ -21,6 +22,7 @@ export default function ChatbotSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     posthog.capture(ANALYTICS_EVENTS.SETTINGS_VIEWED);
@@ -68,25 +70,32 @@ export default function ChatbotSettingsPage() {
     }
   }
 
-  if (loading)
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-spin" />
-      </div>
-    );
+  async function handleDelete() {
+    if (!selected) return;
+    if (
+      !confirm(
+        "Are you sure you want to delete this chatbot? This action cannot be undone.",
+      )
+    )
+      return;
 
-  if (chatbots.length === 0)
-    return (
-      <div className="text-center py-20">
-        <Settings className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-        <h3 className="font-semibold text-muted-foreground mb-2">
-          No chatbots yet
-        </h3>
-        <p className="text-muted-foreground text-sm">
-          Create a chatbot first to configure its settings.
-        </p>
-      </div>
-    );
+    setIsDeleting(true);
+    try {
+      const res = await fetch(ENDPOINTS.CHATBOT_BY_ID(selected.id), {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setChatbots((prev) => prev.filter((c) => c.id !== selected.id));
+        setSelected(null);
+      } else {
+        alert("Failed to delete chatbot.");
+      }
+    } catch {
+      alert("Failed to delete chatbot.");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <div>
@@ -97,56 +106,85 @@ export default function ChatbotSettingsPage() {
         </p>
       </div>
 
-      {chatbots.length > 1 && (
-        <div className="flex gap-2 mb-6 overflow-x-auto scrollbar-hide pb-1">
-          {chatbots.map((bot) => (
-            <button
-              key={bot.id}
-              onClick={() => setSelected(bot)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 cursor-pointer whitespace-nowrap ${
-                selected?.id === bot.id
-                  ? "bg-indigo-600 text-white"
-                  : "bg-muted text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {bot.name}
-            </button>
-          ))}
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-spin" />
         </div>
-      )}
-
-      {selected && (
+      ) : chatbots.length === 0 ? (
+        <NoChatbotEmptyState description="Create a chatbot first to configure its settings." />
+      ) : (
         <>
-          <div className="grid lg:grid-cols-2 gap-6">
-            <div className="space-y-6">
-              <BasicInfoSection selected={selected} onChange={setSelected} />
-              <ToneSection selected={selected} onChange={setSelected} />
-              <ColorSection selected={selected} onChange={setSelected} />
-              <ThemeSection selected={selected} onChange={setSelected} />
+          {chatbots.length > 1 && (
+            <div className="flex gap-2 mb-6 overflow-x-auto scrollbar-hide pb-1">
+              {chatbots.map((bot) => (
+                <button
+                  key={bot.id}
+                  onClick={() => setSelected(bot)}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 cursor-pointer whitespace-nowrap ${
+                    selected?.id === bot.id
+                      ? "bg-indigo-600 text-white"
+                      : "bg-muted text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {bot.name}
+                </button>
+              ))}
             </div>
+          )}
 
-            <div className="space-y-6">
-              <SystemPromptSection selected={selected} onChange={setSelected} />
-              <SettingsPreview selected={selected} />
-            </div>
-          </div>
+          {selected && (
+            <>
+              <div className="grid lg:grid-cols-2 gap-6">
+                <div className="space-y-6">
+                  <BasicInfoSection
+                    selected={selected}
+                    onChange={setSelected}
+                  />
+                  <ToneSection selected={selected} onChange={setSelected} />
+                  <ColorSection selected={selected} onChange={setSelected} />
+                  <ThemeSection selected={selected} onChange={setSelected} />
+                </div>
 
-          <div className="mt-6 flex justify-end">
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-medium rounded-xl transition-all"
-            >
-              {saving ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : saved ? (
-                <CheckCircle className="w-4 h-4" />
-              ) : (
-                <Save className="w-4 h-4" />
-              )}
-              {saved ? "Saved!" : saving ? "Saving..." : "Save Changes"}
-            </button>
-          </div>
+                <div className="space-y-6">
+                  <SystemPromptSection
+                    selected={selected}
+                    onChange={setSelected}
+                  />
+                  <SettingsPreview selected={selected} />
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center justify-between border-t border-border pt-6">
+                <button
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="flex items-center gap-2 px-6 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-500 disabled:opacity-50 font-medium rounded-xl transition-all"
+                >
+                  {isDeleting ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-4 h-4" />
+                  )}
+                  {isDeleting ? "Deleting..." : "Delete Chatbot"}
+                </button>
+
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-medium rounded-xl transition-all"
+                >
+                  {saving ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : saved ? (
+                    <CheckCircle className="w-4 h-4" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )}
+                  {saved ? "Saved!" : saving ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </>
+          )}
         </>
       )}
     </div>

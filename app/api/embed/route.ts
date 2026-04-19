@@ -39,7 +39,7 @@ export async function POST(req: Request) {
 
     // Verify chatbot belongs to user
     const chatbot = await prisma.chatbot.findFirst({
-      where: { id: chatbotId, userId: session.user.id },
+      where: { id: chatbotId, userId: session.user.id, deleted: false },
     });
     if (!chatbot) {
       return NextResponse.json({ error: "Chatbot not found" }, { status: 404 });
