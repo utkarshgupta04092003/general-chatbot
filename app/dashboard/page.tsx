@@ -8,11 +8,16 @@ import {
   Clock,
   Globe,
   MessageSquare,
-  Plus,
   TrendingUp,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
+import {
+  DashboardActions,
+  DashboardAddNewLink,
+  DashboardCreateFirstChatbot,
+  DashboardQuickActions,
+} from "./_components/DashboardAddChatbot";
 
 export default async function DashboardOverviewPage() {
   const session = await requireAuth();
@@ -50,8 +55,7 @@ export default async function DashboardOverviewPage() {
     .sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )
-    .slice(0, 5);
+    );
 
   return (
     <div>
@@ -62,13 +66,7 @@ export default async function DashboardOverviewPage() {
             Welcome back! Here&apos;s how your chatbots are doing.
           </p>
         </div>
-        <Link
-          href="/onboarding"
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all"
-        >
-          <Plus className="w-4 h-4" />
-          New Chatbot
-        </Link>
+        <DashboardActions />
       </div>
 
       {/* Stats Grid */}
@@ -125,12 +123,7 @@ export default async function DashboardOverviewPage() {
         <div className="bg-muted/50 border border-border rounded-2xl p-6 min-w-0">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-semibold">Your Chatbots</h2>
-            <Link
-              href="/onboarding"
-              className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 flex items-center gap-1"
-            >
-              <Plus className="w-3 h-3" /> Add new
-            </Link>
+            <DashboardAddNewLink />
           </div>
           {chatbots.length === 0 ? (
             <div className="text-center py-10">
@@ -140,12 +133,7 @@ export default async function DashboardOverviewPage() {
               <p className="text-muted-foreground text-sm mb-4">
                 No chatbots yet
               </p>
-              <Link
-                href="/onboarding"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm rounded-xl transition-all"
-              >
-                Create your first chatbot
-              </Link>
+              <DashboardCreateFirstChatbot />
             </div>
           ) : (
             <div className="space-y-3">
@@ -240,26 +228,7 @@ export default async function DashboardOverviewPage() {
           <TrendingUp className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
           <h2 className="font-semibold">Quick Actions</h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {[
-            { href: "/onboarding", label: "Add New Chatbot", icon: Plus },
-            {
-              href: "/dashboard/data-sources",
-              label: "Manage Data Sources",
-              icon: Globe,
-            },
-            { href: "/dashboard/embed", label: "Get Embed Code", icon: Zap },
-          ].map((action) => (
-            <Link
-              key={action.href}
-              href={action.href}
-              className="flex items-center gap-2 px-4 py-3 bg-background hover:bg-accent/50 border border-border rounded-xl text-sm text-muted-foreground hover:text-foreground transition-all"
-            >
-              <action.icon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-              {action.label}
-            </Link>
-          ))}
-        </div>
+        <DashboardQuickActions />
       </div>
     </div>
   );

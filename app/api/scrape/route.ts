@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { PLAN_LIMITS } from "@/lib/config";
 import { prisma } from "@/lib/prisma";
 import { fetchWithFallback } from "@/lib/scraper";
 import { getDomain } from "@/lib/utils";
@@ -38,6 +39,23 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const pageCount = await prisma.dataSource.count({
+      where: {
+        chatbot: { userId: user.id, deleted: false },
+        deleted: false,
+      },
+    });
+
+    if (pageCount + urls.length > PLAN_LIMITS.FREE.MAX_PAGES) {
+      return NextResponse.json(
+        {
+          error: "LIMIT_REACHED",
+          message: `You can only select up to ${PLAN_LIMITS.FREE.MAX_PAGES} pages on the Free plan.`,
+        },
+        { status: 403 },
+      );
     }
 
     const verifiedDomains = new Set(

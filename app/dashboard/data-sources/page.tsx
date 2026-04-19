@@ -1,6 +1,8 @@
 "use client";
 
-import { ANALYTICS_EVENTS } from "@/lib/config";
+import { LimitReachedModal } from "@/components/LimitReachedModal";
+import { useUsage } from "@/components/providers/usage-provider";
+import { ANALYTICS_EVENTS, PLAN_LIMITS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
@@ -17,6 +19,8 @@ import { VerificationModal } from "./_components/VerificationModal";
 
 export default function DataSourcesPage() {
   const posthog = usePostHog();
+  const { pageCount, mutate: mutateUsage } = useUsage();
+  const [limitOpen, setLimitOpen] = useState(false);
   const [sources, setSources] = useState<DataSource[]>([]);
   const [loading, setLoading] = useState(true);
   const [addUrl, setAddUrl] = useState("");
@@ -99,6 +103,11 @@ export default function DataSourcesPage() {
 
   async function handleAddUrl() {
     if (!addUrl.trim()) return;
+
+    if (pageCount >= PLAN_LIMITS.FREE.MAX_PAGES) {
+      setLimitOpen(true);
+      return;
+    }
 
     try {
       new URL(addUrl.trim());
@@ -186,6 +195,7 @@ export default function DataSourcesPage() {
 
       setAddUrl("");
       setShowUrlSelectionModal(false);
+      mutateUsage();
       fetchSources();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -196,12 +206,24 @@ export default function DataSourcesPage() {
 
   async function handleAddSelectedUrls() {
     if (selectedUrls.length === 0) return;
+    if (pageCount + selectedUrls.length > PLAN_LIMITS.FREE.MAX_PAGES) {
+      setShowUrlSelectionModal(false);
+      setLimitOpen(true);
+      return;
+    }
     const targetChatbotId = targetChatbotIdForAdd || selectedChatbotId;
     await processAddUrls(selectedUrls, targetChatbotId);
   }
 
   return (
     <div>
+      <LimitReachedModal
+        isOpen={limitOpen}
+        onClose={() => setLimitOpen(false)}
+        title="Page Limit Reached"
+        description={`You've used all ${PLAN_LIMITS.FREE.MAX_PAGES} page slot(s) on this Free plan. Self deploy or sign up with new email to index more pages.`}
+      />
+
       <SelectChatbotModal
         isOpen={showSelectChatbotModal}
         onClose={() => setShowSelectChatbotModal(false)}

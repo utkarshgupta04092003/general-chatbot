@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { ANALYTICS_EVENTS, DEFAULT_SYSTEM_PROMPT } from "@/lib/config";
+import { ANALYTICS_EVENTS, DEFAULT_SYSTEM_PROMPT, PLAN_LIMITS } from "@/lib/config";
 import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
@@ -13,6 +13,20 @@ export async function POST(req: Request) {
     }
 
     const { name } = await req.json();
+
+    // Check plan limit before creating
+    const existingCount = await prisma.chatbot.count({
+      where: { userId: session.user.id, deleted: false },
+    });
+    if (existingCount >= PLAN_LIMITS.FREE.MAX_CHATBOTS) {
+      return NextResponse.json(
+        {
+          error: "LIMIT_REACHED",
+          message: `You have reached the maximum of ${PLAN_LIMITS.FREE.MAX_CHATBOTS} chatbot(s) on the Free plan.`,
+        },
+        { status: 403 },
+      );
+    }
 
     const chatbot = await prisma.chatbot.create({
       data: {

@@ -4,6 +4,7 @@ import {
   GPT_5_2,
   GPT_5_MINI,
   MIN_CONFIDENCE_THRESHOLD,
+  PLAN_LIMITS,
   RESPONSE_ERROR_MESSAGE,
   TEXT_EMBEDDING_3_SMALL,
 } from "@/lib/config";
@@ -91,6 +92,30 @@ export async function POST(req: Request) {
 
     if (!chatbot) {
       return NextResponse.json({ error: "Chatbot not found" }, { status: 404 });
+    }
+
+    // Check message limit
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const messageCount = await prisma.message.count({
+      where: {
+        conversation: { chatbot: { userId: chatbot.userId, deleted: false } },
+        role: CHAT_ROLES.ASSISTANT,
+        createdAt: { gte: startOfMonth },
+        deleted: false,
+      },
+    });
+
+    if (messageCount >= PLAN_LIMITS.FREE.MAX_MESSAGES) {
+      return NextResponse.json(
+        {
+          error: "LIMIT_REACHED",
+          message: `This chatbot has reached its free limit of ${PLAN_LIMITS.FREE.MAX_MESSAGES} messages per month.`,
+        },
+        { status: 403 },
+      );
     }
 
     // Get or create conversation

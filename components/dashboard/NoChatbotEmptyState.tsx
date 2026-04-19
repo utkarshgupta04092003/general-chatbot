@@ -1,5 +1,5 @@
+import { AddChatbotButton } from "@/components/AddChatbotButton";
 import { Plus, Zap } from "lucide-react";
-import Link from "next/link";
 
 interface NoChatbotEmptyStateProps {
   title?: string;
@@ -15,13 +15,10 @@ export function NoChatbotEmptyState({
       <Zap className="w-12 h-12 text-slate-600 mx-auto mb-4" />
       <h3 className="font-semibold text-muted-foreground mb-2">{title}</h3>
       <p className="text-muted-foreground text-sm mb-6">{description}</p>
-      <Link
-        href="/onboarding"
-        className="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all"
-      >
+      <AddChatbotButton className="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all cursor-pointer">
         <Plus className="w-4 h-4" />
         Add Chatbot
-      </Link>
+      </AddChatbotButton>
     </div>
   );
 }

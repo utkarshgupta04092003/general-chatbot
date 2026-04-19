@@ -1,6 +1,8 @@
 "use client";
 
-import { ANALYTICS_EVENTS } from "@/lib/config";
+import { LimitReachedModal } from "@/components/LimitReachedModal";
+import { useUsage } from "@/components/providers/usage-provider";
+import { ANALYTICS_EVENTS, PLAN_LIMITS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import { PROCESSING_STEPS, STEPS } from "@/lib/onboarding-constants";
 import { ScrapedPage } from "@/lib/onboarding-types";
@@ -25,6 +27,7 @@ interface ChatbotWithSources {
 
 export default function OnboardingPage() {
   const posthog = usePostHog();
+  const { mutate: mutateUsage } = useUsage();
   const [step, setStep] = useState(1);
   const [url, setUrl] = useState("");
   const [crawledUrls, setCrawledUrls] = useState<string[]>([]);
@@ -39,6 +42,8 @@ export default function OnboardingPage() {
   const [verificationEmail, setVerificationEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [codeRequested, setCodeRequested] = useState(false);
+  const [limitReached, setLimitReached] = useState(false);
+  const [limitType, setLimitType] = useState<"chatbot" | "page">("chatbot");
 
   // Track initial onboarding start
   useEffect(() => {
@@ -69,7 +74,7 @@ export default function OnboardingPage() {
         : "https://" + url.trim();
       const currentDomain = getDomain(fullUrl);
 
-      // Fetch existing chatbots to check domain
+      // Fetch existing chatbots to check domain only
       const res = await fetch(ENDPOINTS.CHATBOTS);
       const data = await res.json();
       const existingChatbots: ChatbotWithSources[] = data.chatbots || [];
@@ -211,6 +216,12 @@ export default function OnboardingPage() {
   }
 
   async function handleScrape() {
+    if (selectedUrls.size > PLAN_LIMITS.FREE.MAX_PAGES) {
+      setLimitType("page");
+      setLimitReached(true);
+      return;
+    }
+
     setLoading(true);
     setError("");
     try {
@@ -220,7 +231,16 @@ export default function OnboardingPage() {
         body: JSON.stringify({ urls: Array.from(selectedUrls) }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+
+      if (!res.ok) {
+        if (data.error === "LIMIT_REACHED") {
+          setLimitType("page");
+          setLimitReached(true);
+          return;
+        }
+        throw new Error(data.message || data.error);
+      }
+
       setScrapedPages(data.pages);
       setStep(5);
     } catch (e: unknown) {
@@ -242,7 +262,15 @@ export default function OnboardingPage() {
         body: JSON.stringify({ name: rootTitle || "AI Assistant" }),
       });
       const chatData = await chatRes.json();
-      if (!chatRes.ok) throw new Error(chatData.error);
+
+      if (!chatRes.ok) {
+        if (chatData.error === "LIMIT_REACHED") {
+          setLimitType("chatbot");
+          setLimitReached(true);
+          return;
+        }
+        throw new Error(chatData.error);
+      }
       const id = chatData.chatbot.id;
       setChatbotId(id);
 
@@ -259,6 +287,8 @@ export default function OnboardingPage() {
 
       setProcessStep(PROCESSING_STEPS.length);
       setStep(7);
+      // Refresh global usage counts so AddChatbotButton stays in sync
+      mutateUsage();
       posthog.capture("onboarding_completed", {
         chatbotId: id,
         pageCount: scrapedPages.length,
@@ -278,6 +308,20 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <LimitReachedModal
+        isOpen={limitReached}
+        onClose={() => setLimitReached(false)}
+        title={
+          limitType === "chatbot"
+            ? "Chatbot Limit Reached"
+            : "Page Limit Reached"
+        }
+        description={
+          limitType === "chatbot"
+            ? `You've used all ${PLAN_LIMITS.FREE.MAX_CHATBOTS} chatbot slot(s) available on the Free plan. Delete an existing chatbot or upgrade your plan to create more.`
+            : `You can only select up to ${PLAN_LIMITS.FREE.MAX_PAGES} pages on the Free plan. Please restart or upgrade your plan.`
+        }
+      />
       <OnboardingHeader step={step} totalSteps={STEPS.length} />
       <StepIndicator steps={STEPS} currentStep={step} />
 

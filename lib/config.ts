@@ -76,8 +76,8 @@ export const MOBILE_PLACEHOLDER =
 export const PLAN_LIMITS = {
   FREE: {
     MAX_PAGES: 10,
-    MAX_MESSAGES: 100,
-    MAX_CHATBOTS: 1,
+    MAX_MESSAGES: 50,
+    MAX_CHATBOTS: 2,
   },
   STARTER: {
     MAX_PAGES: 50,
@@ -192,3 +192,6 @@ export const COLORS = [
   "#f59e0b",
   "#ef4444",
 ];
+
+export const README_FILE_URL =
+  "https://github.com/utkarshgupta04092003/general-chatbot";

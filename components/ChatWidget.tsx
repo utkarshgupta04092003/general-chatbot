@@ -157,6 +157,18 @@ export default function ChatWidget({
         body: JSON.stringify({ chatbotId, message: userMsg, sessionId }),
       });
       const data = await res.json();
+
+      if (!res.ok && data.error === "LIMIT_REACHED") {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: CHAT_ROLES.ASSISTANT,
+            content: "Message limit has reached. Please contact the admin.",
+          },
+        ]);
+        return;
+      }
+
       setMessages((prev) => [
         ...prev,
         {

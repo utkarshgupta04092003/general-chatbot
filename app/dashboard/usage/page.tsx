@@ -1,8 +1,13 @@
-import { ANALYTICS_EVENTS, CHAT_ROLES, PLAN_LIMITS } from "@/lib/config";
+import {
+  ANALYTICS_EVENTS,
+  CHAT_ROLES,
+  PLAN_LIMITS,
+  README_FILE_URL,
+} from "@/lib/config";
 import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
-import { CreditCard } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default async function UsagePage() {
   const session = await requireAuth();
@@ -111,17 +116,26 @@ export default async function UsagePage() {
         </div>
       </div>
 
-      {/* Payment history placeholder */}
-      <div className="bg-muted/50 border border-border rounded-2xl p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <CreditCard className="w-5 h-5 text-muted-foreground" />
-          <h2 className="font-semibold">Payment History</h2>
-        </div>
-        <div className="text-center py-8">
-          <p className="text-muted-foreground text-sm">
-            No payments yet. You are on the Free plan.
-          </p>
-        </div>
+      {/* Plan Limits Section */}
+      <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-6 text-center flex flex-col items-center">
+        <h2 className="font-semibold text-lg mb-2 text-foreground">
+          Unlock Unlimited Chatbots
+        </h2>
+        <p className="text-muted-foreground text-sm mb-5 max-w-lg">
+          Ready to scale? Bypass the constraints of our hosted Free plan by
+          self-deploying our open-source platform on your own infrastructure for
+          limitless usage. Alternatively, sign up with a new email to continue
+          testing.
+        </p>
+        <a
+          href={README_FILE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all shadow-sm"
+        >
+          Self Deploy
+          <ArrowRight className="w-4 h-4" />
+        </a>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { TEXT_EMBEDDING_3_SMALL } from "@/lib/config";
+import { PLAN_LIMITS, TEXT_EMBEDDING_3_SMALL } from "@/lib/config";
 import { logger } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { getAIClient, getDomain } from "@/lib/utils";
@@ -43,6 +43,23 @@ export async function POST(req: Request) {
     });
     if (!chatbot) {
       return NextResponse.json({ error: "Chatbot not found" }, { status: 404 });
+    }
+
+    const pageCount = await prisma.dataSource.count({
+      where: {
+        chatbot: { userId: session.user.id, deleted: false },
+        deleted: false,
+      },
+    });
+
+    if (pageCount >= PLAN_LIMITS.FREE.MAX_PAGES) {
+      return NextResponse.json(
+        {
+          error: "LIMIT_REACHED",
+          message: `You can only index up to ${PLAN_LIMITS.FREE.MAX_PAGES} pages on the Free plan.`,
+        },
+        { status: 403 },
+      );
     }
 
     const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot");

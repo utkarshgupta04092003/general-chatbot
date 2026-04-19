@@ -14,4 +14,5 @@ export const ENDPOINTS = {
   DATA_SOURCE_RESYNC: (id: string) => `/api/data-sources/${id}/resync`,
   MESSAGE_FEEDBACK: (id: string) => `/api/messages/${id}/feedback`,
   ANALYTICS: "/api/analytics",
+  USAGE: "/api/usage",
 } as const;

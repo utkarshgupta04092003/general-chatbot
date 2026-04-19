@@ -1,4 +1,5 @@
 import Sidebar from "@/components/Sidebar";
+import { UsageProvider } from "@/components/providers/usage-provider";
 import { requireAuth } from "@/lib/session";
 
 export default async function DashboardLayout({
@@ -12,7 +13,7 @@ export default async function DashboardLayout({
       <Sidebar />
       <main className="md:ml-56 pt-14 md:pt-0 min-h-screen">
         <div className="max-w-[80rem] mx-auto p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 relative min-w-0">
-          {children}
+          <UsageProvider>{children}</UsageProvider>
         </div>
       </main>
     </div>
