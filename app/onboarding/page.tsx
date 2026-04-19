@@ -2,7 +2,11 @@
 
 import { LimitReachedModal } from "@/components/LimitReachedModal";
 import { useUsage } from "@/components/providers/usage-provider";
-import { ANALYTICS_EVENTS, PLAN_LIMITS } from "@/lib/config";
+import {
+  ANALYTICS_EVENTS,
+  ENABLE_USAGE_LIMITS,
+  PLAN_LIMITS,
+} from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import { PROCESSING_STEPS, STEPS } from "@/lib/onboarding-constants";
 import { ScrapedPage } from "@/lib/onboarding-types";
@@ -27,7 +31,7 @@ interface ChatbotWithSources {
 
 export default function OnboardingPage() {
   const posthog = usePostHog();
-  const { mutate: mutateUsage } = useUsage();
+  const { pageCount, mutate: mutateUsage } = useUsage();
   const [step, setStep] = useState(1);
   const [url, setUrl] = useState("");
   const [crawledUrls, setCrawledUrls] = useState<string[]>([]);
@@ -216,7 +220,7 @@ export default function OnboardingPage() {
   }
 
   async function handleScrape() {
-    if (selectedUrls.size > PLAN_LIMITS.FREE.MAX_PAGES) {
+    if (ENABLE_USAGE_LIMITS && selectedUrls.size > PLAN_LIMITS.FREE.MAX_PAGES) {
       setLimitType("page");
       setLimitReached(true);
       return;
@@ -319,7 +323,7 @@ export default function OnboardingPage() {
         description={
           limitType === "chatbot"
             ? `You've used all ${PLAN_LIMITS.FREE.MAX_CHATBOTS} chatbot slot(s) available on the Free plan. Delete an existing chatbot or upgrade your plan to create more.`
-            : `You can only select up to ${PLAN_LIMITS.FREE.MAX_PAGES} pages on the Free plan. Please restart or upgrade your plan.`
+            : `You have already indexed ${pageCount} pages. You can only add ${Math.max(0, PLAN_LIMITS.FREE.MAX_PAGES - pageCount)} more page(s) on this Free plan. Please restart or upgrade your plan.`
         }
       />
       <OnboardingHeader step={step} totalSteps={STEPS.length} />

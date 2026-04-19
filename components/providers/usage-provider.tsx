@@ -1,5 +1,6 @@
 "use client";
 
+import { ENABLE_USAGE_LIMITS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import {
   createContext,
@@ -41,6 +42,10 @@ export function UsageProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUsage = useCallback(async () => {
+    if (!ENABLE_USAGE_LIMITS) {
+      setIsLoading(false);
+      return;
+    }
     try {
       const res = await fetch(ENDPOINTS.USAGE);
       if (!res.ok) return;

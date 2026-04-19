@@ -2,7 +2,7 @@
 
 import { LimitReachedModal } from "@/components/LimitReachedModal";
 import { useUsage } from "@/components/providers/usage-provider";
-import { PLAN_LIMITS } from "@/lib/config";
+import { ENABLE_USAGE_LIMITS, PLAN_LIMITS } from "@/lib/config";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -20,7 +20,7 @@ export function AddChatbotButton({
   const router = useRouter();
 
   function handleClick() {
-    if (!isLoading && chatbotCount >= PLAN_LIMITS.FREE.MAX_CHATBOTS) {
+    if (ENABLE_USAGE_LIMITS && !isLoading && chatbotCount >= PLAN_LIMITS.FREE.MAX_CHATBOTS) {
       setLimitOpen(true);
     } else {
       router.push("/onboarding");

@@ -5,6 +5,7 @@ import {
   GPT_5_MINI,
   MIN_CONFIDENCE_THRESHOLD,
   PLAN_LIMITS,
+  ENABLE_USAGE_LIMITS,
   RESPONSE_ERROR_MESSAGE,
   TEXT_EMBEDDING_3_SMALL,
 } from "@/lib/config";
@@ -108,7 +109,7 @@ export async function POST(req: Request) {
       },
     });
 
-    if (messageCount >= PLAN_LIMITS.FREE.MAX_MESSAGES) {
+    if (ENABLE_USAGE_LIMITS && messageCount >= PLAN_LIMITS.FREE.MAX_MESSAGES) {
       return NextResponse.json(
         {
           error: "LIMIT_REACHED",

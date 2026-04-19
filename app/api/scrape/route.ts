@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { PLAN_LIMITS } from "@/lib/config";
+import { PLAN_LIMITS, ENABLE_USAGE_LIMITS } from "@/lib/config";
 import { prisma } from "@/lib/prisma";
 import { fetchWithFallback } from "@/lib/scraper";
 import { getDomain } from "@/lib/utils";
@@ -48,11 +48,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    if (pageCount + urls.length > PLAN_LIMITS.FREE.MAX_PAGES) {
+    if (ENABLE_USAGE_LIMITS && pageCount + urls.length > PLAN_LIMITS.FREE.MAX_PAGES) {
       return NextResponse.json(
         {
           error: "LIMIT_REACHED",
-          message: `You can only select up to ${PLAN_LIMITS.FREE.MAX_PAGES} pages on the Free plan.`,
+          message: `You have already indexed ${pageCount} pages. You can only index up to ${PLAN_LIMITS.FREE.MAX_PAGES} pages on the Free plan. Adding ${urls.length} more page(s) exceeds your limit.`,
         },
         { status: 403 },
       );

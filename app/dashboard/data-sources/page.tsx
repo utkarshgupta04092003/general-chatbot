@@ -2,7 +2,11 @@
 
 import { LimitReachedModal } from "@/components/LimitReachedModal";
 import { useUsage } from "@/components/providers/usage-provider";
-import { ANALYTICS_EVENTS, PLAN_LIMITS } from "@/lib/config";
+import {
+  ANALYTICS_EVENTS,
+  ENABLE_USAGE_LIMITS,
+  PLAN_LIMITS,
+} from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
@@ -104,7 +108,7 @@ export default function DataSourcesPage() {
   async function handleAddUrl() {
     if (!addUrl.trim()) return;
 
-    if (pageCount >= PLAN_LIMITS.FREE.MAX_PAGES) {
+    if (ENABLE_USAGE_LIMITS && pageCount >= PLAN_LIMITS.FREE.MAX_PAGES) {
       setLimitOpen(true);
       return;
     }
@@ -206,7 +210,10 @@ export default function DataSourcesPage() {
 
   async function handleAddSelectedUrls() {
     if (selectedUrls.length === 0) return;
-    if (pageCount + selectedUrls.length > PLAN_LIMITS.FREE.MAX_PAGES) {
+    if (
+      ENABLE_USAGE_LIMITS &&
+      pageCount + selectedUrls.length > PLAN_LIMITS.FREE.MAX_PAGES
+    ) {
       setShowUrlSelectionModal(false);
       setLimitOpen(true);
       return;
@@ -221,7 +228,7 @@ export default function DataSourcesPage() {
         isOpen={limitOpen}
         onClose={() => setLimitOpen(false)}
         title="Page Limit Reached"
-        description={`You've used all ${PLAN_LIMITS.FREE.MAX_PAGES} page slot(s) on this Free plan. Self deploy or sign up with new email to index more pages.`}
+        description={`You have already indexed ${pageCount} pages. You can only add ${Math.max(0, PLAN_LIMITS.FREE.MAX_PAGES - pageCount)} more page(s) on this Free plan. Self deploy or sign up with new email to index more.`}
       />
 
       <SelectChatbotModal

@@ -1,6 +1,7 @@
 import {
   ANALYTICS_EVENTS,
   CHAT_ROLES,
+  ENABLE_USAGE_LIMITS,
   PLAN_LIMITS,
   README_FILE_URL,
 } from "@/lib/config";
@@ -60,7 +61,7 @@ export default async function UsagePage() {
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-semibold">Current Usage</h2>
           <span className="px-3 py-1 bg-indigo-500/10 text-indigo-500 text-xs font-medium rounded-full border border-indigo-500/20">
-            Free Plan
+            {ENABLE_USAGE_LIMITS ? "Free Plan" : "Limitless Plan"}
           </span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -93,50 +94,55 @@ export default async function UsagePage() {
                     <span className="text-foreground font-semibold">
                       {item.used.toLocaleString()}
                     </span>
-                    <span className="text-muted-foreground text-[10px]">
-                      / {item.total.toLocaleString()}
-                    </span>
+                    {ENABLE_USAGE_LIMITS && (
+                      <span className="text-muted-foreground text-[10px]">
+                        / {item.total.toLocaleString()}
+                      </span>
+                    )}
                   </div>
                 </div>
-                <div className="relative w-full bg-accent/50 rounded-full h-2.5 overflow-hidden">
-                  <div
-                    className={`absolute left-0 top-0 h-full rounded-full transition-all duration-500 ease-out ${
-                      percentage > 90
-                        ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
-                        : percentage > 75
-                          ? "bg-amber-500"
-                          : "bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.3)]"
-                    }`}
-                    style={{ width: `${Math.min(100, percentage)}%` }}
-                  />
-                </div>
+                {ENABLE_USAGE_LIMITS && (
+                  <div className="relative w-full bg-accent/50 rounded-full h-2.5 overflow-hidden">
+                    <div
+                      className={`absolute left-0 top-0 h-full rounded-full transition-all duration-500 ease-out ${
+                        percentage > 90
+                          ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+                          : percentage > 75
+                            ? "bg-amber-500"
+                            : "bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.3)]"
+                      }`}
+                      style={{ width: `${Math.min(100, percentage)}%` }}
+                    />
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Plan Limits Section */}
-      <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-6 text-center flex flex-col items-center">
-        <h2 className="font-semibold text-lg mb-2 text-foreground">
-          Unlock Unlimited Chatbots
-        </h2>
-        <p className="text-muted-foreground text-sm mb-5 max-w-lg">
-          Ready to scale? Bypass the constraints of our hosted Free plan by
-          self-deploying our open-source platform on your own infrastructure for
-          limitless usage. Alternatively, sign up with a new email to continue
-          testing.
-        </p>
-        <a
-          href={README_FILE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all shadow-sm"
-        >
-          Self Deploy
-          <ArrowRight className="w-4 h-4" />
-        </a>
-      </div>
+      {ENABLE_USAGE_LIMITS && (
+        <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-6 text-center flex flex-col items-center">
+          <h2 className="font-semibold text-lg mb-2 text-foreground">
+            Unlock Unlimited Chatbots
+          </h2>
+          <p className="text-muted-foreground text-sm mb-5 max-w-lg">
+            Ready to scale? Bypass the constraints of our hosted Free plan by
+            self-deploying our open-source platform on your own infrastructure
+            for limitless usage. Alternatively, sign up with a new email to
+            continue testing.
+          </p>
+          <a
+            href={README_FILE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all shadow-sm"
+          >
+            Self Deploy
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+      )}
     </div>
   );
 }

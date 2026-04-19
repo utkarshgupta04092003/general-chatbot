@@ -1,5 +1,9 @@
 import { auth } from "@/lib/auth";
-import { PLAN_LIMITS, TEXT_EMBEDDING_3_SMALL } from "@/lib/config";
+import {
+  ENABLE_USAGE_LIMITS,
+  PLAN_LIMITS,
+  TEXT_EMBEDDING_3_SMALL,
+} from "@/lib/config";
 import { logger } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { getAIClient, getDomain } from "@/lib/utils";
@@ -52,11 +56,11 @@ export async function POST(req: Request) {
       },
     });
 
-    if (pageCount >= PLAN_LIMITS.FREE.MAX_PAGES) {
+    if (ENABLE_USAGE_LIMITS && pageCount >= PLAN_LIMITS.FREE.MAX_PAGES) {
       return NextResponse.json(
         {
           error: "LIMIT_REACHED",
-          message: `You can only index up to ${PLAN_LIMITS.FREE.MAX_PAGES} pages on the Free plan.`,
+          message: `You have already indexed ${pageCount} pages. You can only index up to ${PLAN_LIMITS.FREE.MAX_PAGES} pages on the Free plan.`,
         },
         { status: 403 },
       );

@@ -1,4 +1,5 @@
 export const APP_NAME = "Chatbase";
+export const ENABLE_USAGE_LIMITS = true; // Set to false to disable all usage restrictions
 export const CONTACT_EMAIL = "hello@chatbase.com";
 export const SALES_EMAIL = "sales@chatbase.com";
 export const SUPPORT_EMAIL = "support@chatbase.com";
@@ -75,7 +76,7 @@ export const MOBILE_PLACEHOLDER =
 
 export const PLAN_LIMITS = {
   FREE: {
-    MAX_PAGES: 10,
+    MAX_PAGES: 25,
     MAX_MESSAGES: 50,
     MAX_CHATBOTS: 2,
   },
