@@ -63,7 +63,7 @@ export function PreviewStep({
             <button
               key={p.url}
               onClick={() => setSelectedPageIndex(index)}
-              className={`w-full flex items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-accent/50 bg-muted/30 ${
+              className={`w-full flex items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-accent/50 bg-muted/30 hover:cursor-pointer ${
                 selectedPageIndex === index ? "bg-indigo-500/10" : ""
               }`}
             >
@@ -82,7 +82,7 @@ export function PreviewStep({
                 <div
                   className={`text-sm truncate ${
                     selectedPageIndex === index
-                      ? "text-indigo-300 font-medium"
+                      ? "text-indigo-500 font-medium"
                       : "text-muted-foreground"
                   }`}
                 >
@@ -103,7 +103,7 @@ export function PreviewStep({
             <div className="text-xs text-muted-foreground uppercase tracking-wide">
               Content preview: {selectedPage.title || "Untitled Page"}
             </div>
-            <div className="text-[10px] text-slate-600 font-mono">
+            <div className="text-xs text-slate-600">
               {selectedPage.wordCount} words
             </div>
           </div>

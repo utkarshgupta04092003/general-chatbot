@@ -9,7 +9,7 @@ import {
 } from "@/lib/config";
 import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
-import { ensureAbsoluteUrl, getAIClient, getDomain } from "@/lib/utils";
+import { ensureAbsoluteUrl, getAIClient } from "@/lib/utils";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { NextResponse } from "next/server";
 import { zodResponseFormat } from "openai/helpers/zod";
@@ -121,15 +121,10 @@ export async function POST(req: Request) {
     });
     const queryEmbedding = embeddingResponse.data[0].embedding;
 
-    // Retrieve relevant chunks from Pinecone
+    // Retrieve relevant chunks from Pinecone using chatbotId as namespace
     const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot");
 
-    // Determine namespace from the first data source's URL
-    const domain = chatbot.dataSources[0]
-      ? getDomain(chatbot.dataSources[0].url)
-      : "default";
-
-    const queryResults = await index.namespace(domain).query({
+    const queryResults = await index.namespace(chatbotId).query({
       vector: queryEmbedding,
       topK: 5,
       filter: { chatbotId: { $eq: chatbotId } },

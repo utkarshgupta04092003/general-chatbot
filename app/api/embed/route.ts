@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { TEXT_EMBEDDING_3_SMALL } from "@/lib/config";
+import { logger } from "@/lib/logger";
+import { prisma } from "@/lib/prisma";
 import { getAIClient, getDomain } from "@/lib/utils";
 import { Pinecone, PineconeRecord } from "@pinecone-database/pinecone";
-import { logger } from "@/lib/logger";
+import { NextResponse } from "next/server";
 
 // Initialize Pinecone client
 const pc = new Pinecone({
@@ -31,7 +31,10 @@ export async function POST(req: Request) {
     const { chatbotId, pages } = await req.json();
 
     if (!chatbotId || !pages) {
-      return NextResponse.json({ error: "chatbotId and pages required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "chatbotId and pages required" },
+        { status: 400 },
+      );
     }
 
     // Verify chatbot belongs to user
@@ -43,23 +46,20 @@ export async function POST(req: Request) {
     }
 
     const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot");
-    
-    // Group chunks by domain for namespacing
-    const chunksByDomain: Record<string, { id: string; text: string; url: string }[]> = {};
-    
+
+    // Collect all chunks across all pages into a single list for this chatbot
+    const allChunks: { id: string; text: string; url: string }[] = [];
+
     for (const page of pages) {
       if (!page.content || page.status === "failed") continue;
 
-      const domain = getDomain(page.url);
-      if (!chunksByDomain[domain]) chunksByDomain[domain] = [];
-
       // Create/update data source
       await prisma.dataSource.upsert({
-        where: { 
+        where: {
           chatbotId_url: {
             chatbotId,
-            url: page.url
-          }
+            url: page.url,
+          },
         },
         create: {
           chatbotId,
@@ -79,42 +79,39 @@ export async function POST(req: Request) {
 
       // Chunk the content
       const pageChunks = chunkText(page.content);
-      pageChunks.forEach((chunk, index) => {
-        const chunkId = `${Buffer.from(page.url).toString('base64url')}-${index}`;
-        chunksByDomain[domain].push({ id: chunkId, text: chunk, url: page.url });
+      pageChunks.forEach((chunk, i) => {
+        const chunkId = `${Buffer.from(page.url).toString("base64url")}-${i}`;
+        allChunks.push({ id: chunkId, text: chunk, url: page.url });
       });
     }
 
-    // Process each domain's chunks
+    // Process all chunks under the chatbotId namespace
     const client = getAIClient(TEXT_EMBEDDING_3_SMALL);
-    let totalChunks = 0;
+    const totalChunks = allChunks.length;
+    const batchSize = 20;
 
-    for (const [domain, domainChunks] of Object.entries(chunksByDomain)) {
-      totalChunks += domainChunks.length;
-      const batchSize = 20;
-      
-      for (let i = 0; i < domainChunks.length; i += batchSize) {
-        const batch = domainChunks.slice(i, i + batchSize);
-        const input = batch.map(c => c.text);
-        
-        const response = await client.embeddings.create({
-          model: TEXT_EMBEDDING_3_SMALL,
-          input,
-        });
+    for (let i = 0; i < allChunks.length; i += batchSize) {
+      const batch = allChunks.slice(i, i + batchSize);
+      const input = batch.map((c) => c.text);
 
-        const vectors: PineconeRecord[] = batch.map((chunk, idx) => ({
-          id: chunk.id,
-          values: response.data[idx].embedding,
-          metadata: {
-            chatbotId: String(chatbotId),
-            text: chunk.text,
-            url: chunk.url,
-          },
-        }));
+      const response = await client.embeddings.create({
+        model: TEXT_EMBEDDING_3_SMALL,
+        input,
+      });
 
-        // Upsert to Pinecone with domain namespace
-        await index.namespace(domain).upsert({ records: vectors });
-      }
+      const vectors: PineconeRecord[] = batch.map((chunk, idx) => ({
+        id: chunk.id,
+        values: response.data[idx].embedding,
+        metadata: {
+          chatbotId: String(chatbotId),
+          text: chunk.text,
+          url: chunk.url,
+          domain: getDomain(chunk.url),
+        },
+      }));
+
+      // Upsert to Pinecone using chatbotId as the namespace
+      await index.namespace(chatbotId).upsert({ records: vectors });
     }
 
     // Update chatbot status to ready
@@ -126,7 +123,9 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       chunksGenerated: totalChunks,
-      pagesIndexed: pages.filter((p: { status: string }) => p.status !== "failed").length,
+      pagesIndexed: pages.filter(
+        (p: { status: string }) => p.status !== "failed",
+      ).length,
     });
   } catch (err: unknown) {
     logger.error("Embedding error:", err);

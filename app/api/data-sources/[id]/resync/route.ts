@@ -92,7 +92,7 @@ export async function POST(
 
     // 2. Perform Full Resync (Pinecone + Prisma)
     const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot");
-    const domain = getDomain(dataSource.url);
+    const chatbotId = String(dataSource.chatbotId);
 
     // Delete old vectors (Using metadata filter)
     // Note: Pinecone doesn't support deleting by metadata directly in all index types,
@@ -105,11 +105,11 @@ export async function POST(
     // For now, we'll use the ID prefix to delete
     const idPrefix = Buffer.from(dataSource.url).toString("base64url");
 
-    // Pinecone delete with metadata filter
-    await index.namespace(domain).deleteMany({
+    // Delete old vectors for this data source URL within the chatbot's namespace
+    await index.namespace(chatbotId).deleteMany({
       filter: {
         url: { $eq: dataSource.url },
-        chatbotId: { $eq: String(dataSource.chatbotId) },
+        chatbotId: { $eq: chatbotId },
       },
     });
 
@@ -129,13 +129,15 @@ export async function POST(
         id: `${idPrefix}-resync-${Date.now()}-${i + idx}`,
         values: embeddingRes.data[idx].embedding,
         metadata: {
-          chatbotId: String(dataSource.chatbotId),
+          chatbotId,
           text: chunk,
           url: dataSource.url,
+          domain: getDomain(dataSource.url),
         },
       }));
 
-      await index.namespace(domain).upsert({ records: vectors });
+      // Upsert to Pinecone using chatbotId as the namespace
+      await index.namespace(chatbotId).upsert({ records: vectors });
     }
 
     // Update Prisma
