@@ -63,7 +63,7 @@ export function PreviewStep({
             <button
               key={p.url}
               onClick={() => setSelectedPageIndex(index)}
-              className={`w-full flex items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-accent/50 bg-muted/30 hover:cursor-pointer ${
+              className={`w-full flex items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-accent/50 bg-muted/30 cursor-pointer disabled:cursor-not-allowed ${
                 selectedPageIndex === index ? "bg-indigo-500/10" : ""
               }`}
             >
@@ -118,13 +118,13 @@ export function PreviewStep({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm transition-all text-foreground"
+          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm transition-all text-foreground cursor-pointer disabled:cursor-not-allowed"
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
         <button
           onClick={onTrain}
-          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-sm font-medium transition-all text-white"
+          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-sm font-medium transition-all text-white cursor-pointer disabled:cursor-not-allowed"
         >
           Train Chatbot <Sparkles className="w-4 h-4" />
         </button>

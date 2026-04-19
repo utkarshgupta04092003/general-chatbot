@@ -81,14 +81,14 @@ export function PermissionStep({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm transition-all text-foreground"
+          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-sm transition-all text-foreground cursor-pointer disabled:cursor-not-allowed"
         >
           <ArrowLeft className="w-4 h-4" /> Cancel
         </button>
         <button
           onClick={onScrape}
           disabled={loading}
-          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl text-sm font-medium transition-all text-white"
+          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl text-sm font-medium transition-all text-white cursor-pointer disabled:cursor-not-allowed"
         >
           {loading ? (
             <>

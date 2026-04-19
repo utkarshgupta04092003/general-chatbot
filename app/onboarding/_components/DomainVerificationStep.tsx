@@ -75,7 +75,7 @@ export function DomainVerificationStep({
               <button
                 onClick={onRequestCode}
                 disabled={loading}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white disabled:opacity-50 rounded-xl font-medium transition-all"
+                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white disabled:opacity-50 rounded-xl font-medium transition-all cursor-pointer disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -107,7 +107,7 @@ export function DomainVerificationStep({
               <button
                 onClick={onVerify}
                 disabled={loading}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl font-medium transition-all flex items-center gap-2 text-white"
+                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl font-medium transition-all flex items-center gap-2 text-white cursor-pointer disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -119,7 +119,7 @@ export function DomainVerificationStep({
             </div>
             <button
               onClick={() => setCodeRequested(false)}
-              className="text-xs text-muted-foreground hover:text-indigo-600 dark:text-indigo-400 mt-2 underline"
+              className="text-xs text-muted-foreground hover:text-indigo-600 dark:text-indigo-400 mt-2 underline cursor-pointer disabled:cursor-not-allowed"
             >
               Use different email
             </button>
@@ -130,7 +130,7 @@ export function DomainVerificationStep({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm transition-all text-foreground"
+          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-sm transition-all text-foreground cursor-pointer disabled:cursor-not-allowed"
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>

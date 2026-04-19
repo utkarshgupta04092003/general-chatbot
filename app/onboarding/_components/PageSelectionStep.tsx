@@ -75,7 +75,7 @@ export function PageSelectionStep({
                 <button
                   onClick={onRescan}
                   disabled={loading}
-                  className="flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors"
+                  className="flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors cursor-pointer disabled:cursor-not-allowed"
                   title="Rescan website"
                 >
                   <RefreshCw
@@ -89,7 +89,7 @@ export function PageSelectionStep({
                 selectedUrls.size === crawledUrls.length ? (
                   <button
                     onClick={() => setSelectedUrls(new Set())}
-                    className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300"
+                    className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 cursor-pointer"
                   >
                     Deselect all
                   </button>
@@ -97,14 +97,14 @@ export function PageSelectionStep({
                   <>
                     <button
                       onClick={() => setSelectedUrls(new Set(crawledUrls))}
-                      className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300"
+                      className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 cursor-pointer"
                     >
                       Select all
                     </button>
                     {selectedUrls.size > 0 && (
                       <button
                         onClick={() => setSelectedUrls(new Set())}
-                        className="text-xs text-muted-foreground hover:text-muted-foreground"
+                        className="text-xs text-muted-foreground hover:text-muted-foreground cursor-pointer"
                       >
                         Clear
                       </button>
@@ -151,14 +151,14 @@ export function PageSelectionStep({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm transition-all text-foreground"
+          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm transition-all text-foreground cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
         <button
           onClick={onContinue}
           disabled={loading || selectedUrls.size === 0}
-          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl text-sm font-medium transition-all text-white"
+          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl text-sm font-medium transition-all text-white cursor-pointer disabled:cursor-not-allowed"
         >
           {loading ? "Discovering..." : "Continue"}{" "}
           {!loading && <ArrowRight className="w-4 h-4" />}

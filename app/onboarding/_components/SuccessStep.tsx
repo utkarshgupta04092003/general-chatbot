@@ -57,7 +57,7 @@ export function SuccessStep({
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <a
           href="/dashboard"
-          className="flex items-center justify-center gap-2 px-8 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm font-medium transition-all text-foreground"
+          className="flex items-center justify-center gap-2 px-8 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-sm font-medium transition-all text-foreground cursor-pointer"
         >
           Go to Dashboard
         </a>
@@ -65,7 +65,7 @@ export function SuccessStep({
           href={testUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 px-8 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-sm font-medium transition-all text-white"
+          className="flex items-center justify-center gap-2 px-8 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-sm font-medium transition-all text-white cursor-pointer"
         >
           <Flag className="w-4 h-4" />
           Test Chatbot
