@@ -78,6 +78,7 @@ model Chatbot {
   contactPageLink String?
   theme           String         @default("light") // light, dark
   status          String         @default("training") // training, ready, inactive
+  model           String         @default("gemini-3-flash-preview")
   totalQueries    Int            @default(0)
   deleted         Boolean        @default(false)
   createdAt       DateTime       @default(now())

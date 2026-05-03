@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 
 import { BasicInfoSection } from "./_components/BasicInfoSection";
 import { ColorSection } from "./_components/ColorSection";
+import { ModelSection } from "./_components/ModelSection";
 import { SettingsPreview } from "./_components/SettingsPreview";
 import { SystemPromptSection } from "./_components/SystemPromptSection";
 import { ThemeSection } from "./_components/ThemeSection";
@@ -61,6 +62,7 @@ export default function ChatbotSettingsPage() {
         hasSupportWhatsapp: !!selected.supportWhatsapp,
         hasContactPage: !!selected.contactPageLink,
         theme: selected.theme,
+        model: selected.model,
       });
 
       setSaved(true);
@@ -143,6 +145,7 @@ export default function ChatbotSettingsPage() {
                   <ToneSection selected={selected} onChange={setSelected} />
                   <ColorSection selected={selected} onChange={setSelected} />
                   <ThemeSection selected={selected} onChange={setSelected} />
+                  <ModelSection selected={selected} onChange={setSelected} />
                 </div>
 
                 <div className="space-y-6">

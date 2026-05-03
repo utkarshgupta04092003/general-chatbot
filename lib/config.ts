@@ -8,6 +8,10 @@ export const GEMINI_3_FLASH = "gemini-3-flash-preview";
 export const GEMINI_3_1_PRO = "gemini-3.1-pro-preview";
 export const GEMINI_EMBEDDING_001 = "gemini-embedding-001";
 export const COHERE_RERANK_3_5 = "cohere-rerank-3.5";
+export const MODEL_OPTIONS = [
+  { value: GEMINI_3_FLASH, label: "Gemini 1.5 Flash (Fastest)" },
+  { value: GEMINI_3_1_PRO, label: "Gemini 1.5 Pro (Most Capable)" },
+];
 
 export const API_VERSIONS = {
   [GEMINI_EMBEDDING_001]: "v1beta",

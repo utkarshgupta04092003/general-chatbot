@@ -16,7 +16,7 @@ export function WidgetPreview({ chatbot }: WidgetPreviewProps) {
       <h2 className="font-semibold mb-4">Widget Preview</h2>
       <div
         className="bg-card rounded-xl border border-border relative overflow-hidden"
-        style={{ height: "400px" }}
+        style={{ height: "550px" }}
       >
         <div className="p-4 h-full flex flex-col">
           {/* Chat header */}

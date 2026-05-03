@@ -15,6 +15,7 @@ export function SettingsPreview({ selected }: SettingsPreviewProps) {
       <h2 className="font-semibold mb-4">Widget Preview</h2>
       <div
         className={`rounded-xl overflow-hidden border border-border transition-colors ${selected.theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white"}`}
+        style={{ minHeight: "450px" }}
       >
         <div
           className="px-4 py-3 flex items-center gap-3"

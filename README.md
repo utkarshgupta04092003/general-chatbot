@@ -35,12 +35,13 @@ _(Upload a GIF or screenshot of the dashboard and chat widget here)_
 - **Chatbot Widget & Interface**
   - Website and embedded widget Light / Dark mode support.
   - Mobile responsive UI and completely dynamic configuration.
-  - Assistant configuration variables (Names, System Prompts, Models).
-  - Color picker customization.
-  - Company name configuration (Chatbase integration fallback).
-  - Chatbot fallback contact capture.
-  - Business-type dropdown for prompt suggestions.
-  - Select / deselect all interaction points.
+  - **Dynamic Model Selection:** Choose between Gemini 1.5 Flash (Speed) or Gemini 1.5 Pro (Reasoning) for each chatbot.
+  - Assistant configuration variables (Names, System Prompts, Welcome Messages).
+  - **Refined Source Rendering:** Intelligent source display with "Show More" functionality and URL masking for manual sources.
+  - Color picker customization and theme toggle (Light/Dark).
+  - Company name configuration and fallback contact capture.
+  - Business-type dropdown for tailored system prompt templates.
+  - Select / deselect all interaction points for easy management.
 - **AI & RAG Engine**
   - Full Chat history context injection in response generation.
   - API endpoint implementation for conversational interface.
@@ -57,20 +58,13 @@ _(Upload a GIF or screenshot of the dashboard and chat widget here)_
 
 ### 🧠 Future Contributions
 
-- Document upload capability
-- Data source document update support
-- Secure chatbot identifier
-
-- Inactive chatbot handling
-- Show / hide sources in chat responses
-- Dynamic widget theming (match host website)
-- Multi-database provider support (mongodb, supabase, etc.)
-- Cloud storage support (AWS, Azure, etc.)
-- Multi-LLM provider support (openai, gemini, etc.)
-- Multi-vector DB support (pinecone, chroma DB, qdrant etc.)
-- Scheduled auto-resync (cron based)
-- Analytics section improvements
-- Route optimization across backend
+- **Document Uploads:** Support for PDF, CSV, and TXT file indexing.
+- **Auto-Resync:** Scheduled crawling to keep data fresh (Cron-based).
+- **Secure Identifiers:** Enhanced security for widget embedding.
+- **Expanded AI Providers:** Support for OpenAI (GPT-4o) and Anthropic (Claude 3.5).
+- **Multi-Vector DBs:** Support for Weaviate, ChromaDB, and Qdrant.
+- **Advanced Analytics:** Deeper insights into user journeys and query clusters.
+- **Dynamic Widget Themes:** Automatically match the host website's design system.
 
 ---
 
@@ -87,13 +81,14 @@ This project simplifies the complex Retrieval-Augmented Generation (RAG) pipelin
 
 ## ⚙️ Tech Stack
 
-- **Frontend:** Next.js / React / TailwindCSS
+- **Frontend:** Next.js 15 / React 19 / TailwindCSS 4
 - **Backend:** Node.js (Next.js Serverless API Routes)
-- **API Extraction:** Puppeteer
+- **API Extraction:** Puppeteer (with UA rotation and robust fetch)
 - **Database:** MongoDB (via Prisma ORM)
 - **Vector DB:** Pinecone
 - **AI Provider:** Google Gemini (Gemini 3 Flash & 3.1 Pro via OpenAI-compatible endpoint)
 - **Analytics:** PostHog
+- **Storage:** Cloudinary (for logos and assets)
 
 ---
 

@@ -2,13 +2,13 @@ import {
   ANALYTICS_EVENTS,
   CHAT_ROLES,
   ENABLE_USAGE_LIMITS,
-  GEMINI_3_1_PRO,
   GEMINI_3_FLASH,
   GEMINI_EMBEDDING_001,
   MIN_CONFIDENCE_THRESHOLD,
   PLAN_LIMITS,
   RESPONSE_ERROR_MESSAGE,
 } from "@/lib/config";
+import { QAModel } from "@/lib/declaration";
 import { logger } from "@/lib/logger";
 import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
@@ -174,7 +174,8 @@ export async function POST(req: Request) {
       .filter(Boolean);
 
     // Generate response using real AI Client
-    const client = getAIClient(GEMINI_3_1_PRO);
+    const modelToUse = (chatbot.model || GEMINI_3_FLASH) as QAModel;
+    const client = getAIClient(modelToUse);
 
     let context = relevantChunks.join("\n\n");
     if (context.length === 0 && chatbot.dataSources.length > 0) {
@@ -221,7 +222,7 @@ export async function POST(req: Request) {
     }));
 
     const aiResponse = await client.chat.completions.create({
-      model: GEMINI_3_FLASH,
+      model: modelToUse,
       messages: [
         { role: CHAT_ROLES.SYSTEM, content: systemMessage },
         ...contextMessages,
