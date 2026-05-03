@@ -153,15 +153,12 @@ DATABASE_URL="mongodb+srv://<username>:<password>@cluster0.ek9bjmo.mongodb.net/<
 
 # Authentication (NextAuth)
 NEXTAUTH_SECRET="your-secret-key"
+AUTH_SECRET="your-secret-key"
 NEXTAUTH_URL="http://localhost:3000"
 AUTH_TRUST_HOST=true
 
-# Google OAuth (optional)
-GOOGLE_CLIENT_ID=""
-GOOGLE_CLIENT_SECRET=""
-
 # AI Providers
-GEMINI_API_KEY_MB_AI="<gemini_api_key>"
+GEMINI_API_KEY="<gemini_api_key>"
 
 # Pinecone
 PINECONE_API_KEY="pc-..."

@@ -1,6 +1,7 @@
 "use client";
 
 import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 import { Chatbot } from "./types";
 
 type WidgetPreviewProps = {
@@ -75,14 +76,14 @@ export function WidgetPreview({ chatbot }: WidgetPreviewProps) {
         </div>
       </div>
       {chatbot?.id && (
-        <a
+        <Link
           href={`/widget/${chatbot.id}`}
           target="_blank"
-          className="mt-4 flex items-center justify-center gap-2 w-full py-2.5 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border text-sm text-muted-foreground rounded-xl transition-all"
+          className="mt-4 flex items-center justify-center gap-2 w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/25 cursor-pointer"
         >
           <ExternalLink className="w-4 h-4" />
           Open full chat page
-        </a>
+        </Link>
       )}
     </div>
   );

@@ -72,7 +72,7 @@ export function ensureAbsoluteUrl(url: string): string {
 export const getAIClient = (model: QAModel) => {
   if (model === GEMINI_3_1_PRO || model === GEMINI_3_FLASH) {
     const client = new OpenAI({
-      apiKey: process.env.GEMINI_API_KEY_MB_AI,
+      apiKey: process.env.GEMINI_API_KEY,
       baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
     });
     logger.debug("Using Gemini client for model:", model);
@@ -92,7 +92,7 @@ export async function generateEmbeddings(
   input: string | string[],
 ) {
   if (model === GEMINI_EMBEDDING_001) {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY_MB_AI!);
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const embeddingModel = genAI.getGenerativeModel({
       model: GEMINI_EMBEDDING_001,
     });

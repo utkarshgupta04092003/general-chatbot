@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import NextAuth, { type DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
 import { ANALYTICS_EVENTS } from "./config";
 import PostHogClient from "./posthog";
 import { prisma } from "./prisma";
@@ -22,10 +21,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   // No adapter — using JWT strategy which doesn't need DB sessions
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
