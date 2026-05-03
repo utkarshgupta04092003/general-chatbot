@@ -232,16 +232,33 @@ export async function POST(req: Request) {
     const response =
       aiResponse.choices[0].message.content || RESPONSE_ERROR_MESSAGE;
 
-    // Extract unique source URLs
-    const sources = Array.from(
+    // Extract unique source URLs and fetch titles
+    const uniqueUrls = Array.from(
       new Set(
         queryResults.matches.map((match) => match.metadata?.url as string),
       ),
     ).filter(Boolean);
 
+    const sourceData = await prisma.dataSource.findMany({
+      where: {
+        chatbotId,
+        url: { in: uniqueUrls },
+        deleted: false,
+      },
+      select: { url: true, title: true },
+    });
+
     let finalResponse = response;
-    if (sources.length > 0) {
-      finalResponse += `\n\n**Sources:**\n${sources.map((url) => `- [${url}](${url})`).join("\n")}`;
+    if (uniqueUrls.length > 0) {
+      const sourceLines = uniqueUrls.map((url) => {
+        const found = sourceData.find((s) => s.url === url);
+        const title = found?.title || url;
+        if (url.startsWith("manual-text-")) {
+          return `- ${title}`;
+        }
+        return `- [${title}](${url})`;
+      });
+      finalResponse += `\n\n**Sources:**\n${sourceLines.join("\n")}`;
     }
 
     // Higher Accuracy Analytics: Categorize and detect 'unanswered' using structured output
@@ -305,7 +322,7 @@ export async function POST(req: Request) {
         content: finalResponse,
         unanswered: analytics.unanswered,
         confidence: analytics.confidence,
-        sourceUrls: sources,
+        sourceUrls: uniqueUrls,
       },
     });
 
