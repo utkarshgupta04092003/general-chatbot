@@ -287,58 +287,58 @@ export default function ChatWidget({
                     )}
                   </div>
                 )}
-                <div
-                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed break-words overflow-hidden relative group transition-colors ${
-                    msg.role === CHAT_ROLES.USER
-                      ? "text-white rounded-br-sm"
-                      : theme === "dark"
-                        ? "bg-slate-800 text-slate-100 shadow-md rounded-bl-sm"
-                        : "bg-white text-gray-700 shadow-sm rounded-bl-sm"
-                  }`}
-                  style={
-                    msg.role === CHAT_ROLES.USER
-                      ? { backgroundColor: primaryColor }
-                      : {}
-                  }
-                >
-                  {msg.role === CHAT_ROLES.ASSISTANT ? (
-                    <>
+                <div className="flex flex-col items-start max-w-[80%] group">
+                  <div
+                    className={`rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed break-words overflow-hidden relative transition-colors ${
+                      msg.role === CHAT_ROLES.USER
+                        ? "text-white rounded-br-sm"
+                        : theme === "dark"
+                          ? "bg-slate-800 text-slate-100 shadow-md rounded-bl-sm"
+                          : "bg-white text-gray-700 shadow-sm rounded-bl-sm"
+                    }`}
+                    style={
+                      msg.role === CHAT_ROLES.USER
+                        ? { backgroundColor: primaryColor }
+                        : {}
+                    }
+                  >
+                    {msg.role === CHAT_ROLES.ASSISTANT ? (
                       <MarkdownMessage content={msg.content} />
-                      {msg.id && (
-                        <div
-                          className={`flex items-center gap-1.5 mt-2 pt-2 border-t opacity-0 group-hover:opacity-100 transition-all ${theme === "dark" ? "border-slate-700" : "border-gray-50"}`}
-                        >
-                          <button
-                            onClick={() =>
-                              handleFeedback(msg.id!, FEEDBACK_TEXT.HELPFUL)
-                            }
-                            className={`hover:bg-opacity-10 p-1 rounded transition-colors ${
-                              msg.feedback === FEEDBACK_TEXT.HELPFUL
-                                ? "text-green-500 bg-green-500/10"
-                                : "text-gray-400 hover:bg-gray-400"
-                            }`}
-                            title={FEEDBACK_TEXT.HELPFUL}
-                          >
-                            <ThumbsUp className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleFeedback(msg.id!, FEEDBACK_TEXT.UNHELPFUL)
-                            }
-                            className={`hover:bg-opacity-10 p-1 rounded transition-colors ${
-                              msg.feedback === FEEDBACK_TEXT.UNHELPFUL
-                                ? "text-red-500 bg-red-500/10"
-                                : "text-gray-400 hover:bg-gray-400"
-                            }`}
-                            title={FEEDBACK_TEXT.UNHELPFUL}
-                          >
-                            <ThumbsDown className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    msg.content
+                    ) : (
+                      msg.content
+                    )}
+                  </div>
+                  {msg.role === CHAT_ROLES.ASSISTANT && msg.id && (
+                    <div
+                      className={`flex items-center gap-1.5 mt-1 ml-1 opacity-0 group-hover:opacity-100 transition-all`}
+                    >
+                      <button
+                        onClick={() =>
+                          handleFeedback(msg.id!, FEEDBACK_TEXT.HELPFUL)
+                        }
+                        className={`hover:bg-opacity-10 p-1 rounded transition-colors ${
+                          msg.feedback === FEEDBACK_TEXT.HELPFUL
+                            ? "text-green-500 bg-green-500/10"
+                            : "text-gray-400 hover:bg-gray-400"
+                        }`}
+                        title={FEEDBACK_TEXT.HELPFUL}
+                      >
+                        <ThumbsUp className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleFeedback(msg.id!, FEEDBACK_TEXT.UNHELPFUL)
+                        }
+                        className={`hover:bg-opacity-10 p-1 rounded transition-colors ${
+                          msg.feedback === FEEDBACK_TEXT.UNHELPFUL
+                            ? "text-red-500 bg-red-500/10"
+                            : "text-gray-400 hover:bg-gray-400"
+                        }`}
+                        title={FEEDBACK_TEXT.UNHELPFUL}
+                      >
+                        <ThumbsDown className="w-3 h-3" />
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>

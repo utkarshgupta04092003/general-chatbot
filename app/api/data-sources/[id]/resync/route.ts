@@ -1,9 +1,9 @@
 import { auth } from "@/lib/auth";
-import { TEXT_EMBEDDING_3_SMALL } from "@/lib/config";
+import { GEMINI_EMBEDDING_001 } from "@/lib/config";
 import { logger } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { fetchWithFallback } from "@/lib/scraper";
-import { getAIClient, getDomain } from "@/lib/utils";
+import { generateEmbeddings, getDomain } from "@/lib/utils";
 import { Pinecone, PineconeRecord } from "@pinecone-database/pinecone";
 import { NextResponse } from "next/server";
 
@@ -91,7 +91,7 @@ export async function POST(
     }
 
     // 2. Perform Full Resync (Pinecone + Prisma)
-    const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot");
+    const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot-v1");
     const chatbotId = String(dataSource.chatbotId);
 
     // Delete old vectors (Using metadata filter)
@@ -115,15 +115,14 @@ export async function POST(
 
     // Generate new embeddings
     const chunks = chunkText(text);
-    const aiClient = getAIClient(TEXT_EMBEDDING_3_SMALL);
     const batchSize = 20;
 
     for (let i = 0; i < chunks.length; i += batchSize) {
       const batch = chunks.slice(i, i + batchSize);
-      const embeddingRes = await aiClient.embeddings.create({
-        model: TEXT_EMBEDDING_3_SMALL,
-        input: batch,
-      });
+      const embeddingRes = await generateEmbeddings(
+        GEMINI_EMBEDDING_001,
+        batch,
+      );
 
       const vectors: PineconeRecord[] = batch.map((chunk, idx) => ({
         id: `${idPrefix}-resync-${Date.now()}-${i + idx}`,

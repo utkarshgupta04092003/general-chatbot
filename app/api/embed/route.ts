@@ -1,12 +1,12 @@
 import { auth } from "@/lib/auth";
 import {
   ENABLE_USAGE_LIMITS,
+  GEMINI_EMBEDDING_001,
   PLAN_LIMITS,
-  TEXT_EMBEDDING_3_SMALL,
 } from "@/lib/config";
 import { logger } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
-import { getAIClient, getDomain } from "@/lib/utils";
+import { generateEmbeddings, getDomain } from "@/lib/utils";
 import { Pinecone, PineconeRecord } from "@pinecone-database/pinecone";
 import { NextResponse } from "next/server";
 
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot");
+    const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot-v1");
 
     // Collect all chunks across all pages into a single list for this chatbot
     const allChunks: { id: string; text: string; url: string }[] = [];
@@ -107,7 +107,6 @@ export async function POST(req: Request) {
     }
 
     // Process all chunks under the chatbotId namespace
-    const client = getAIClient(TEXT_EMBEDDING_3_SMALL);
     const totalChunks = allChunks.length;
     const batchSize = 20;
 
@@ -115,10 +114,7 @@ export async function POST(req: Request) {
       const batch = allChunks.slice(i, i + batchSize);
       const input = batch.map((c) => c.text);
 
-      const response = await client.embeddings.create({
-        model: TEXT_EMBEDDING_3_SMALL,
-        input,
-      });
+      const response = await generateEmbeddings(GEMINI_EMBEDDING_001, input);
 
       const vectors: PineconeRecord[] = batch.map((chunk, idx) => ({
         id: chunk.id,

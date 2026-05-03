@@ -119,6 +119,7 @@ model Message {
   conversationId String       @db.ObjectId
   role           String // user, assistant
   content        String
+  isError        Boolean      @default(false)
   deleted        Boolean      @default(false)
   feedback       String? // helpful, unhelpful
   confidence     Float?       @default(1.0)

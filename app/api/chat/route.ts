@@ -1,17 +1,22 @@
 import {
   ANALYTICS_EVENTS,
   CHAT_ROLES,
-  GPT_5_2,
-  GPT_5_MINI,
+  ENABLE_USAGE_LIMITS,
+  GEMINI_3_1_PRO,
+  GEMINI_3_FLASH,
+  GEMINI_EMBEDDING_001,
   MIN_CONFIDENCE_THRESHOLD,
   PLAN_LIMITS,
-  ENABLE_USAGE_LIMITS,
   RESPONSE_ERROR_MESSAGE,
-  TEXT_EMBEDDING_3_SMALL,
 } from "@/lib/config";
+import { logger } from "@/lib/logger";
 import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
-import { ensureAbsoluteUrl, getAIClient } from "@/lib/utils";
+import {
+  ensureAbsoluteUrl,
+  generateEmbeddings,
+  getAIClient,
+} from "@/lib/utils";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { NextResponse } from "next/server";
 import { zodResponseFormat } from "openai/helpers/zod";
@@ -30,9 +35,9 @@ const AnalyticsSchema = z.object({
 
 async function getChatAnalytics(message: string, aiResponse: string) {
   try {
-    const catClient = getAIClient(GPT_5_MINI);
+    const catClient = getAIClient(GEMINI_3_FLASH);
     const catRes = await catClient.chat.completions.create({
-      model: GPT_5_MINI,
+      model: GEMINI_3_FLASH,
       messages: [
         {
           role: CHAT_ROLES.SYSTEM,
@@ -62,8 +67,15 @@ async function getChatAnalytics(message: string, aiResponse: string) {
 
 export async function POST(req: Request) {
   const posthog = PostHogClient();
+  let chatbotId: string | null = null;
+  let sessionId: string | null = null;
+  let conversationId: string | null = null;
+
   try {
-    const { chatbotId, message, sessionId } = await req.json();
+    const body = await req.json();
+    chatbotId = body.chatbotId;
+    const message = body.message;
+    sessionId = body.sessionId;
 
     if (!chatbotId || !message) {
       return NextResponse.json(
@@ -129,6 +141,7 @@ export async function POST(req: Request) {
         data: { chatbotId, sessionId: sessionId ?? "" },
       });
     }
+    conversationId = conversation.id;
 
     // Save user message
     const userMessage = await prisma.message.create({
@@ -140,15 +153,14 @@ export async function POST(req: Request) {
     });
 
     // Generate embedding for the user message
-    const embeddingClient = getAIClient(TEXT_EMBEDDING_3_SMALL);
-    const embeddingResponse = await embeddingClient.embeddings.create({
-      model: TEXT_EMBEDDING_3_SMALL,
-      input: message,
-    });
+    const embeddingResponse = await generateEmbeddings(
+      GEMINI_EMBEDDING_001,
+      message,
+    );
     const queryEmbedding = embeddingResponse.data[0].embedding;
 
     // Retrieve relevant chunks from Pinecone using chatbotId as namespace
-    const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot");
+    const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot-v1");
 
     const queryResults = await index.namespace(chatbotId).query({
       vector: queryEmbedding,
@@ -162,7 +174,7 @@ export async function POST(req: Request) {
       .filter(Boolean);
 
     // Generate response using real AI Client
-    const client = getAIClient(GPT_5_2);
+    const client = getAIClient(GEMINI_3_1_PRO);
 
     let context = relevantChunks.join("\n\n");
     if (context.length === 0 && chatbot.dataSources.length > 0) {
@@ -209,7 +221,7 @@ export async function POST(req: Request) {
     }));
 
     const aiResponse = await client.chat.completions.create({
-      model: GPT_5_2,
+      model: GEMINI_3_FLASH,
       messages: [
         { role: CHAT_ROLES.SYSTEM, content: systemMessage },
         ...contextMessages,
@@ -309,7 +321,40 @@ export async function POST(req: Request) {
       messageId: assistantMessage.id,
     });
   } catch (err: unknown) {
+    logger.error("Chat API error:", err);
     const message = err instanceof Error ? err.message : "Chat failed";
+
+    // Attempt to save error message to database for persistence
+    if (conversationId || chatbotId) {
+      try {
+        const idToUse =
+          conversationId ||
+          (
+            await prisma.conversation.findFirst({
+              where: {
+                chatbotId: chatbotId!,
+                sessionId: sessionId ?? "",
+                deleted: false,
+              },
+            })
+          )?.id;
+
+        if (idToUse) {
+          await prisma.message.create({
+            data: {
+              conversationId: idToUse,
+              role: CHAT_ROLES.ASSISTANT,
+              content: RESPONSE_ERROR_MESSAGE,
+              isError: true,
+            },
+          });
+          logger.debug("Saved error message to DB for conversation:", idToUse);
+        }
+      } catch (saveErr) {
+        logger.error("Failed to save error message to DB:", saveErr);
+      }
+    }
+
     return NextResponse.json({ error: message }, { status: 500 });
   } finally {
     // Ensure all events are sent before the request finishes in serverless environments
@@ -340,7 +385,13 @@ export async function GET(req: Request) {
       include: {
         messages: {
           orderBy: { createdAt: "asc" },
-          select: { id: true, role: true, content: true, feedback: true },
+          select: {
+            id: true,
+            role: true,
+            content: true,
+            feedback: true,
+            isError: true,
+          },
         },
       },
     });

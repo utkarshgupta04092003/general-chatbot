@@ -88,7 +88,8 @@ export function DomainVerificationStep({
         ) : (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground italic mb-2 text-indigo-300 flex items-center gap-2">
-              Verification code sent to {verificationEmail}
+              Verification code sent to {verificationEmail} (for testing use
+              111111)
             </p>
             <div className="flex gap-3">
               <input

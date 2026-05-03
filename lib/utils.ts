@@ -1,7 +1,8 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { type ClassValue, clsx } from "clsx";
-import OpenAI, { AzureOpenAI } from "openai";
+import OpenAI from "openai";
 import { twMerge } from "tailwind-merge";
-import { API_VERSIONS, GEMINI_3_1_PRO, GPT_5_2 } from "./config";
+import { GEMINI_3_1_PRO, GEMINI_3_FLASH, GEMINI_EMBEDDING_001 } from "./config";
 import { QAModel } from "./declaration";
 import { logger } from "./logger";
 
@@ -69,31 +70,57 @@ export function ensureAbsoluteUrl(url: string): string {
 }
 
 export const getAIClient = (model: QAModel) => {
-  if (model === GEMINI_3_1_PRO) {
+  if (model === GEMINI_3_1_PRO || model === GEMINI_3_FLASH) {
     const client = new OpenAI({
       apiKey: process.env.GEMINI_API_KEY_MB_AI,
       baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
     });
     logger.debug("Using Gemini client for model:", model);
     return client;
-  } else if (model === GPT_5_2) {
-    const client = new AzureOpenAI({
-      apiKey: process.env.AZURE_OPENAI_API_KEY_EAST_US,
-      endpoint: process.env.AZURE_OPENAI_ENDPOINT_EAST_US,
-      deployment: model,
-      apiVersion: API_VERSIONS[model],
-    });
-    logger.debug("Using Azure OpenAI East US client for model:", model);
-    return client;
   } else {
-    // Grok-4 Fast Reasoning, Mistral Large 3, GPT-5-mini
-    const client = new AzureOpenAI({
-      apiKey: process.env.AZURE_OPENAI_API_KEY,
-      endpoint: process.env.AZURE_OPENAI_ENDPOINT,
-      deployment: model,
-      apiVersion: API_VERSIONS[model],
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      baseURL: process.env.OPENAI_BASE_URL,
     });
-    logger.debug("Using Azure OpenAI client for model:", model);
+    logger.debug("Using standard OpenAI client for model:", model);
     return client;
   }
 };
+
+export async function generateEmbeddings(
+  model: QAModel,
+  input: string | string[],
+) {
+  if (model === GEMINI_EMBEDDING_001) {
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY_MB_AI!);
+    const embeddingModel = genAI.getGenerativeModel({
+      model: GEMINI_EMBEDDING_001,
+    });
+
+    if (Array.isArray(input)) {
+      const responses = await Promise.all(
+        input.map((text) => embeddingModel.embedContent(text)),
+      );
+      return {
+        data: responses.map((res) => ({
+          embedding: res.embedding.values,
+        })),
+      };
+    } else {
+      const result = await embeddingModel.embedContent(input);
+      return {
+        data: [
+          {
+            embedding: result.embedding.values,
+          },
+        ],
+      };
+    }
+  } else {
+    const client = getAIClient(model);
+    return await client.embeddings.create({
+      model: model,
+      input,
+    });
+  }
+}
