@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, Globe, Loader2, Plus } from "lucide-react";
+import { AlertCircle, FileText, Globe, Loader2, Plus } from "lucide-react";
 import { DataSource } from "./types";
 
 type AddUrlSectionProps = {
@@ -10,6 +10,7 @@ type AddUrlSectionProps = {
   addUrl: string;
   setAddUrl: (url: string) => void;
   onAdd: () => void;
+  onAddManual: () => void;
   adding: boolean;
 };
 
@@ -20,6 +21,7 @@ export function AddUrlSection({
   addUrl,
   setAddUrl,
   onAdd,
+  onAddManual,
   adding,
 }: AddUrlSectionProps) {
   const selectedChatbotName =
@@ -60,6 +62,14 @@ export function AddUrlSection({
             <Plus className="w-4 h-4" />
           )}
           {adding ? "Adding..." : "Add URL"}
+        </button>
+        <button
+          onClick={onAddManual}
+          disabled={adding}
+          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-muted hover:bg-muted/80 disabled:opacity-50 text-foreground text-sm font-medium border border-border rounded-xl transition-all w-full lg:w-auto"
+        >
+          <FileText className="w-4 h-4" />
+          Add Manual Data
         </button>
       </div>
     </div>

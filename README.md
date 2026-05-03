@@ -31,6 +31,7 @@ _(Upload a GIF or screenshot of the dashboard and chat widget here)_
   - Fetch webpage data using puppeteer
   - Auto-fetch website logo and support custom logo uploads.
   - Resync indexed URLs on demand.
+  - **Manual Data Sources:** Paste raw text directly into the dashboard to train your bot without a URL.
 - **Chatbot Widget & Interface**
   - Website and embedded widget Light / Dark mode support.
   - Mobile responsive UI and completely dynamic configuration.
@@ -59,7 +60,7 @@ _(Upload a GIF or screenshot of the dashboard and chat widget here)_
 - Document upload capability
 - Data source document update support
 - Secure chatbot identifier
-- Manual data source input (copy-paste)
+
 - Inactive chatbot handling
 - Show / hide sources in chat responses
 - Dynamic widget theming (match host website)
@@ -77,7 +78,7 @@ _(Upload a GIF or screenshot of the dashboard and chat widget here)_
 
 This project simplifies the complex Retrieval-Augmented Generation (RAG) pipeline into four seamless steps:
 
-1. **URL → Content Extraction:** You provide a domain. Our backend scraper navigates JavaScript-heavy pages, bypasses bot blocks, fetches the HTML, and cleans the text of noise.
+1. **URL or Text → Content Extraction:** You can either provide a website domain or paste raw text directly. Our backend handles the rest—scraping JavaScript-heavy pages, bypasses bot blocks, or processing your manual input into clean, noise-free text.
 2. **Chunking → Embeddings:** The text is algorithmically broken down into overlapping chunks to preserve meaning. We submit these to an embedding model to convert the text into highly searchable numerical vectors.
 3. **Vector Search → Response:** When a user asks the widget a question, their query is converted into a vector. We query our Vector DB to find the most relevant chunks from your website and pass them to the LLM.
 4. **Chatbot UI:** The LLM generates a highly accurate, natural-language response which is streamed back to the user via a beautiful, embeddable React interface.

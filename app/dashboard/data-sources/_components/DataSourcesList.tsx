@@ -5,6 +5,7 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
+  FileText,
   Globe,
   Loader2,
   Plus,
@@ -95,12 +96,23 @@ export function DataSourcesList({
                   {source.title || source.url}
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground truncate">
-                  {source.url}
-                  {verifiedDomains.includes(new URL(source.url).hostname) && (
-                    <span className="flex items-center gap-0.5 text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded-md font-medium shrink-0">
-                      <ShieldCheck className="w-3 h-3" />
-                      Verified
+                  {source.url.startsWith("manual-") ? (
+                    <span className="flex items-center gap-1 text-slate-500">
+                      <FileText className="w-3 h-3" />
+                      Manual Upload
                     </span>
+                  ) : (
+                    <>
+                      {source.url}
+                      {verifiedDomains.includes(
+                        new URL(source.url).hostname,
+                      ) && (
+                        <span className="flex items-center gap-0.5 text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded-md font-medium shrink-0">
+                          <ShieldCheck className="w-3 h-3" />
+                          Verified
+                        </span>
+                      )}
+                    </>
                   )}
                   {selectedChatbotId === "all" && (
                     <span className="flex items-center gap-1.5 text-muted-foreground bg-muted px-2 py-0.5 rounded-md border border-border max-w-[120px] sm:max-w-[180px] truncate shrink-0">
@@ -128,13 +140,15 @@ export function DataSourcesList({
                 {source.status}
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <button
-                  onClick={() => onResync(source.id)}
-                  title="Resync Page Content"
-                  className="p-1.5 text-muted-foreground hover:text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-all cursor-pointer"
-                >
-                  <RefreshCw className="w-4 h-4" />
-                </button>
+                {!source.url.startsWith("manual-") && (
+                  <button
+                    onClick={() => onResync(source.id)}
+                    title="Resync Page Content"
+                    className="p-1.5 text-muted-foreground hover:text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-all cursor-pointer"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </button>
+                )}
                 <button
                   onClick={() => onDelete(source.id)}
                   title="Remove Page"

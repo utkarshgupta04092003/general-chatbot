@@ -142,7 +142,7 @@ export default function Sidebar() {
         </div>
         <button
           onClick={() => setMobileOpen(true)}
-          className="text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground cursor-pointer"
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -152,13 +152,13 @@ export default function Sidebar() {
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-50">
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
             onClick={() => setMobileOpen(false)}
           />
           <div className="absolute left-0 top-0 bottom-0 w-56 bg-background border-r border-border">
             <button
               onClick={() => setMobileOpen(false)}
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>

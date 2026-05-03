@@ -220,7 +220,10 @@ export default function OnboardingPage() {
   }
 
   async function handleScrape() {
-    if (ENABLE_USAGE_LIMITS && selectedUrls.size > PLAN_LIMITS.FREE.MAX_PAGES) {
+    if (
+      ENABLE_USAGE_LIMITS &&
+      pageCount + selectedUrls.size > PLAN_LIMITS.FREE.MAX_PAGES
+    ) {
       setLimitType("page");
       setLimitReached(true);
       return;

@@ -49,8 +49,10 @@ export async function POST(
     const dataSource = await prisma.dataSource.findFirst({
       where: {
         id,
+        deleted: false,
         chatbot: {
           userId: session.user.id,
+          deleted: false,
         },
       },
       include: {

@@ -116,7 +116,7 @@ export function VerificationModal({
   return (
     <div
       onClick={handleCancel}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm cursor-pointer"
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -221,7 +221,7 @@ export function VerificationModal({
           {step !== "success" && (
             <button
               onClick={handleCancel}
-              className="w-full sm:flex-1 py-2.5 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 text-foreground text-sm font-medium rounded-xl transition-all"
+              className="w-full sm:flex-1 py-2.5 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 text-foreground text-sm font-medium rounded-xl transition-all cursor-pointer"
             >
               Cancel
             </button>
@@ -231,7 +231,7 @@ export function VerificationModal({
             <button
               onClick={handleSendCode}
               disabled={loading || !email.trim()}
-              className="w-full sm:flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2"
+              className="w-full sm:flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -246,7 +246,7 @@ export function VerificationModal({
             <button
               onClick={handleVerifyCode}
               disabled={loading || code.length !== 6}
-              className="w-full sm:flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2"
+              className="w-full sm:flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -260,7 +260,7 @@ export function VerificationModal({
           {step === "success" && (
             <button
               onClick={handleFinish}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all"
+              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all cursor-pointer"
             >
               Continue Adding URL
             </button>

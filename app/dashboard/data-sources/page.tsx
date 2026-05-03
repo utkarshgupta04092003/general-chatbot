@@ -15,6 +15,7 @@ import { getDomain } from "@/lib/utils";
 import { AddUrlSection } from "./_components/AddUrlSection";
 import { ChatbotFilter } from "./_components/ChatbotFilter";
 import { DataSourcesList } from "./_components/DataSourcesList";
+import { ManualDataSourceModal } from "./_components/ManualDataSourceModal";
 import { ResyncModal } from "./_components/ResyncModal";
 import { SelectChatbotModal } from "./_components/SelectChatbotModal";
 import { DataSource } from "./_components/types";
@@ -36,6 +37,7 @@ export default function DataSourcesPage() {
   const [selectedChatbotId, setSelectedChatbotId] = useState<string>("all");
 
   const [showSelectChatbotModal, setShowSelectChatbotModal] = useState(false);
+  const [showManualModal, setShowManualModal] = useState(false);
   const [targetChatbotIdForAdd, setTargetChatbotIdForAdd] =
     useState<string>("");
   const [chatbotDomain, setChatbotDomain] = useState<string | null>(null);
@@ -208,6 +210,67 @@ export default function DataSourcesPage() {
     }
   }
 
+  async function handleAddManualSource(
+    title: string,
+    content: string,
+    type: "text",
+  ) {
+    if (ENABLE_USAGE_LIMITS && pageCount >= PLAN_LIMITS.FREE.MAX_PAGES) {
+      setShowManualModal(false);
+      setLimitOpen(true);
+      return;
+    }
+
+    setAdding(true);
+    setError("");
+
+    try {
+      let targetChatbotId = selectedChatbotId;
+      if (targetChatbotId === "all") {
+        targetChatbotId = sources[0]?.chatbotId;
+      }
+      if (!targetChatbotId) {
+        const res = await fetch(ENDPOINTS.CHATBOTS);
+        const data = await res.json();
+        if (data.chatbots?.length > 0) {
+          targetChatbotId = data.chatbots[0].id;
+        } else {
+          throw new Error("No chatbot found. Please create one first.");
+        }
+      }
+
+      const wordCount = content.split(/\s+/).filter(Boolean).length;
+
+      const pages = [
+        {
+          url: `manual-${type}-${Date.now()}`,
+          title: title || "Manual Text",
+          content: content,
+          status: "indexed",
+          wordCount: wordCount,
+        },
+      ];
+
+      const embedRes = await fetch(ENDPOINTS.EMBED, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chatbotId: targetChatbotId, pages }),
+      });
+      const embedData = await embedRes.json();
+      if (!embedRes.ok) {
+        throw new Error(embedData.error || "Failed to index data source");
+      }
+
+      setShowManualModal(false);
+      mutateUsage();
+      fetchSources();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setAdding(false);
+    }
+  }
+
   async function handleAddSelectedUrls() {
     if (selectedUrls.length === 0) return;
     if (
@@ -252,6 +315,18 @@ export default function DataSourcesPage() {
         error={error}
       />
 
+      <ManualDataSourceModal
+        key={showManualModal ? "open" : "closed"}
+        isOpen={showManualModal}
+        adding={adding}
+        error={error}
+        onClose={() => {
+          setShowManualModal(false);
+          setError("");
+        }}
+        onConfirm={handleAddManualSource}
+      />
+
       <VerificationModal
         isOpen={showVerifyModal}
         targetUrl={targetUrl}
@@ -287,6 +362,7 @@ export default function DataSourcesPage() {
         addUrl={addUrl}
         setAddUrl={setAddUrl}
         onAdd={handleAddUrl}
+        onAddManual={() => setShowManualModal(true)}
         adding={adding}
       />
 

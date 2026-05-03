@@ -14,7 +14,7 @@ export async function DELETE(
     const { id } = await params;
 
     await prisma.dataSource.updateMany({
-      where: { id, chatbot: { userId: session.user.id } },
+      where: { id, chatbot: { userId: session.user.id, deleted: false } },
       data: { deleted: true },
     });
 
