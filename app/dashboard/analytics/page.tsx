@@ -99,9 +99,10 @@ export default function AnalyticsPage() {
     async function fetchAnalytics() {
       setLoading(true);
       try {
-        const res = await fetch(
-          `${ENDPOINTS.ANALYTICS}?chatbotId=${chatbotId}`,
-        );
+        const url = chatbotId
+          ? `${ENDPOINTS.ANALYTICS}?chatbotId=${chatbotId}`
+          : ENDPOINTS.ANALYTICS;
+        const res = await fetch(url);
         const d = await res.json();
         setData(d);
       } finally {
@@ -134,18 +135,20 @@ export default function AnalyticsPage() {
       ) : (
         <>
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <select
-              value={chatbotId || ""}
-              onChange={(e) => setChatbotId(e.target.value)}
-              className="bg-card border border-border rounded-xl px-4 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50 min-w-[200px]"
-            >
-              {chatbots.map((cb) => (
-                <option key={cb.id} value={cb.id}>
-                  {cb.name}
-                </option>
-              ))}
-            </select>
+          <div className="flex gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+            {chatbots.map((cb) => (
+              <button
+                key={cb.id}
+                onClick={() => setChatbotId(cb.id)}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
+                  chatbotId === cb.id
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                    : "bg-muted text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
+              >
+                {cb.name}
+              </button>
+            ))}
           </div>
 
           {/* 1. OVERVIEW CARDS */}
