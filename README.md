@@ -48,8 +48,8 @@ _(Upload a GIF or screenshot of the dashboard and chat widget here)_
   - Unanswered question handling system.
   - Chat feedback system (Like / Dislike responses).
   - Chat conversation categorization per chatbot.
-  - Usage dashboard with Pricing limits enforcement in UI and features.
-  - Beta readiness with soft usage limits & soft limit testing system.
+  - Usage dashboard with usage analytics and charts.
+  - Beta readiness with global usage toggle.
 
 - **Others**
   - Config based limit removal
@@ -91,7 +91,7 @@ This project simplifies the complex Retrieval-Augmented Generation (RAG) pipelin
 - **API Extraction:** Puppeteer
 - **Database:** MongoDB (via Prisma ORM)
 - **Vector DB:** Pinecone
-- **AI Provider:** OpenAI (Embeddings & LLMs)
+- **AI Provider:** Google Gemini (Gemini 3 Flash & 3.1 Pro via OpenAI-compatible endpoint)
 - **Analytics:** PostHog
 
 ---
@@ -159,15 +159,12 @@ AUTH_TRUST_HOST=true
 GOOGLE_CLIENT_ID=""
 GOOGLE_CLIENT_SECRET=""
 
-# AI & Vector DB Providers
-AZURE_OPENAI_API_KEY="<azure_openai_api_key>"
-AZURE_OPENAI_ENDPOINT="<azure_openai_endpoint>"
-
+# AI Providers
 GEMINI_API_KEY_MB_AI="<gemini_api_key>"
 
 # Pinecone
 PINECONE_API_KEY="pc-..."
-PINECONE_INDEX="general-chatbot"
+PINECONE_INDEX="general-chatbot-v1"
 
 
 # cloudinary related api keys
@@ -221,8 +218,8 @@ This repository is heavily optimized for Vercel:
 Designed from day one to be easily modifiable:
 
 - **Swapping the Vector DB:** The Pinecone implementation is cleanly contained in `/app/api/embed/route.ts` and `/app/api/chat/route.ts`. You can swap `pc.index()` references to utilize Weaviate, Milvus, or Supabase pgvector.
-- **Changing the LLM:** The AI models are defined globally in `lib/config.ts`. If you want to move away from OpenAI, simply update the `getAIClient()` utility wrapper in `lib/utils.ts` to construct an Anthropic or open-source local model client.
-- **Managing Limits:** Don't want SaaS restrictions? Toggle `ENABLE_USAGE_LIMITS = false` locally and bypass all tracking blockades automatically.
+- **Changing the LLM:** The AI models are defined globally in `lib/config.ts`. The project uses Google's Gemini models via an OpenAI-compatible interface, making it easy to swap for other providers.
+- **Managing Limits:** Toggle `ENABLE_USAGE_LIMITS = false` locally and bypass all tracking blockades automatically.
 
 ---
 
@@ -251,3 +248,17 @@ Contributions are always welcome!
 ## 📜 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
+
+Review this project too deeply from first pr to last one
+and if needed read each file, and each directory
+Create a md file for "LLM Reference" in which you have to mention
+
+- My mindset while working on this project
+- My approach
+- How i approach any problem
+- File structure
+- CSS styles and varaible convension
+- Lib directory management
+- Patterns we've seen work well across different use cases
+
+I want this file as a overall idea about how i code etc, so that in the next project, i just have to past the document and i have not to think about the code structure and all.

@@ -52,7 +52,6 @@ export async function GET(req: Request) {
       lowConfidenceSamples,
       helpfulCount,
       unhelpfulCount,
-      pricingCount,
       productCount,
       supportCount,
       otherCount,
@@ -123,14 +122,6 @@ export async function GET(req: Request) {
       }),
       prisma.message.count({
         where: { ...baseMessageWhere, feedback: FEEDBACK_TEXT.UNHELPFUL },
-      }),
-      // Individual category counts (safer than groupBy for content strings in Mongo)
-      prisma.message.count({
-        where: {
-          ...baseMessageWhere,
-          role: CHAT_ROLES.USER,
-          category: "pricing",
-        },
       }),
       prisma.message.count({
         where: {
@@ -239,7 +230,6 @@ export async function GET(req: Request) {
         ratio: totalFeedback > 0 ? helpfulCount / totalFeedback : 0,
       },
       categories: {
-        pricing: pricingCount,
         product: productCount,
         support: supportCount,
         other: otherCount,

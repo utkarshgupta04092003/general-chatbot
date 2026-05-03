@@ -82,19 +82,6 @@ export const PLAN_LIMITS = {
   },
 } as const;
 
-export const PLAN_PRICES =
-  REGION === "IN"
-    ? ({
-        FREE: 0,
-        STARTER: 1499,
-        PREMIUM: 4499,
-      } as const)
-    : ({
-        FREE: 0,
-        STARTER: 19,
-        PREMIUM: 49,
-      } as const);
-
 export const AGENT_TYPE_GENERAL = "general";
 export const AGENT_TYPE_SALES = "sales";
 export const AGENT_TYPE_SUPPORT = "support";

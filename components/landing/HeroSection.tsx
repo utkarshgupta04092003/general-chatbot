@@ -15,7 +15,7 @@ export function HeroSection({ session }: { session: Session | null }) {
       <div className="w-full max-w-[80rem] mx-auto text-center relative">
         <div className="inline-flex items-center gap-[0.5rem] px-[0.75rem] py-[0.375rem] bg-indigo-500/10 border border-indigo-500/20 rounded-full text-[0.75rem] text-indigo-500 font-medium mb-[2rem] animate-fade-in-up">
           <Sparkles className="w-3 h-3" />
-          Powered by GPT-5 + RAG Technology
+          Powered by Gemini-3 + RAG Technology
         </div>
 
         <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight animate-fade-in-up delay-100">
@@ -133,7 +133,7 @@ export function HeroSection({ session }: { session: Session | null }) {
                     Recent Conversations
                   </div>
                   {[
-                    "What are your pricing plans?",
+                    "How do I setup the chatbot?",
                     "How do I integrate the chatbot?",
                     "Does it support multiple languages?",
                   ].map((msg) => (

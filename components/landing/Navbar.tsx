@@ -30,12 +30,7 @@ export function Navbar({ session }: { session: Session | null }) {
             >
               Features
             </Link>
-            <Link
-              href="#pricing"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Pricing
-            </Link>
+
             <Link
               href="#faq"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"

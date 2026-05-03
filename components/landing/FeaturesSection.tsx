@@ -32,7 +32,7 @@ export function FeaturesSection() {
             },
             {
               icon: Sparkles,
-              title: "GPT-4 Powered",
+              title: "Gemini-3 Powered",
               desc: "State-of-the-art AI with retrieval-augmented generation for accurate answers.",
             },
             {

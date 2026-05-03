@@ -28,7 +28,7 @@ const pc = new Pinecone({
 });
 
 const AnalyticsSchema = z.object({
-  category: z.enum(["pricing", "product", "support", "other"]),
+  category: z.enum(["product", "support", "other"]),
   unanswered: z.boolean(),
   confidence: z.number().min(0).max(1),
 });
