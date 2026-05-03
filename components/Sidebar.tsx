@@ -111,7 +111,7 @@ function SidebarContent({
       <div className="px-3 py-4 border-t border-border">
         <button
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 bg-muted/30 transition-all"
+          className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 bg-muted/30 transition-all cursor-pointer"
         >
           <LogOut className="w-4 h-4" />
           Sign out

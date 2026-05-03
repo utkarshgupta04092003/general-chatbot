@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { APP_NAME, RESPONSE_ERROR_MESSAGE } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import { Bot, Eye, EyeOff, Loader2 } from "lucide-react";
@@ -55,11 +56,15 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       {/* Background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-600 rounded-full blur-[120px] opacity-20" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-violet-600 rounded-full blur-[120px] opacity-20" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-600/20 dark:bg-indigo-600 rounded-full blur-[120px] dark:opacity-20" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-violet-600/20 dark:bg-violet-600 rounded-full blur-[120px] dark:opacity-20" />
+      </div>
+
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
       </div>
 
       <div className="relative w-full max-w-md">
@@ -209,13 +214,19 @@ export default function SignupPage() {
 
         <p className="text-center text-xs text-slate-600 mt-4">
           By signing up you agree to our{" "}
-          <span className="text-muted-foreground cursor-pointer hover:text-muted-foreground">
+          <Link
+            href="/terms"
+            className="text-muted-foreground cursor-pointer hover:text-indigo-500 transition-colors"
+          >
             Terms of Service
-          </span>{" "}
+          </Link>{" "}
           and{" "}
-          <span className="text-muted-foreground cursor-pointer hover:text-muted-foreground">
+          <Link
+            href="/privacy"
+            className="text-muted-foreground cursor-pointer hover:text-indigo-500 transition-colors"
+          >
             Privacy Policy
-          </span>
+          </Link>
         </p>
       </div>
     </div>

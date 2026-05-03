@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { APP_NAME } from "@/lib/config";
 import { Bot, Eye, EyeOff, Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -35,10 +36,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-600 rounded-full blur-[120px] opacity-20" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-violet-600 rounded-full blur-[120px] opacity-20" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-600/20 dark:bg-indigo-600 rounded-full blur-[120px] dark:opacity-20" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-violet-600/20 dark:bg-violet-600 rounded-full blur-[120px] dark:opacity-20" />
+      </div>
+
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
       </div>
 
       <div className="relative w-full max-w-md">

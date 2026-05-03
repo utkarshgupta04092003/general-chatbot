@@ -36,7 +36,7 @@ export function HeroSection({ session }: { session: Session | null }) {
             href={session ? "/dashboard" : "/signup"}
             className="group flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all text-lg shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40"
           >
-            {session ? "Go to Dashboard" : "Start Free Trial"}
+            {session ? "Go to Dashboard" : "Try It Out"}
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link

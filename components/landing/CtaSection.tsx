@@ -22,7 +22,7 @@ export function CtaSection({ session }: { session: Session | null }) {
               href={session ? "/dashboard" : "/signup"}
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all text-lg"
             >
-              {session ? "Go to Dashboard" : "Start Free Trial"}
+              {session ? "Go to Dashboard" : "Try It Out"}
               <ArrowRight className="w-5 h-5" />
             </Link>
             <p className="text-indigo-200 text-sm mt-4">
