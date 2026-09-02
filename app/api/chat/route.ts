@@ -2,15 +2,14 @@ import {
   ANALYTICS_EVENTS,
   CHAT_ROLES,
   ENABLE_USAGE_LIMITS,
-  GEMINI_3_FLASH,
+  GEMINI_FLASH_LITE,
   GEMINI_EMBEDDING_001,
   MIN_CONFIDENCE_THRESHOLD,
   PLAN_LIMITS,
   RESPONSE_ERROR_MESSAGE,
 } from "@/lib/config";
-import { QAModel } from "@/lib/declaration";
 import { logger } from "@/lib/logger";
-import PostHogClient from "@/lib/posthog";
+import PostHogClient, { flushPostHog } from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import {
   ensureAbsoluteUrl,
@@ -35,9 +34,9 @@ const AnalyticsSchema = z.object({
 
 async function getChatAnalytics(message: string, aiResponse: string) {
   try {
-    const catClient = getAIClient(GEMINI_3_FLASH);
+    const catClient = getAIClient(GEMINI_FLASH_LITE);
     const catRes = await catClient.chat.completions.create({
-      model: GEMINI_3_FLASH,
+      model: GEMINI_FLASH_LITE,
       messages: [
         {
           role: CHAT_ROLES.SYSTEM,
@@ -97,20 +96,25 @@ export async function POST(req: Request) {
       },
     });
 
-    // Get chatbot config
-    const chatbot = await prisma.chatbot.findFirst({
-      where: { id: chatbotId, deleted: false },
-      include: { dataSources: { where: { deleted: false }, take: 5 } },
-    });
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    // Independent of each other: run concurrently rather than in series.
+    const [chatbot, existingConversation, embeddingResponse] = await Promise.all([
+      prisma.chatbot.findFirst({
+        where: { id: chatbotId, deleted: false },
+        include: { dataSources: { where: { deleted: false }, take: 5 } },
+      }),
+      prisma.conversation.findFirst({
+        where: { chatbotId, sessionId: sessionId ?? "", deleted: false },
+      }),
+      generateEmbeddings(GEMINI_EMBEDDING_001, message),
+    ]);
 
     if (!chatbot) {
       return NextResponse.json({ error: "Chatbot not found" }, { status: 404 });
     }
-
-    // Check message limit
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
 
     const messageCount = await prisma.message.count({
       where: {
@@ -131,33 +135,30 @@ export async function POST(req: Request) {
       );
     }
 
-    // Get or create conversation
-    let conversation = await prisma.conversation.findFirst({
-      where: { chatbotId, sessionId: sessionId ?? "", deleted: false },
-    });
-
-    if (!conversation) {
-      conversation = await prisma.conversation.create({
+    const conversation =
+      existingConversation ??
+      (await prisma.conversation.create({
         data: { chatbotId, sessionId: sessionId ?? "" },
-      });
-    }
+      }));
     conversationId = conversation.id;
 
-    // Save user message
-    const userMessage = await prisma.message.create({
-      data: {
-        conversationId: conversation.id,
-        role: CHAT_ROLES.USER,
-        content: message,
-      },
-    });
-
-    // Generate embedding for the user message
-    const embeddingResponse = await generateEmbeddings(
-      GEMINI_EMBEDDING_001,
-      message,
-    );
     const queryEmbedding = embeddingResponse.data[0].embedding;
+
+    // The user message row and the prior-history read do not depend on each other.
+    const [userMessage, history] = await Promise.all([
+      prisma.message.create({
+        data: {
+          conversationId: conversation.id,
+          role: CHAT_ROLES.USER,
+          content: message,
+        },
+      }),
+      prisma.message.findMany({
+        where: { conversationId: conversation.id, deleted: false },
+        orderBy: { createdAt: "desc" },
+        take: 6,
+      }),
+    ]);
 
     // Retrieve relevant chunks from Pinecone using chatbotId as namespace
     const index = pc.index(process.env.PINECONE_INDEX || "general-chatbot-v1");
@@ -165,7 +166,6 @@ export async function POST(req: Request) {
     const queryResults = await index.namespace(chatbotId).query({
       vector: queryEmbedding,
       topK: 5,
-      filter: { chatbotId: { $eq: chatbotId } },
       includeMetadata: true,
     });
 
@@ -174,7 +174,7 @@ export async function POST(req: Request) {
       .filter(Boolean);
 
     // Generate response using real AI Client
-    const modelToUse = (chatbot.model || GEMINI_3_FLASH) as QAModel;
+    const modelToUse = GEMINI_FLASH_LITE;
     const client = getAIClient(modelToUse);
 
     let context = relevantChunks.join("\n\n");
@@ -199,17 +199,6 @@ export async function POST(req: Request) {
       ${context}
     `;
 
-    // Fetch last 6 messages for context (excluding the current user message)
-    const history = await prisma.message.findMany({
-      where: {
-        conversationId: conversation.id,
-        id: { not: userMessage.id },
-        deleted: false,
-      },
-      orderBy: { createdAt: "desc" },
-      take: 6,
-    });
-
     const contextMessages = history.reverse().map((msg) => ({
       role: msg.role as "user" | "assistant",
       content:
@@ -220,6 +209,20 @@ export async function POST(req: Request) {
               .trim()
           : msg.content,
     }));
+
+    const uniqueUrlsEarly = Array.from(
+      new Set(
+        queryResults.matches.map((match) => match.metadata?.url as string),
+      ),
+    ).filter(Boolean);
+
+    // Fire the source lookup alongside the completion instead of after it.
+    const sourceDataPromise = uniqueUrlsEarly.length
+      ? prisma.dataSource.findMany({
+          where: { chatbotId, url: { in: uniqueUrlsEarly }, deleted: false },
+          select: { url: true, title: true },
+        })
+      : Promise.resolve([] as { url: string; title: string | null }[]);
 
     const aiResponse = await client.chat.completions.create({
       model: modelToUse,
@@ -233,21 +236,11 @@ export async function POST(req: Request) {
     const response =
       aiResponse.choices[0].message.content || RESPONSE_ERROR_MESSAGE;
 
-    // Extract unique source URLs and fetch titles
-    const uniqueUrls = Array.from(
-      new Set(
-        queryResults.matches.map((match) => match.metadata?.url as string),
-      ),
-    ).filter(Boolean);
+    // Start classification immediately; awaited only where its result is needed.
+    const analyticsPromise = getChatAnalytics(message, response);
 
-    const sourceData = await prisma.dataSource.findMany({
-      where: {
-        chatbotId,
-        url: { in: uniqueUrls },
-        deleted: false,
-      },
-      select: { url: true, title: true },
-    });
+    const uniqueUrls = uniqueUrlsEarly;
+    const sourceData = await sourceDataPromise;
 
     let finalResponse = response;
     if (uniqueUrls.length > 0) {
@@ -262,8 +255,7 @@ export async function POST(req: Request) {
       finalResponse += `\n\n**Sources:**\n${sourceLines.join("\n")}`;
     }
 
-    // Higher Accuracy Analytics: Categorize and detect 'unanswered' using structured output
-    const analytics = await getChatAnalytics(message, response);
+    const analytics = await analyticsPromise;
     if (
       analytics.unanswered ||
       analytics.confidence < MIN_CONFIDENCE_THRESHOLD
@@ -309,29 +301,27 @@ export async function POST(req: Request) {
       },
     });
 
-    // Save user message category (specifically for this message ID)
-    await prisma.message.update({
-      where: { id: userMessage.id },
-      data: { category: analytics.category },
-    });
-
-    // Save assistant message
-    const assistantMessage = await prisma.message.create({
-      data: {
-        conversationId: conversation.id,
-        role: CHAT_ROLES.ASSISTANT,
-        content: finalResponse,
-        unanswered: analytics.unanswered,
-        confidence: analytics.confidence,
-        sourceUrls: uniqueUrls,
-      },
-    });
-
-    // Update query count
-    await prisma.chatbot.update({
-      where: { id: chatbotId, deleted: false },
-      data: { totalQueries: { increment: 1 } },
-    });
+    // These three writes are independent; only the assistant row is needed downstream.
+    const [, assistantMessage] = await Promise.all([
+      prisma.message.update({
+        where: { id: userMessage.id },
+        data: { category: analytics.category },
+      }),
+      prisma.message.create({
+        data: {
+          conversationId: conversation.id,
+          role: CHAT_ROLES.ASSISTANT,
+          content: finalResponse,
+          unanswered: analytics.unanswered,
+          confidence: analytics.confidence,
+          sourceUrls: uniqueUrls,
+        },
+      }),
+      prisma.chatbot.update({
+        where: { id: chatbotId, deleted: false },
+        data: { totalQueries: { increment: 1 } },
+      }),
+    ]);
 
     return NextResponse.json({
       response: finalResponse,
@@ -376,7 +366,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status: 500 });
   } finally {
     // Ensure all events are sent before the request finishes in serverless environments
-    await posthog.shutdown();
+    flushPostHog(posthog);
   }
 }
 

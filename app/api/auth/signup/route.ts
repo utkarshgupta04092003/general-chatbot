@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
-import PostHogClient from "@/lib/posthog";
+import PostHogClient, { flushPostHog } from "@/lib/posthog";
 
 export async function POST(req: Request) {
   const posthog = PostHogClient();
@@ -59,6 +59,6 @@ export async function POST(req: Request) {
       { status: 500 },
     );
   } finally {
-    await posthog.shutdown();
+    flushPostHog(posthog);
   }
 }

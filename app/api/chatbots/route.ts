@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { ANALYTICS_EVENTS, DEFAULT_SYSTEM_PROMPT, PLAN_LIMITS, ENABLE_USAGE_LIMITS } from "@/lib/config";
-import PostHogClient from "@/lib/posthog";
+import PostHogClient, { flushPostHog } from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
       err instanceof Error ? err.message : "Failed to create chatbot";
     return NextResponse.json({ error: message }, { status: 500 });
   } finally {
-    await posthog.shutdown();
+    flushPostHog(posthog);
   }
 }
 

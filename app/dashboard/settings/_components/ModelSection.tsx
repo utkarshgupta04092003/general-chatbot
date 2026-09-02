@@ -1,6 +1,6 @@
 "use client";
 
-import { GEMINI_3_FLASH, MODEL_OPTIONS } from "@/lib/config";
+import { MODEL_OPTIONS } from "@/lib/config";
 import { Cpu } from "lucide-react";
 import { ChatbotSettings } from "./types";
 
@@ -42,9 +42,7 @@ export function ModelSection({ selected, onChange }: ModelSectionProps) {
               )}
             </div>
             <p className="text-xs text-muted-foreground">
-              {opt.value === GEMINI_3_FLASH
-                ? "Fast, efficient, and great for most common queries."
-                : "More intelligent and capable of complex reasoning."}
+              Fast, efficient, and great for most common queries.
             </p>
           </button>
         ))}

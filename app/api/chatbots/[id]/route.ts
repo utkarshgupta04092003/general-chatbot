@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { ANALYTICS_EVENTS } from "@/lib/config";
-import PostHogClient from "@/lib/posthog";
+import PostHogClient, { flushPostHog } from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -51,7 +51,7 @@ export async function PATCH(
     const message = err instanceof Error ? err.message : "Update failed";
     return NextResponse.json({ error: message }, { status: 500 });
   } finally {
-    await posthog.shutdown();
+    flushPostHog(posthog);
   }
 }
 
@@ -85,6 +85,6 @@ export async function DELETE(
     const message = err instanceof Error ? err.message : "Delete failed";
     return NextResponse.json({ error: message }, { status: 500 });
   } finally {
-    await posthog.shutdown();
+    flushPostHog(posthog);
   }
 }

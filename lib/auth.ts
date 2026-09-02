@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import NextAuth, { type DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { ANALYTICS_EVENTS } from "./config";
-import PostHogClient from "./posthog";
+import PostHogClient, { flushPostHog } from "./posthog";
 import { prisma } from "./prisma";
 
 declare module "next-auth" {
@@ -63,7 +63,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             method: account?.provider || "credentials",
           },
         });
-        await posthog.shutdown();
+        flushPostHog(posthog);
       }
       return true;
     },

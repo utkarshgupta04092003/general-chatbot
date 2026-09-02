@@ -1,5 +1,6 @@
 import { POSTHOG_CONFIG } from "@/lib/config";
 import { PostHog } from "posthog-node";
+import { after } from "next/server";
 
 interface PostHogCaptureArgs {
   distinctId: string;
@@ -24,11 +25,33 @@ export default function PostHogClient() {
     };
   }
 
+  // flushAt:1 + flushInterval:0 made every capture a blocking HTTP round-trip,
+  // and shutdown() awaited them on the response path (~6s per chat request).
   const posthogClient = new PostHog(posthogApiKey, {
     host: posthogHost,
-    flushAt: 1,
-    flushInterval: 0,
+    flushAt: 20,
+    flushInterval: 10000,
+    requestTimeout: 3000,
   });
 
   return posthogClient;
+}
+
+/**
+ * Flush without blocking the response. Next's `after()` runs the work once the
+ * response has been sent, so the client never waits on the analytics round-trip.
+ */
+export function flushPostHog(client: { shutdown: () => Promise<void> }) {
+  try {
+    after(async () => {
+      try {
+        await client.shutdown();
+      } catch {
+        // analytics delivery is best-effort; never surface to the caller
+      }
+    });
+  } catch {
+    // outside a request scope (scripts, tests): fall back to fire-and-forget
+    void client.shutdown().catch(() => {});
+  }
 }

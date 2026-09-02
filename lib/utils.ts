@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { type ClassValue, clsx } from "clsx";
 import OpenAI from "openai";
 import { twMerge } from "tailwind-merge";
-import { GEMINI_3_1_PRO, GEMINI_3_FLASH, GEMINI_EMBEDDING_001 } from "./config";
+import { GEMINI_EMBEDDING_001, GEMINI_FLASH_LITE } from "./config";
 import { QAModel } from "./declaration";
 import { logger } from "./logger";
 
@@ -70,7 +70,7 @@ export function ensureAbsoluteUrl(url: string): string {
 }
 
 export const getAIClient = (model: QAModel) => {
-  if (model === GEMINI_3_1_PRO || model === GEMINI_3_FLASH) {
+  if (model === GEMINI_FLASH_LITE) {
     const client = new OpenAI({
       apiKey: process.env.GEMINI_API_KEY,
       baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",

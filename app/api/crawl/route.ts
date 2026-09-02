@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { ANALYTICS_EVENTS } from "@/lib/config";
-import PostHogClient from "@/lib/posthog";
+import PostHogClient, { flushPostHog } from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import { extractLogo, fetchWithFallback } from "@/lib/scraper";
 import { getDomain } from "@/lib/utils";
@@ -287,6 +287,6 @@ export async function POST(req: Request) {
     const message = err instanceof Error ? err.message : "Failed to crawl";
     return NextResponse.json({ error: message }, { status: 500 });
   } finally {
-    await posthog.shutdown();
+    flushPostHog(posthog);
   }
 }

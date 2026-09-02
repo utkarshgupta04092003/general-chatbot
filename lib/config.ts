@@ -4,19 +4,16 @@ export const CONTACT_EMAIL = "hello@chatbase.com";
 export const SALES_EMAIL = "sales@chatbase.com";
 export const SUPPORT_EMAIL = "support@chatbase.com";
 
-export const GEMINI_3_FLASH = "gemini-3-flash-preview";
-export const GEMINI_3_1_PRO = "gemini-3.1-pro-preview";
+export const GEMINI_FLASH_LITE = "gemini-flash-lite-latest";
 export const GEMINI_EMBEDDING_001 = "gemini-embedding-001";
 export const COHERE_RERANK_3_5 = "cohere-rerank-3.5";
 export const MODEL_OPTIONS = [
-  { value: GEMINI_3_FLASH, label: "Gemini 1.5 Flash (Fastest)" },
-  { value: GEMINI_3_1_PRO, label: "Gemini 1.5 Pro (Most Capable)" },
+  { value: GEMINI_FLASH_LITE, label: "Gemini Flash Lite" },
 ];
 
 export const API_VERSIONS = {
   [GEMINI_EMBEDDING_001]: "v1beta",
-  [GEMINI_3_1_PRO]: "v1beta",
-  [GEMINI_3_FLASH]: "v1beta",
+  [GEMINI_FLASH_LITE]: "v1beta",
 };
 
 export const CHAT_ROLES = {
