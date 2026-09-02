@@ -48,16 +48,16 @@ export function PageSelectionStep({
       </p>
 
       {error && (
-        <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl mb-6">
+        <div className="flex items-start gap-3 bg-danger/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-md mb-6">
           <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
           <span className="text-sm">{error}</span>
         </div>
       )}
 
-      <div className="bg-card border border-border rounded-2xl overflow-hidden mb-6 min-h-[300px] flex flex-col">
+      <div className="bg-card border border-border rounded-lg overflow-hidden mb-6 min-h-[300px] flex flex-col">
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center p-12 text-muted-foreground">
-            <Loader2 className="w-12 h-12 text-indigo-500 animate-spin mb-4" />
+            <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
             <p className="text-lg font-medium text-foreground mb-2">
               {`Scanning ${domain}...`}
             </p>
@@ -75,7 +75,7 @@ export function PageSelectionStep({
                 <button
                   onClick={onRescan}
                   disabled={loading}
-                  className="flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors cursor-pointer disabled:cursor-not-allowed"
+                  className="flex items-center gap-1.5 text-xs text-primary dark:text-primary hover:text-primary dark:hover:text-primary transition-colors cursor-pointer disabled:cursor-not-allowed"
                   title="Rescan website"
                 >
                   <RefreshCw
@@ -89,7 +89,7 @@ export function PageSelectionStep({
                 selectedUrls.size === crawledUrls.length ? (
                   <button
                     onClick={() => setSelectedUrls(new Set())}
-                    className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 cursor-pointer"
+                    className="text-xs text-primary dark:text-primary hover:text-primary dark:hover:text-primary cursor-pointer"
                   >
                     Deselect all
                   </button>
@@ -97,7 +97,7 @@ export function PageSelectionStep({
                   <>
                     <button
                       onClick={() => setSelectedUrls(new Set(crawledUrls))}
-                      className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 cursor-pointer"
+                      className="text-xs text-primary dark:text-primary hover:text-primary dark:hover:text-primary cursor-pointer"
                     >
                       Select all
                     </button>
@@ -127,9 +127,9 @@ export function PageSelectionStep({
                     className="shrink-0"
                   >
                     {selectedUrls.has(u) ? (
-                      <CheckSquare className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                      <CheckSquare className="w-5 h-5 text-primary dark:text-primary" />
                     ) : (
-                      <Square className="w-5 h-5 text-slate-600" />
+                      <Square className="w-5 h-5 text-muted-foreground" />
                     )}
                   </div>
                   <Globe className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -151,14 +151,14 @@ export function PageSelectionStep({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm transition-all text-foreground cursor-pointer"
+          className="flex items-center gap-2 px-5 py-3 bg-card border border-border hover:bg-accent/50 border border-border rounded-md text-sm transition-all text-foreground cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
         <button
           onClick={onContinue}
           disabled={loading || selectedUrls.size === 0}
-          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl text-sm font-medium transition-all text-white cursor-pointer disabled:cursor-not-allowed"
+          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-primary hover:bg-primary-hover disabled:opacity-50 rounded-md text-sm font-medium transition-all text-white cursor-pointer disabled:cursor-not-allowed"
         >
           {loading ? "Discovering..." : "Continue"}{" "}
           {!loading && <ArrowRight className="w-4 h-4" />}

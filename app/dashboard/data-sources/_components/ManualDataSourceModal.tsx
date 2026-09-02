@@ -41,7 +41,7 @@ export function ManualDataSourceModal({
         if (e.target === e.currentTarget) resetAndClose();
       }}
     >
-      <div className="w-full max-w-lg bg-card border border-border rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-lg bg-card border border-border rounded-lg shadow-e3 overflow-hidden flex flex-col max-h-[90vh]">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <h2 className="text-lg font-semibold">Add Manual Source</h2>
           <button
@@ -54,7 +54,7 @@ export function ManualDataSourceModal({
 
         <div className="p-5 overflow-y-auto">
           {error && (
-            <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-sm mb-4">
+            <div className="flex items-center gap-2 bg-danger/10 border border-red-500/20 text-danger px-4 py-3 rounded-md text-sm mb-4">
               <AlertCircle className="w-4 h-4 shrink-0" />
               {error}
             </div>
@@ -68,7 +68,7 @@ export function ManualDataSourceModal({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Company Overview"
-                className="w-full px-4 py-2 bg-muted/50 border border-border rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full px-4 py-2 bg-card border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
 
@@ -81,7 +81,7 @@ export function ManualDataSourceModal({
                 onChange={(e) => setTextContent(e.target.value)}
                 placeholder="Paste your text content here..."
                 rows={8}
-                className="w-full px-4 py-3 bg-muted/50 border border-border rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 resize-none font-mono"
+                className="w-full px-4 py-3 bg-card border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none font-mono"
               />
             </div>
           </div>
@@ -98,7 +98,7 @@ export function ManualDataSourceModal({
           <button
             onClick={handleSubmit}
             disabled={isSubmitDisabled}
-            className="flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all"
+            className="flex items-center gap-2 px-5 py-2 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white text-sm font-medium rounded-md transition-all"
           >
             {adding ? (
               <Loader2 className="w-4 h-4 animate-spin" />

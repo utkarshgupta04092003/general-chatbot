@@ -12,7 +12,7 @@ export default function RefundPage() {
       <div className="max-w-3xl mx-auto">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-primary dark:text-primary hover:text-primary dark:hover:text-primary mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
@@ -50,7 +50,7 @@ export default function RefundPage() {
             future pricing structure, please reach out to our team at{" "}
             <a
               href={`mailto:${SUPPORT_EMAIL}`}
-              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300"
+              className="text-primary dark:text-primary hover:text-primary dark:hover:text-primary"
             >
               {SUPPORT_EMAIL}
             </a>

@@ -60,7 +60,7 @@ export function SelectChatbotModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-card border border-border rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200"
+        className="bg-card border border-border rounded-lg w-full max-w-sm overflow-hidden shadow-e4 animate-in fade-in zoom-in duration-200"
       >
         <div className="flex items-center justify-between p-5 border-b border-border">
           <h2 className="font-semibold text-foreground">
@@ -89,7 +89,7 @@ export function SelectChatbotModal({
                 <button
                   key={bot.id}
                   onClick={() => onSelect(bot.id)}
-                  className="px-4 py-3 bg-muted/50 hover:bg-indigo-500/10 border border-border hover:border-indigo-500/30 rounded-xl text-sm font-medium text-left transition-all text-foreground"
+                  className="px-4 py-3 bg-muted/50 hover:bg-primary-subtle border border-border hover:border-primary/30 rounded-md text-sm font-medium text-left transition-all text-foreground"
                 >
                   {bot.name}
                 </button>

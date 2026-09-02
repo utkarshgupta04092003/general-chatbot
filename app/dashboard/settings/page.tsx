@@ -1,6 +1,7 @@
 "use client";
 
 import { NoChatbotEmptyState } from "@/components/dashboard/NoChatbotEmptyState";
+import { PageHeader } from "@/components/ui";
 import { ANALYTICS_EVENTS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import { CheckCircle, Loader2, Save, Trash2 } from "lucide-react";
@@ -102,15 +103,12 @@ export default function ChatbotSettingsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Chatbot Settings</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Customize how your chatbot looks and behaves.
-        </p>
+        <PageHeader title="Chatbot Settings" description={"Customize how your chatbot looks and behaves."} />
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-spin" />
+          <Loader2 className="w-8 h-8 text-primary dark:text-primary animate-spin" />
         </div>
       ) : chatbots.length === 0 ? (
         <NoChatbotEmptyState description="Create a chatbot first to configure its settings." />
@@ -122,9 +120,9 @@ export default function ChatbotSettingsPage() {
                 <button
                   key={bot.id}
                   onClick={() => setSelected(bot)}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 cursor-pointer whitespace-nowrap ${
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all shrink-0 cursor-pointer whitespace-nowrap ${
                     selected?.id === bot.id
-                      ? "bg-indigo-600 text-white"
+                      ? "bg-primary text-white"
                       : "bg-muted text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -161,7 +159,7 @@ export default function ChatbotSettingsPage() {
                 <button
                   onClick={handleDelete}
                   disabled={isDeleting}
-                  className="flex items-center gap-2 px-6 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-500 disabled:opacity-50 font-medium rounded-xl transition-all"
+                  className="flex items-center gap-2 px-6 py-3 bg-danger/10 hover:bg-danger/20 text-danger disabled:opacity-50 font-medium rounded-md transition-all"
                 >
                   {isDeleting ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -174,7 +172,7 @@ export default function ChatbotSettingsPage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-medium rounded-xl transition-all"
+                  className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-medium rounded-md transition-all"
                 >
                   {saving ? (
                     <Loader2 className="w-4 h-4 animate-spin" />

@@ -6,14 +6,14 @@ import { ThemeToggle } from "../ThemeToggle";
 
 export function Navbar({ session }: { session: Session | null }) {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/85 backdrop-blur border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <Bot className="w-5 h-5 text-white" />
+            <div className="w-6 h-6 bg-primary rounded-sm flex items-center justify-center">
+              <Bot className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold text-foreground tracking-tight">
+            <span className="text-base font-semibold text-foreground tracking-tight">
               {APP_NAME}
             </span>
           </div>
@@ -43,7 +43,7 @@ export function Navbar({ session }: { session: Session | null }) {
             {session ? (
               <Link
                 href="/dashboard"
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-all"
+                className="inline-flex items-center h-8 px-3 bg-primary hover:bg-primary-hover text-primary-foreground text-sm font-medium rounded-md transition-colors"
               >
                 Dashboard
               </Link>
@@ -57,7 +57,7 @@ export function Navbar({ session }: { session: Session | null }) {
                 </Link>
                 <Link
                   href="/signup"
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-all"
+                  className="inline-flex items-center h-8 px-3 bg-primary hover:bg-primary-hover text-primary-foreground text-sm font-medium rounded-md transition-colors"
                 >
                   Try It Out
                 </Link>

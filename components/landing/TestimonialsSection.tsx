@@ -33,13 +33,13 @@ export function TestimonialsSection() {
           ].map((testimonial) => (
             <div
               key={testimonial.name}
-              className="bg-card border border-border rounded-2xl p-6"
+              className="bg-card border border-border rounded-lg p-6"
             >
               <div className="flex gap-0.5 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star
                     key={i}
-                    className="w-4 h-4 text-yellow-400"
+                    className="w-4 h-4 text-warning"
                     fill="currentColor"
                   />
                 ))}

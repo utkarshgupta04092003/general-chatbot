@@ -15,16 +15,16 @@ export function ThemeSection({ selected, onChange }: ThemeSectionProps) {
   ];
 
   return (
-    <div className="bg-muted/50 border border-border rounded-2xl p-6">
+    <div className="bg-card border border-border rounded-lg p-6">
       <h2 className="font-semibold mb-5">Widget Theme</h2>
       <div className="grid grid-cols-2 gap-3">
         {options.map((option) => (
           <button
             key={option.value}
             onClick={() => onChange({ ...selected, theme: option.value })}
-            className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-2 px-4 py-3 rounded-md border-2 transition-all cursor-pointer ${
               selected.theme === option.value
-                ? "bg-indigo-600/10 border-indigo-600 text-indigo-600"
+                ? "bg-primary-subtle border-primary text-primary"
                 : "bg-background border-transparent hover:border-border text-muted-foreground hover:text-foreground"
             }`}
           >

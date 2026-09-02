@@ -34,18 +34,18 @@ export function UrlInputStep({
       </p>
 
       {error && (
-        <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl mb-6">
+        <div className="flex items-start gap-3 bg-danger/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-md mb-6">
           <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
           <span className="text-sm">{error}</span>
         </div>
       )}
 
-      <div className="bg-card border border-border rounded-2xl p-6">
+      <div className="bg-card border border-border rounded-lg p-6">
         <label className="block text-sm font-medium text-muted-foreground mb-2">
           Website URL
         </label>
         <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 flex items-center hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 gap-3 focus-within:ring-2 focus-within:ring-indigo-500 transition-all">
+          <div className="flex-1 flex items-center bg-card border border-border border border-border rounded-md px-4 gap-3 focus-within:ring-2 focus-within:ring-primary transition-all">
             <Globe className="w-5 h-5 text-muted-foreground shrink-0" />
             <input
               type="url"
@@ -59,7 +59,7 @@ export function UrlInputStep({
           <button
             onClick={onScan}
             disabled={loading}
-            className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-white font-medium rounded-xl transition-all whitespace-nowrap cursor-pointer disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-hover disabled:opacity-60 text-white font-medium rounded-md transition-all whitespace-nowrap cursor-pointer disabled:cursor-not-allowed"
           >
             {loading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -95,9 +95,9 @@ export function UrlInputStep({
         ].map((item) => (
           <div
             key={item.label}
-            className="bg-card/50 border border-border rounded-xl p-4 text-center"
+            className="bg-card/50 border border-border rounded-md p-4 text-center"
           >
-            <item.icon className="w-6 h-6 text-indigo-600 dark:text-indigo-400 mx-auto mb-2" />
+            <item.icon className="w-6 h-6 text-primary dark:text-primary mx-auto mb-2" />
             <div className="text-sm font-medium mb-1">{item.label}</div>
             <div className="text-xs text-muted-foreground">{item.desc}</div>
           </div>

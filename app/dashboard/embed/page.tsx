@@ -1,6 +1,7 @@
 "use client";
 
 import { NoChatbotEmptyState } from "@/components/dashboard/NoChatbotEmptyState";
+import { PageHeader } from "@/components/ui";
 import { ANALYTICS_EVENTS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import { Loader2 } from "lucide-react";
@@ -65,15 +66,12 @@ export default function EmbedPage() {
   return (
     <div className="min-w-0 overflow-hidden">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Embed Your Chatbot</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Add your chatbot to any website with a single line of code.
-        </p>
+        <PageHeader title="Embed Your Chatbot" description={"Add your chatbot to any website with a single line of code."} />
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-spin" />
+          <Loader2 className="w-8 h-8 text-primary dark:text-primary animate-spin" />
         </div>
       ) : chatbots.length === 0 ? (
         <NoChatbotEmptyState />
@@ -92,7 +90,7 @@ export default function EmbedPage() {
                 description={
                   <>
                     Paste this script before the closing{" "}
-                    <code className="text-indigo-300 bg-indigo-500/10 px-1 rounded">
+                    <code className="text-primary bg-primary-subtle px-1 rounded">
                       &lt;/body&gt;
                     </code>{" "}
                     tag on your website.

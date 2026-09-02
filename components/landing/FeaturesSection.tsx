@@ -12,7 +12,7 @@ export function FeaturesSection() {
     <section id="features" className="py-24 px-4 bg-card/30">
       <div className="max-w-[70rem] mx-auto">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-xs text-indigo-500 font-medium mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-subtle border border-primary/20 rounded-full text-xs text-primary font-medium mb-4">
             Everything you need
           </div>
           <h2 className="text-4xl font-bold mb-4">
@@ -58,10 +58,10 @@ export function FeaturesSection() {
           ].map((feature) => (
             <div
               key={feature.title}
-              className="bg-card border border-border rounded-xl p-6 hover:border-indigo-500/30 transition-all group"
+              className="bg-card border border-border rounded-md p-6 hover:border-primary/30 transition-all group"
             >
-              <div className="w-10 h-10 bg-indigo-500/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-indigo-500/20 transition-colors">
-                <feature.icon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <div className="w-10 h-10 bg-primary-subtle rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-subtle transition-colors">
+                <feature.icon className="w-5 h-5 text-primary dark:text-primary" />
               </div>
               <h3 className="font-semibold mb-2">{feature.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">

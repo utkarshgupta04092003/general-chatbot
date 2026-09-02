@@ -38,9 +38,9 @@ export function FaqSection() {
           ].map((faq) => (
             <details
               key={faq.q}
-              className="group bg-card border border-border rounded-xl overflow-hidden"
+              className="group bg-card border border-border rounded-md overflow-hidden"
             >
-              <summary className="flex items-center justify-between p-6 cursor-pointer font-medium text-foreground hover:text-indigo-600 dark:hover:text-indigo-500 transition-colors">
+              <summary className="flex items-center justify-between p-6 cursor-pointer font-medium text-foreground hover:text-primary dark:hover:text-primary transition-colors">
                 {faq.q}
                 <ChevronDown className="w-5 h-5 text-muted-foreground group-open:rotate-180 transition-transform" />
               </summary>

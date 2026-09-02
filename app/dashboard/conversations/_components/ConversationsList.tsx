@@ -39,8 +39,8 @@ export function ConversationsList({
 
   if (conversations.length === 0) {
     return (
-      <div className="text-center py-20 bg-muted/30 border border-border rounded-2xl">
-        <MessageSquare className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+      <div className="text-center py-20 bg-card border border-border rounded-lg">
+        <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
         <h3 className="font-semibold text-muted-foreground mb-2">
           No conversations yet
         </h3>
@@ -57,9 +57,9 @@ export function ConversationsList({
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
         <button
           onClick={() => setSelectedChatbotId("all")}
-          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-all shrink-0 ${
             selectedChatbotId === "all"
-              ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+              ? "bg-primary text-white shadow-e2 shadow-e2"
               : "bg-muted text-muted-foreground hover:text-foreground"
           }`}
         >
@@ -69,9 +69,9 @@ export function ConversationsList({
           <button
             key={id}
             onClick={() => setSelectedChatbotId(id)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-all shrink-0 ${
               selectedChatbotId === id
-                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                ? "bg-primary text-white shadow-e2 shadow-e2"
                 : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -82,8 +82,8 @@ export function ConversationsList({
 
       <div className="space-y-4">
         {filtered.length === 0 ? (
-          <div className="text-center py-20 bg-muted/30 border border-border rounded-2xl">
-            <MessageSquare className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+          <div className="text-center py-20 bg-card border border-border rounded-lg">
+            <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="font-semibold text-muted-foreground mb-2">
               No conversations for this chatbot
             </h3>

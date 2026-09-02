@@ -1,4 +1,5 @@
 import { ANALYTICS_EVENTS } from "@/lib/config";
+import { PageHeader } from "@/components/ui";
 import PostHogClient from "@/lib/posthog";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
@@ -27,10 +28,7 @@ export default async function ConversationsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Conversations</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          All chats your visitors have had with your chatbots.
-        </p>
+        <PageHeader title="Conversations" description={"All chats your visitors have had with your chatbots."} />
       </div>
 
       <ConversationsList conversations={conversations} />

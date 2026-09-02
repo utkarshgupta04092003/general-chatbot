@@ -59,8 +59,8 @@ export default function SignupPage() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       {/* Background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-600/20 dark:bg-indigo-600 rounded-full blur-[120px] dark:opacity-20" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-violet-600/20 dark:bg-violet-600 rounded-full blur-[120px] dark:opacity-20" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/20 dark:bg-primary rounded-full blur-[120px] dark:opacity-20" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary/20 dark:bg-primary rounded-full blur-[120px] dark:opacity-20" />
       </div>
 
       <div className="absolute top-4 right-4 z-50">
@@ -74,7 +74,7 @@ export default function SignupPage() {
             href="/"
             className="inline-flex items-center gap-2 text-foreground"
           >
-            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-indigo-500/20">
+            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-4 shadow-e3 shadow-e2">
               <Bot className="w-7 h-7 text-foreground" />
             </div>
           </Link>
@@ -86,10 +86,10 @@ export default function SignupPage() {
           </p>
         </div>
 
-        <div className="hover:bg-accent/50 bg-muted/30 backdrop-blur-xl border border-border rounded-2xl p-8 shadow-2xl">
+        <div className="bg-card border border-border backdrop-blur-xl border border-border rounded-lg p-8 shadow-e4">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm px-4 py-3 rounded-xl">
+              <div className="bg-danger/10 border border-red-500/30 text-red-300 text-sm px-4 py-3 rounded-md">
                 {error}
               </div>
             )}
@@ -103,7 +103,7 @@ export default function SignupPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="John Smith"
-                className="w-full px-4 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                className="w-full h-10 px-3 bg-card border border-input rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
               />
             </div>
 
@@ -117,7 +117,7 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="john@company.com"
-                className="w-full px-4 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                className="w-full h-10 px-3 bg-card border border-input rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
               />
             </div>
 
@@ -132,7 +132,7 @@ export default function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min. 6 characters"
-                  className="w-full px-4 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all pr-12"
+                  className="w-full h-10 px-3 bg-card border border-input rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors pr-12"
                 />
                 <button
                   type="button"
@@ -151,7 +151,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-800 disabled:opacity-60 text-white font-medium rounded-xl transition-all flex items-center justify-center gap-2 mt-2"
+              className="w-full h-10 px-4 bg-primary hover:bg-primary-hover disabled:opacity-50 text-primary-foreground font-medium rounded-md transition-colors flex items-center justify-center gap-2 mt-2"
             >
               {loading ? (
                 <>
@@ -168,25 +168,25 @@ export default function SignupPage() {
             Already have an account?{" "}
             <Link
               href="/login"
-              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 font-medium"
+              className="text-primary hover:underline font-medium"
             >
               Sign in
             </Link>
           </p>
         </div>
 
-        <p className="text-center text-xs text-slate-600 mt-4">
+        <p className="text-center text-xs text-muted-foreground mt-4">
           By signing up you agree to our{" "}
           <Link
             href="/terms"
-            className="text-muted-foreground cursor-pointer hover:text-indigo-500 transition-colors"
+            className="text-muted-foreground cursor-pointer hover:text-primary transition-colors"
           >
             Terms of Service
           </Link>{" "}
           and{" "}
           <Link
             href="/privacy"
-            className="text-muted-foreground cursor-pointer hover:text-indigo-500 transition-colors"
+            className="text-muted-foreground cursor-pointer hover:text-primary transition-colors"
           >
             Privacy Policy
           </Link>

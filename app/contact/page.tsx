@@ -12,7 +12,7 @@ export default function ContactPage() {
       <div className="max-w-3xl mx-auto">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-primary dark:text-primary hover:text-primary dark:hover:text-primary mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
@@ -25,7 +25,7 @@ export default function ContactPage() {
           </p>
 
           <div className="grid md:grid-cols-2 gap-6 mt-8">
-            <div className="bg-card border border-border rounded-2xl p-8">
+            <div className="bg-card border border-border rounded-lg p-8">
               <h3 className="text-xl font-semibold text-foreground mb-2">
                 General Inquiries
               </h3>
@@ -34,13 +34,13 @@ export default function ContactPage() {
               </p>
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors"
+                className="text-primary dark:text-primary hover:text-primary dark:hover:text-primary transition-colors"
               >
                 {CONTACT_EMAIL}
               </a>
             </div>
 
-            <div className="bg-card border border-border rounded-2xl p-8">
+            <div className="bg-card border border-border rounded-lg p-8">
               <h3 className="text-xl font-semibold text-foreground mb-2">
                 Sales
               </h3>
@@ -49,7 +49,7 @@ export default function ContactPage() {
               </p>
               <a
                 href={`mailto:${SALES_EMAIL}`}
-                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors"
+                className="text-primary dark:text-primary hover:text-primary dark:hover:text-primary transition-colors"
               >
                 {SALES_EMAIL}
               </a>

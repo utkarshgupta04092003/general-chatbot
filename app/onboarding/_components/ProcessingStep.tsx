@@ -19,9 +19,9 @@ export function ProcessingStep({
 }: ProcessingStepProps) {
   return (
     <div className="animate-fade-in-up text-center">
-      <div className="w-20 h-20 bg-indigo-600/20 rounded-full flex items-center justify-center mx-auto mb-8 relative">
-        <Sparkles className="w-10 h-10 text-indigo-600 dark:text-indigo-400" />
-        <div className="absolute inset-0 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+      <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-8 relative">
+        <Sparkles className="w-10 h-10 text-primary dark:text-primary" />
+        <div className="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
       <h1 className="text-3xl font-bold mb-2 text-foreground">
         Training your chatbot...
@@ -45,9 +45,9 @@ export function ProcessingStep({
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
                 i < processStep
-                  ? "bg-green-500"
+                  ? "bg-success"
                   : i === processStep
-                    ? "bg-indigo-600"
+                    ? "bg-primary"
                     : "bg-accent"
               }`}
             >
@@ -70,7 +70,7 @@ export function ProcessingStep({
 
       <div className="max-w-sm mx-auto bg-muted rounded-full h-2">
         <div
-          className="bg-gradient-to-r from-indigo-600 to-violet-600 h-2 rounded-full transition-all duration-500"
+          className="bg-gradient-to-r from-primary to-primary h-2 rounded-full transition-all duration-500"
           style={{
             width: `${Math.min((processStep / processingSteps.length) * 100, 100)}%`,
           }}

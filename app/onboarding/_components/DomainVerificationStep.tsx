@@ -45,13 +45,13 @@ export function DomainVerificationStep({
       </p>
 
       {error && (
-        <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl mb-6">
+        <div className="flex items-start gap-3 bg-danger/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-md mb-6">
           <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
           <span className="text-sm">{error}</span>
         </div>
       )}
 
-      <div className="bg-card border border-border rounded-2xl p-6 mb-6">
+      <div className="bg-card border border-border rounded-lg p-6 mb-6">
         {!codeRequested ? (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
@@ -70,12 +70,12 @@ export function DomainVerificationStep({
                   }
                 }}
                 placeholder={`admin@${domain}`}
-                className="flex-1 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none text-foreground"
+                className="flex-1 bg-card border border-border border border-border rounded-md px-4 py-3 focus:ring-2 focus:ring-primary outline-none text-foreground"
               />
               <button
                 onClick={onRequestCode}
                 disabled={loading}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white disabled:opacity-50 rounded-xl font-medium transition-all cursor-pointer disabled:cursor-not-allowed"
+                className="px-6 py-3 bg-primary hover:bg-primary-hover text-white disabled:opacity-50 rounded-md font-medium transition-all cursor-pointer disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -87,7 +87,7 @@ export function DomainVerificationStep({
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground italic mb-2 text-indigo-300 flex items-center gap-2">
+            <p className="text-sm text-muted-foreground italic mb-2 text-primary flex items-center gap-2">
               Verification code sent to {verificationEmail} (for testing use
               111111)
             </p>
@@ -103,12 +103,12 @@ export function DomainVerificationStep({
                   }
                 }}
                 placeholder="Enter 6-digit code"
-                className="flex-1 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none text-foreground"
+                className="flex-1 bg-card border border-border border border-border rounded-md px-4 py-3 focus:ring-2 focus:ring-primary outline-none text-foreground"
               />
               <button
                 onClick={onVerify}
                 disabled={loading}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl font-medium transition-all flex items-center gap-2 text-white cursor-pointer disabled:cursor-not-allowed"
+                className="px-6 py-3 bg-primary hover:bg-primary-hover disabled:opacity-50 rounded-md font-medium transition-all flex items-center gap-2 text-white cursor-pointer disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -120,7 +120,7 @@ export function DomainVerificationStep({
             </div>
             <button
               onClick={() => setCodeRequested(false)}
-              className="text-xs text-muted-foreground hover:text-indigo-600 dark:text-indigo-400 mt-2 underline cursor-pointer disabled:cursor-not-allowed"
+              className="text-xs text-muted-foreground hover:text-primary dark:text-primary mt-2 underline cursor-pointer disabled:cursor-not-allowed"
             >
               Use different email
             </button>
@@ -131,7 +131,7 @@ export function DomainVerificationStep({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-sm transition-all text-foreground cursor-pointer disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-5 py-3 bg-card border border-border border border-border rounded-md text-sm transition-all text-foreground cursor-pointer disabled:cursor-not-allowed"
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>

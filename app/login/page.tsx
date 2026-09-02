@@ -21,27 +21,29 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
 
-    if (result?.error) {
-      setError("Invalid email or password");
-      setLoading(false);
-    } else {
+      if (!result || result.error || result.ok === false) {
+        setError("Invalid email or password");
+        return;
+      }
+
       router.push("/dashboard");
+      router.refresh();
+    } catch {
+      setError("Couldn't sign in. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-600/20 dark:bg-indigo-600 rounded-full blur-[120px] dark:opacity-20" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-violet-600/20 dark:bg-violet-600 rounded-full blur-[120px] dark:opacity-20" />
-      </div>
-
       <div className="absolute top-4 right-4 z-50">
         <ThemeToggle />
       </div>
@@ -52,20 +54,20 @@ export default function LoginPage() {
             href="/"
             className="inline-flex flex-col items-center gap-2 text-foreground"
           >
-            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-indigo-500/20">
-              <Bot className="w-7 h-7 text-foreground" />
+            <div className="w-10 h-10 bg-primary rounded-md flex items-center justify-center mx-auto mb-4">
+              <Bot className="w-5 h-5 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">Welcome back</h1>
             <p className="text-muted-foreground text-sm mt-2">
               Sign in to your {APP_NAME} account
             </p>
           </Link>
         </div>
 
-        <div className="hover:bg-accent/50 bg-muted/30 backdrop-blur-xl border border-border rounded-2xl p-8 shadow-2xl">
+        <div className="bg-card border border-border rounded-lg p-6 shadow-e2">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm px-4 py-3 rounded-xl">
+              <div className="bg-danger-subtle border border-danger/30 text-danger text-sm px-3 py-2.5 rounded-md">
                 {error}
               </div>
             )}
@@ -80,7 +82,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="john@company.com"
-                className="w-full px-4 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                className="w-full h-10 px-3 bg-card border border-input rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
               />
             </div>
 
@@ -95,7 +97,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Your password"
-                  className="w-full px-4 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all pr-12"
+                  className="w-full h-10 px-3 bg-card border border-input rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors pr-12"
                 />
                 <button
                   type="button"
@@ -114,7 +116,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-medium rounded-xl transition-all flex items-center justify-center gap-2 mt-2"
+              className="w-full h-10 px-4 bg-primary hover:bg-primary-hover disabled:opacity-50 text-primary-foreground font-medium rounded-md transition-colors flex items-center justify-center gap-2 mt-2 text-sm"
             >
               {loading ? (
                 <>
@@ -131,7 +133,7 @@ export default function LoginPage() {
             Don&apos;t have an account?{" "}
             <Link
               href="/signup"
-              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 font-medium"
+              className="text-primary hover:underline font-medium"
             >
               Sign up free
             </Link>

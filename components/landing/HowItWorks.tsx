@@ -5,7 +5,7 @@ export function HowItWorks() {
     <section id="how-it-works" className="py-24 px-4">
       <div className="max-w-[70rem] mx-auto">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-violet-500/10 border border-violet-500/20 rounded-full text-xs text-violet-500 font-medium mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-xs text-primary font-medium mb-4">
             Simple Setup
           </div>
           <h2 className="text-4xl font-bold mb-4">Ready in 3 simple steps</h2>
@@ -22,8 +22,7 @@ export function HowItWorks() {
               title: "Paste your URL",
               description:
                 "Enter your website URL and we'll automatically crawl and discover all your public pages.",
-              color: "from-indigo-600 to-indigo-700",
-              glow: "shadow-indigo-500/25",
+              color: "bg-primary",
             },
             {
               step: "02",
@@ -31,8 +30,7 @@ export function HowItWorks() {
               title: "AI trains instantly",
               description:
                 "We extract, chunk, and convert your content into smart embeddings stored in our vector database.",
-              color: "from-violet-600 to-violet-700",
-              glow: "shadow-violet-500/25",
+              color: "bg-primary",
             },
             {
               step: "03",
@@ -40,8 +38,7 @@ export function HowItWorks() {
               title: "Embed on your site",
               description:
                 "Copy one line of code and paste it on your website. The chatbot goes live instantly.",
-              color: "from-cyan-600 to-cyan-700",
-              glow: "shadow-cyan-500/25",
+              color: "bg-primary",
             },
           ].map((item, index) => (
             <div
@@ -49,12 +46,12 @@ export function HowItWorks() {
               className="relative group"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="bg-card border border-border rounded-2xl p-8 hover:border-border transition-all h-full">
-                <div className="text-slate-600 text-sm font-mono mb-4">
+              <div className="bg-card border border-border rounded-lg p-8 hover:border-border transition-all h-full">
+                <div className="text-muted-foreground text-sm font-mono mb-4">
                   {item.step}
                 </div>
                 <div
-                  className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center mb-6 shadow-lg ${item.glow}`}
+                  className={`w-10 h-10 ${item.color} rounded-md flex items-center justify-center mb-5`}
                 >
                   <item.icon className="w-6 h-6 text-foreground" />
                 </div>
@@ -64,7 +61,7 @@ export function HowItWorks() {
                 </p>
               </div>
               {index < 2 && (
-                <div className="hidden md:block absolute top-1/2 -right-4 w-8 text-slate-600 z-10">
+                <div className="hidden md:block absolute top-1/2 -right-4 w-8 text-muted-foreground z-10">
                   →
                 </div>
               )}

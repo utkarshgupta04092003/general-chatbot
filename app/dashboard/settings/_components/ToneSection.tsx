@@ -10,16 +10,16 @@ type ToneSectionProps = {
 
 export function ToneSection({ selected, onChange }: ToneSectionProps) {
   return (
-    <div className="bg-muted/50 border border-border rounded-2xl p-6">
+    <div className="bg-card border border-border rounded-lg p-6">
       <h2 className="font-semibold mb-5">Response Tone</h2>
       <div className="grid grid-cols-2 gap-3">
         {TONE_OPTIONS.map((tone) => (
           <button
             key={tone.value}
             onClick={() => onChange({ ...selected, tone: tone.value })}
-            className={`text-left p-3 rounded-xl border transition-all ${
+            className={`text-left p-3 rounded-md border transition-all ${
               selected.tone === tone.value
-                ? "border-indigo-500 bg-indigo-500 text-white"
+                ? "border-primary bg-primary text-white"
                 : "border-border bg-muted/50 text-muted-foreground hover:text-foreground hover:border-border"
             }`}
           >

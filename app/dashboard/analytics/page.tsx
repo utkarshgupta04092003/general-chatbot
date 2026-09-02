@@ -1,8 +1,10 @@
 "use client";
 
 import { NoChatbotEmptyState } from "@/components/dashboard/NoChatbotEmptyState";
+import { PageHeader } from "@/components/ui";
 import { MarkdownMessage } from "@/components/MarkdownMessage";
 import { Tooltip as GlobalTooltip } from "@/components/Tooltip";
+import { CHART_COLORS, axisProps, gridProps, tooltipProps } from "@/lib/chart-theme";
 import { ANALYTICS_EVENTS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import { motion } from "framer-motion";
@@ -113,7 +115,7 @@ export default function AnalyticsPage() {
     fetchAnalytics();
   }, [chatbotId]);
 
-  const COLORS = ["#6366f1", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
+  const COLORS = CHART_COLORS;
   const categoryData = data?.categories
     ? Object.entries(data.categories).map(([name, value]) => ({ name, value }))
     : [];
@@ -121,14 +123,11 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Analytics Dashboard</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Derive actionable insights from your AI
-        </p>
+        <PageHeader title="Analytics Dashboard" description={"Derive actionable insights from your AI"} />
       </div>
       {loading && !data ? (
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500" />
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
         </div>
       ) : chatbots.length === 0 ? (
         <NoChatbotEmptyState description="Create a chatbot first to see analytics." />
@@ -140,9 +139,9 @@ export default function AnalyticsPage() {
               <button
                 key={cb.id}
                 onClick={() => setChatbotId(cb.id)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all shrink-0 ${
                   chatbotId === cb.id
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                    ? "bg-primary text-white shadow-e2 shadow-e2"
                     : "bg-muted text-muted-foreground hover:text-foreground hover:bg-accent"
                 }`}
               >
@@ -164,19 +163,19 @@ export default function AnalyticsPage() {
                 label: "Total Messages",
                 value: data?.overview.totalMessages,
                 icon: Search,
-                color: "text-indigo-500",
+                color: "text-primary",
               },
               {
                 label: "Unique Users",
                 value: data?.overview.uniqueSessions,
                 icon: Users,
-                color: "text-emerald-500",
+                color: "text-success",
               },
               {
                 label: "Success Rate",
                 value: `${Math.round((data?.successRate || 0) * 100)}%`,
                 icon: CheckCircle2,
-                color: "text-emerald-400",
+                color: "text-success",
               },
             ].map((m, i) => (
               <motion.div
@@ -184,10 +183,10 @@ export default function AnalyticsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-card/50 border border-border p-5 rounded-2xl hover:border-border transition-all group"
+                className="bg-card border border-border p-5 rounded-lg hover:border-border transition-all group"
               >
                 <div
-                  className={`w-10 h-10 rounded-xl bg-muted flex items-center justify-center ${m.color} mb-4`}
+                  className={`w-10 h-10 rounded-md bg-muted flex items-center justify-center ${m.color} mb-4`}
                 >
                   <m.icon className="w-5 h-5" />
                 </div>
@@ -203,7 +202,7 @@ export default function AnalyticsPage() {
 
           {/* 2. CHARTS */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-card/50 border border-border rounded-2xl p-6">
+            <div className="bg-card border border-border rounded-lg p-6">
               <h2 className="text-lg font-semibold text-foreground mb-6">
                 Conversations Per Day
               </h2>
@@ -220,40 +219,24 @@ export default function AnalyticsPage() {
                       >
                         <stop
                           offset="5%"
-                          stopColor="#6366f1"
+                          stopColor="hsl(var(--primary))"
                           stopOpacity={0.3}
                         />
                         <stop
                           offset="95%"
-                          stopColor="#6366f1"
+                          stopColor="hsl(var(--primary))"
                           stopOpacity={0}
                         />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      vertical={false}
-                      stroke="#ffffff05"
-                    />
-                    <XAxis
-                      dataKey="date"
-                      stroke="#475569"
-                      fontSize={10}
-                      tickFormatter={(s) => s.split("-")[2]}
-                    />
-                    <YAxis stroke="#475569" fontSize={10} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#0f172a",
-                        border: "1px solid #ffffff10",
-                        borderRadius: "12px",
-                        color: "#fff",
-                      }}
-                    />
+                    <CartesianGrid {...gridProps} />
+                    <XAxis dataKey="date" {...axisProps} tickFormatter={(s) => s.split("-")[2]} />
+                    <YAxis {...axisProps} width={32} />
+                    <Tooltip {...tooltipProps} />
                     <Area
                       type="monotone"
                       dataKey="count"
-                      stroke="#6366f1"
+                      stroke="hsl(var(--primary))"
                       fillOpacity={1}
                       fill="url(#colorConv)"
                     />
@@ -261,34 +244,18 @@ export default function AnalyticsPage() {
                 </ResponsiveContainer>
               </div>
             </div>
-            <div className="bg-card/50 border border-border rounded-2xl p-6">
+            <div className="bg-card border border-border rounded-lg p-6">
               <h2 className="text-lg font-semibold text-foreground mb-6">
                 Messages Per Day
               </h2>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={data?.dailyActivity.messages}>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      vertical={false}
-                      stroke="#ffffff05"
-                    />
-                    <XAxis
-                      dataKey="date"
-                      stroke="#475569"
-                      fontSize={10}
-                      tickFormatter={(s) => s.split("-")[2]}
-                    />
-                    <YAxis stroke="#475569" fontSize={10} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#0f172a",
-                        border: "1px solid #ffffff10",
-                        borderRadius: "12px",
-                        color: "#fff",
-                      }}
-                    />
-                    <Bar dataKey="count" fill="#10b981" radius={[4, 4, 0, 0]} />
+                    <CartesianGrid {...gridProps} />
+                    <XAxis dataKey="date" {...axisProps} tickFormatter={(s) => s.split("-")[2]} />
+                    <YAxis {...axisProps} width={32} />
+                    <Tooltip {...tooltipProps} />
+                    <Bar dataKey="count" fill="hsl(var(--success))" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -297,7 +264,7 @@ export default function AnalyticsPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* 3. CATEGORY DISTRIBUTION PIE */}
-            <div className="bg-card/50 border border-border rounded-2xl p-6">
+            <div className="bg-card border border-border rounded-lg p-6">
               <h2 className="text-lg font-semibold text-foreground mb-6">
                 Category Distribution
               </h2>
@@ -318,14 +285,7 @@ export default function AnalyticsPage() {
                         />
                       ))}
                     </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#0f172a",
-                        border: "1px solid #ffffff10",
-                        borderRadius: "12px",
-                        color: "#fff",
-                      }}
-                    />
+                    <Tooltip {...tooltipProps} />
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
@@ -359,7 +319,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* 4. FEEDBACK STATS */}
-            <div className="bg-card/50 border border-border rounded-2xl p-6 flex flex-col justify-between">
+            <div className="bg-card border border-border rounded-lg p-6 flex flex-col justify-between">
               <div>
                 <h2 className="text-lg font-semibold text-foreground mb-6">
                   Feedback Insights
@@ -367,7 +327,7 @@ export default function AnalyticsPage() {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                      <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-success">
                         <ThumbsUp className="w-5 h-5" />
                       </div>
                       <div>
@@ -408,7 +368,7 @@ export default function AnalyticsPage() {
                   <span className="text-sm text-muted-foreground font-medium">
                     Approval Rating
                   </span>
-                  <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                  <span className="text-2xl font-bold text-primary dark:text-primary">
                     {Math.round((data?.feedback.ratio || 0) * 100)}%
                   </span>
                 </div>
@@ -416,14 +376,14 @@ export default function AnalyticsPage() {
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${(data?.feedback.ratio || 0) * 100}%` }}
-                    className="h-full bg-indigo-500 rounded-full"
+                    className="h-full bg-primary rounded-full"
                   />
                 </div>
               </div>
             </div>
 
             {/* 5. TOP SOURCES */}
-            <div className="bg-card/50 border border-border rounded-2xl p-6 overflow-hidden">
+            <div className="bg-card border border-border rounded-lg p-6 overflow-hidden">
               <h2 className="text-lg font-semibold text-foreground mb-6">
                 Top Data Sources
               </h2>
@@ -447,7 +407,7 @@ export default function AnalyticsPage() {
                             href={s.url}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-xs text-muted-foreground truncate hover:text-indigo-600 dark:text-indigo-400 flex items-center gap-1 transition-colors min-w-0"
+                            className="text-xs text-muted-foreground truncate hover:text-primary dark:text-primary flex items-center gap-1 transition-colors min-w-0"
                           >
                             {s.url}
                             <ExternalLink className="w-2 h-2 opacity-0 group-hover/row:opacity-100 shrink-0" />
@@ -466,7 +426,7 @@ export default function AnalyticsPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* 6. TOP QUESTIONS */}
-            <div className="bg-card/50 border border-border rounded-2xl overflow-hidden">
+            <div className="bg-card border border-border rounded-lg overflow-hidden">
               <div className="p-6 border-b border-border flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-foreground">
                   Top User Questions
@@ -479,17 +439,17 @@ export default function AnalyticsPage() {
                 {data?.topQuestions?.map((q, i) => (
                   <div
                     key={q.question}
-                    className="p-4 hover:bg-accent/50 bg-muted/30 transition-colors group flex items-center justify-between"
+                    className="p-4 bg-card border border-border transition-colors group flex items-center justify-between"
                   >
                     <div className="flex items-center gap-4 min-w-0 pr-4">
-                      <span className="text-xs text-slate-600 font-mono italic">
+                      <span className="text-xs text-muted-foreground font-mono italic">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <p className="text-sm text-foreground truncate pr-2 italic">
                         &quot;{q.question}&quot;
                       </p>
                     </div>
-                    <div className="text-xs font-bold text-indigo-500/80 bg-indigo-500/10 px-2.5 py-1 rounded-lg shrink-0">
+                    <div className="text-xs font-bold text-primary/80 bg-primary-subtle px-2.5 py-1 rounded-lg shrink-0">
                       {q.count.toLocaleString()} times
                     </div>
                   </div>
@@ -499,10 +459,10 @@ export default function AnalyticsPage() {
 
             {/* 7. UNANSWERED / LOW CONFIDENCE */}
             <div className="space-y-6">
-              <div className="bg-card/50 border border-border rounded-2xl p-6">
+              <div className="bg-card border border-border rounded-lg p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500">
+                    <div className="w-10 h-10 rounded-md bg-warning/10 flex items-center justify-center text-warning">
                       <AlertCircle className="w-5 h-5" />
                     </div>
                     <div>
@@ -514,7 +474,7 @@ export default function AnalyticsPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-amber-500">
+                  <div className="text-2xl font-bold text-warning">
                     {data?.unanswered.count.toLocaleString()}
                   </div>
                 </div>
@@ -522,11 +482,11 @@ export default function AnalyticsPage() {
                   {data?.unanswered?.list?.map((u, i) => (
                     <div
                       key={i}
-                      className="text-xs p-3 bg-muted/50 rounded-xl text-muted-foreground border border-border"
+                      className="text-xs p-3 bg-muted/50 rounded-md text-muted-foreground border border-border"
                     >
                       <MarkdownMessage
                         content={u.content}
-                        linkColor="text-indigo-400"
+                        linkColor="text-primary"
                         codeBg="bg-accent"
                         preBg="bg-accent"
                       />
@@ -534,17 +494,17 @@ export default function AnalyticsPage() {
                   ))}
                   {(!data?.unanswered?.count ||
                     data.unanswered.count === 0) && (
-                    <div className="text-center py-4 text-emerald-500/50 text-sm">
+                    <div className="text-center py-4 text-success/50 text-sm">
                       Perfect Performance! 🌟
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="bg-card/50 border border-border rounded-2xl p-6">
+              <div className="bg-card border border-border rounded-lg p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500">
+                    <div className="w-10 h-10 rounded-md bg-rose-500/10 flex items-center justify-center text-rose-500">
                       <TrendingUp className="w-5 h-5 rotate-180" />
                     </div>
                     <div>

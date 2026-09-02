@@ -1,6 +1,7 @@
 "use client";
 
 import { NoChatbotEmptyState } from "@/components/dashboard/NoChatbotEmptyState";
+import { PageHeader } from "@/components/ui";
 import { ANALYTICS_EVENTS } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
 import { CheckCircle, Loader2, Save } from "lucide-react";
@@ -53,16 +54,12 @@ export default function ContactSettingsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Fallback Contact Options</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Configure what information is shown to users when the AI assistant
-          cannot answer their query.
-        </p>
+        <PageHeader title="Fallback Contact Options" description={"Configure what information is shown to users when the AI assistant cannot answer their query."} />
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-spin" />
+          <Loader2 className="w-8 h-8 text-primary dark:text-primary animate-spin" />
         </div>
       ) : chatbots.length === 0 ? (
         <NoChatbotEmptyState description="Create a chatbot first to configure its fallback contact options." />
@@ -74,9 +71,9 @@ export default function ContactSettingsPage() {
                 <button
                   key={bot.id}
                   onClick={() => setSelected(bot)}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 cursor-pointer whitespace-nowrap ${
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all shrink-0 cursor-pointer whitespace-nowrap ${
                     selected?.id === bot.id
-                      ? "bg-indigo-600 text-white"
+                      ? "bg-primary text-white"
                       : "bg-muted text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -94,7 +91,7 @@ export default function ContactSettingsPage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-medium rounded-xl transition-all"
+                  className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-medium rounded-md transition-all"
                 >
                   {saving ? (
                     <Loader2 className="w-4 h-4 animate-spin" />

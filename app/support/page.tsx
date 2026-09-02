@@ -12,7 +12,7 @@ export default function SupportPage() {
       <div className="max-w-3xl mx-auto">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-primary dark:text-primary hover:text-primary dark:hover:text-primary mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
@@ -23,7 +23,7 @@ export default function SupportPage() {
             have any questions or need assistance, please feel free to reach out
             to our dedicated support team.
           </p>
-          <div className="bg-card border border-border rounded-2xl p-8 mt-8">
+          <div className="bg-card border border-border rounded-lg p-8 mt-8">
             <h2 className="text-2xl font-semibold text-foreground mb-4">
               Contact Support
             </h2>
@@ -31,7 +31,7 @@ export default function SupportPage() {
               Email us at:{" "}
               <a
                 href={`mailto:${SUPPORT_EMAIL}`}
-                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors"
+                className="text-primary dark:text-primary hover:text-primary dark:hover:text-primary transition-colors"
               >
                 {SUPPORT_EMAIL}
               </a>

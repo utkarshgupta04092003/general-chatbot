@@ -11,9 +11,9 @@ export function ContactInfoSection({
   onChange: (b: ChatbotSettings) => void;
 }) {
   return (
-    <div className="bg-card border border-border rounded-2xl p-6">
+    <div className="bg-card border border-border rounded-lg p-6">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 bg-pink-500/10 rounded-xl flex items-center justify-center">
+        <div className="w-10 h-10 bg-pink-500/10 rounded-md flex items-center justify-center">
           <MessageCircle className="w-5 h-5 text-pink-400" />
         </div>
         <div>
@@ -30,7 +30,7 @@ export function ContactInfoSection({
             Support Email
           </label>
           <div className="flex gap-3">
-            <div className="flex items-center hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 flex-1">
+            <div className="flex items-center bg-card border border-border border border-border rounded-md px-4 flex-1">
               <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
               <input
                 type="email"
@@ -50,7 +50,7 @@ export function ContactInfoSection({
             Phone Number
           </label>
           <div className="flex gap-3">
-            <div className="flex items-center hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 flex-1">
+            <div className="flex items-center bg-card border border-border border border-border rounded-md px-4 flex-1">
               <Phone className="w-4 h-4 text-muted-foreground shrink-0" />
               <input
                 type="tel"
@@ -70,7 +70,7 @@ export function ContactInfoSection({
             WhatsApp
           </label>
           <div className="flex gap-3">
-            <div className="flex items-center hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 flex-1">
+            <div className="flex items-center bg-card border border-border border border-border rounded-md px-4 flex-1">
               <MessageCircle className="w-4 h-4 text-muted-foreground shrink-0" />
               <input
                 type="text"
@@ -90,7 +90,7 @@ export function ContactInfoSection({
             Contact Page Link
           </label>
           <div className="flex gap-3">
-            <div className="flex items-center hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 flex-1">
+            <div className="flex items-center bg-card border border-border border border-border rounded-md px-4 flex-1">
               <LinkIcon className="w-4 h-4 text-muted-foreground shrink-0" />
               <input
                 type="url"

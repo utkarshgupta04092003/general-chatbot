@@ -30,18 +30,18 @@ export function AddUrlSection({
       : sources.find((s) => s.chatbotId === selectedChatbotId)?.chatbot.name;
 
   return (
-    <div className="bg-muted/50 border border-border rounded-2xl p-5 mb-6">
+    <div className="bg-card border border-border rounded-lg p-5 mb-6">
       <h2 className="text-sm font-semibold mb-3">
         Add to {selectedChatbotName}
       </h2>
       {error && (
-        <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-300 px-3 py-2 rounded-lg text-sm mb-3">
+        <div className="flex items-center gap-2 bg-danger/10 border border-red-500/20 text-red-300 px-3 py-2 rounded-lg text-sm mb-3">
           <AlertCircle className="w-4 h-4" />
           {error}
         </div>
       )}
       <div className="flex flex-col lg:flex-row gap-3">
-        <div className="flex-1 flex items-center hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 gap-2 focus-within:ring-2 focus-within:ring-indigo-500 transition-all">
+        <div className="flex-1 flex items-center bg-card border border-border border border-border rounded-md px-4 gap-2 focus-within:ring-2 focus-within:ring-primary transition-all">
           <Globe className="w-4 h-4 text-muted-foreground shrink-0" />
           <input
             type="url"
@@ -54,7 +54,7 @@ export function AddUrlSection({
         <button
           onClick={onAdd}
           disabled={adding || !addUrl.trim()}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all w-full lg:w-auto"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white text-sm font-medium rounded-md transition-all w-full lg:w-auto"
         >
           {adding ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -66,7 +66,7 @@ export function AddUrlSection({
         <button
           onClick={onAddManual}
           disabled={adding}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-muted hover:bg-muted/80 disabled:opacity-50 text-foreground text-sm font-medium border border-border rounded-xl transition-all w-full lg:w-auto"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-muted hover:bg-muted/80 disabled:opacity-50 text-foreground text-sm font-medium border border-border rounded-md transition-all w-full lg:w-auto"
         >
           <FileText className="w-4 h-4" />
           Add Manual Data

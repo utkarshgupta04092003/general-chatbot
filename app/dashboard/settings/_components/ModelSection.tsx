@@ -11,10 +11,10 @@ type ModelSectionProps = {
 
 export function ModelSection({ selected, onChange }: ModelSectionProps) {
   return (
-    <div className="bg-card border border-border rounded-2xl p-5 sm:p-6 transition-all">
+    <div className="bg-card border border-border rounded-lg p-5 sm:p-6 transition-all">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-indigo-600/10 flex items-center justify-center">
-          <Cpu className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+        <div className="w-10 h-10 rounded-md bg-primary-subtle flex items-center justify-center">
+          <Cpu className="w-5 h-5 text-primary dark:text-primary" />
         </div>
         <div>
           <h2 className="font-semibold">AI Model</h2>
@@ -29,16 +29,16 @@ export function ModelSection({ selected, onChange }: ModelSectionProps) {
           <button
             key={opt.value}
             onClick={() => onChange({ ...selected, model: opt.value })}
-            className={`flex flex-col items-start gap-1 p-4 rounded-xl border text-left transition-all ${
+            className={`flex flex-col items-start gap-1 p-4 rounded-md border text-left transition-all ${
               selected.model === opt.value
-                ? "border-indigo-600 bg-indigo-600/5 ring-1 ring-indigo-600"
+                ? "border-primary bg-primary/5 ring-1 ring-primary"
                 : "border-border hover:border-accent hover:bg-accent/50"
             }`}
           >
             <div className="flex items-center justify-between w-full">
               <span className="font-medium text-sm">{opt.label}</span>
               {selected.model === opt.value && (
-                <div className="w-2 h-2 rounded-full bg-indigo-600" />
+                <div className="w-2 h-2 rounded-full bg-primary" />
               )}
             </div>
             <p className="text-xs text-muted-foreground">

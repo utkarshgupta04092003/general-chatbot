@@ -9,7 +9,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8 md:gap-12 mb-12">
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Bot className="w-5 h-5 text-white" />
               </div>
               <span className="font-bold text-lg">{APP_NAME}</span>
@@ -119,7 +119,7 @@ export function Footer() {
         </div>
 
         <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-sm text-slate-600">
+          <div className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
           </div>
         </div>

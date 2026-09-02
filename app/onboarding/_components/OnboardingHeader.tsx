@@ -14,7 +14,7 @@ export function OnboardingHeader({ step, totalSteps }: OnboardingHeaderProps) {
     <>
       <div className="border-b border-border px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <Bot className="w-5 h-5 text-white" />
           </div>
           <span className="text-xl font-bold tracking-tight text-foreground">
@@ -31,7 +31,7 @@ export function OnboardingHeader({ step, totalSteps }: OnboardingHeaderProps) {
 
       <div className="w-full bg-card h-1">
         <div
-          className="bg-gradient-to-r from-indigo-600 to-violet-600 h-1 transition-all duration-500"
+          className="bg-gradient-to-r from-primary to-primary h-1 transition-all duration-500"
           style={{ width: `${(step / totalSteps) * 100}%` }}
         />
       </div>

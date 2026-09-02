@@ -21,9 +21,9 @@ export function ChatbotSelector({
         <button
           key={bot.id}
           onClick={() => onSelect(bot)}
-          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 max-w-[12rem] truncate ${
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-all shrink-0 max-w-[12rem] truncate ${
             selectedId === bot.id
-              ? "bg-indigo-600 text-white"
+              ? "bg-primary text-white"
               : "bg-muted text-muted-foreground hover:text-foreground"
           }`}
         >

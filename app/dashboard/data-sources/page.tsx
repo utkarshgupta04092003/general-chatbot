@@ -1,6 +1,7 @@
 "use client";
 
 import { LimitReachedModal } from "@/components/LimitReachedModal";
+import { PageHeader } from "@/components/ui";
 import { useUsage } from "@/components/providers/usage-provider";
 import {
   ANALYTICS_EVENTS,
@@ -343,10 +344,7 @@ export default function DataSourcesPage() {
       />
 
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Data Sources</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Manage the pages your chatbots are trained on.
-        </p>
+        <PageHeader title="Data Sources" description={"Manage the pages your chatbots are trained on."} />
       </div>
 
       <ChatbotFilter

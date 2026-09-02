@@ -120,12 +120,12 @@ export function VerificationModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-card border border-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200"
+        className="bg-card border border-border rounded-lg w-full max-w-lg overflow-hidden shadow-e4 animate-in fade-in zoom-in duration-200"
       >
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-              <Shield className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+            <div className="w-10 h-10 rounded-md bg-primary-subtle flex items-center justify-center">
+              <Shield className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <h2 className="text-xl font-bold text-foreground">
               Verify Ownership
@@ -139,7 +139,7 @@ export function VerificationModal({
 
         <div className="p-6 space-y-6">
           {isDifferentDomain && step === "email" && (
-            <div className="flex items-start gap-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 px-3 py-2.5 rounded-xl text-xs">
+            <div className="flex items-start gap-2 bg-warning-subtle border border-yellow-500/20 text-yellow-300 px-3 py-2.5 rounded-md text-xs">
               <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold">Domain Mismatch Warning</p>
@@ -160,7 +160,7 @@ export function VerificationModal({
               </label>
               <p className="text-xs text-muted-foreground">
                 Please provide an email address suffix with{" "}
-                <code className="text-indigo-300">@{domain}</code> to receive a
+                <code className="text-primary">@{domain}</code> to receive a
                 6-digit OTP.
               </p>
               <input
@@ -168,7 +168,7 @@ export function VerificationModal({
                 placeholder={`e.g., admin@${domain}`}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-muted border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="w-full bg-muted border border-border rounded-md px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
           )}
@@ -189,17 +189,17 @@ export function VerificationModal({
                 onChange={(e) =>
                   setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
                 }
-                className="w-full bg-muted border border-border rounded-xl px-4 py-3 text-sm tracking-[0.5em] text-center text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="w-full bg-muted border border-border rounded-md px-4 py-3 text-sm tracking-[0.5em] text-center text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
           )}
 
           {step === "success" && (
             <div className="flex flex-col items-center justify-center py-6 text-center space-y-3">
-              <div className="w-12 h-12 bg-green-500/10 flex items-center justify-center rounded-full mb-2">
-                <CheckCircle className="w-6 h-6 text-green-400" />
+              <div className="w-12 h-12 bg-success/10 flex items-center justify-center rounded-full mb-2">
+                <CheckCircle className="w-6 h-6 text-success" />
               </div>
-              <p className="font-semibold text-green-400">Domain Verified!</p>
+              <p className="font-semibold text-success">Domain Verified!</p>
               <p className="text-sm text-muted-foreground">
                 You can now add {domain} to your chatbot.
               </p>
@@ -207,7 +207,7 @@ export function VerificationModal({
           )}
 
           {error && (
-            <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/20 text-red-300 px-3 py-2.5 rounded-xl text-xs">
+            <div className="flex items-start gap-2 bg-danger/10 border border-red-500/20 text-red-300 px-3 py-2.5 rounded-md text-xs">
               <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold">Error</p>
@@ -221,7 +221,7 @@ export function VerificationModal({
           {step !== "success" && (
             <button
               onClick={handleCancel}
-              className="w-full sm:flex-1 py-2.5 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 text-foreground text-sm font-medium rounded-xl transition-all cursor-pointer"
+              className="w-full sm:flex-1 py-2.5 bg-card border border-border hover:bg-accent/50 text-foreground text-sm font-medium rounded-md transition-all cursor-pointer"
             >
               Cancel
             </button>
@@ -231,7 +231,7 @@ export function VerificationModal({
             <button
               onClick={handleSendCode}
               disabled={loading || !email.trim()}
-              className="w-full sm:flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+              className="w-full sm:flex-1 py-2.5 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white text-sm font-medium rounded-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -246,7 +246,7 @@ export function VerificationModal({
             <button
               onClick={handleVerifyCode}
               disabled={loading || code.length !== 6}
-              className="w-full sm:flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+              className="w-full sm:flex-1 py-2.5 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white text-sm font-medium rounded-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -260,7 +260,7 @@ export function VerificationModal({
           {step === "success" && (
             <button
               onClick={handleFinish}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all cursor-pointer"
+              className="w-full py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-md transition-all cursor-pointer"
             >
               Continue Adding URL
             </button>

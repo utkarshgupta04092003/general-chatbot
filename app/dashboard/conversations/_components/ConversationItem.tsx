@@ -46,11 +46,11 @@ export function ConversationItem({
   return (
     <details
       onToggle={handleToggle}
-      className="group bg-muted/50 border border-border rounded-2xl overflow-hidden"
+      className="group bg-card border border-border rounded-lg overflow-hidden"
     >
       <summary className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-muted/50 transition-colors list-none">
-        <div className="w-9 h-9 bg-indigo-500/10 rounded-xl flex items-center justify-center shrink-0">
-          <MessageSquare className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+        <div className="w-9 h-9 bg-primary-subtle rounded-md flex items-center justify-center shrink-0">
+          <MessageSquare className="w-4 h-4 text-primary dark:text-primary" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="font-medium text-sm text-foreground">
@@ -74,21 +74,21 @@ export function ConversationItem({
             }`}
           >
             {msg.role === CHAT_ROLES.ASSISTANT && (
-              <div className="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+              <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center shrink-0 mt-0.5">
                 <Bot className="w-3 h-3 text-white" />
               </div>
             )}
             <div
-              className={`max-w-[85%] rounded-xl px-4 py-2.5 text-sm break-words overflow-hidden ${
+              className={`max-w-[85%] rounded-md px-4 py-2.5 text-sm break-words overflow-hidden ${
                 msg.role === CHAT_ROLES.USER
-                  ? "bg-indigo-600 text-white rounded-br-none"
+                  ? "bg-primary text-white rounded-br-none"
                   : "bg-accent text-foreground rounded-bl-none"
               }`}
             >
               {msg.role === CHAT_ROLES.ASSISTANT ? (
                 <MarkdownMessage
                   content={msg.content}
-                  linkColor="text-indigo-400"
+                  linkColor="text-primary"
                   codeBg="bg-white/10"
                   preBg="bg-white/5"
                 />
@@ -98,7 +98,7 @@ export function ConversationItem({
               <div
                 className={`text-xs mt-1.5 ${
                   msg.role === CHAT_ROLES.USER
-                    ? "text-indigo-200"
+                    ? "text-primary-foreground/80"
                     : "text-muted-foreground"
                 }`}
               >

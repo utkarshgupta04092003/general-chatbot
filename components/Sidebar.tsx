@@ -1,6 +1,7 @@
 "use client";
 
 import { APP_NAME } from "@/lib/config";
+import { cn } from "@/lib/utils";
 import {
   BarChart3,
   Code,
@@ -17,7 +18,7 @@ import {
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navSections = [
@@ -60,58 +61,64 @@ const navSections = [
 
 function SidebarContent({
   pathname,
-  setMobileOpen,
+  onNavigate,
 }: {
   pathname: string;
-  setMobileOpen: (open: boolean) => void;
+  onNavigate: () => void;
 }) {
   return (
     <div className="flex flex-col h-full">
-      {/* Logo */}
-      <div className="flex items-center gap-2 px-4 py-5 border-b border-border">
-        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+      <div className="flex items-center gap-2.5 h-14 px-4 border-b border-border shrink-0">
+        <div className="w-6 h-6 bg-primary rounded-sm flex items-center justify-center text-primary-foreground text-xs font-semibold shrink-0">
           {APP_NAME[0]}
         </div>
-        <div className="flex-1 flex items-center justify-between">
-          <span className="font-bold text-foreground">{APP_NAME}</span>
-          <ThemeToggle />
-        </div>
+        <span className="font-semibold text-sm tracking-tight flex-1 truncate">
+          {APP_NAME}
+        </span>
+        <ThemeToggle />
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
+      <nav className="flex-1 px-2 py-4 space-y-5 overflow-y-auto">
         {navSections.map((section) => (
-          <div key={section.label} className="space-y-1">
-            <h3 className="px-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
+          <div key={section.label}>
+            <h3 className="px-2 mb-1 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
               {section.label}
             </h3>
-            {section.items.map((item) => {
-              const active = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                    active
-                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/25"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50 bg-muted/30"
-                  }`}
-                >
-                  <item.icon className="w-4 h-4 shrink-0" />
-                  {item.label}
-                </Link>
-              );
-            })}
+            <div className="space-y-0.5">
+              {section.items.map((item) => {
+                const active = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onNavigate}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex items-center gap-2.5 px-2 py-1.5 rounded-md text-sm transition-colors",
+                      active
+                        ? "bg-accent text-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/60",
+                    )}
+                  >
+                    <item.icon
+                      className={cn(
+                        "w-4 h-4 shrink-0",
+                        active ? "text-primary" : "text-muted-foreground",
+                      )}
+                    />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         ))}
       </nav>
 
-      {/* User / Sign out */}
-      <div className="px-3 py-4 border-t border-border">
+      <div className="p-2 border-t border-border shrink-0">
         <button
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 bg-muted/30 transition-all cursor-pointer"
+          className="flex items-center gap-2.5 px-2 py-1.5 w-full rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
         >
           <LogOut className="w-4 h-4" />
           Sign out
@@ -125,44 +132,58 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMobileOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
+
   return (
     <>
-      {/* Desktop sidebar */}
-      <div className="hidden md:flex w-56 flex-col border-r border-border bg-background h-screen fixed left-0 top-0">
-        <SidebarContent pathname={pathname} setMobileOpen={setMobileOpen} />
+      <div className="hidden md:flex w-56 flex-col border-r border-border bg-card h-screen fixed left-0 top-0">
+        <SidebarContent
+          pathname={pathname}
+          onNavigate={() => setMobileOpen(false)}
+        />
       </div>
 
-      {/* Mobile header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-b border-border px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-14 bg-card border-b border-border px-4 flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <div className="w-6 h-6 bg-primary rounded-sm flex items-center justify-center text-primary-foreground text-xs font-semibold">
             {APP_NAME[0]}
           </div>
-          <span className="font-bold text-foreground text-sm">{APP_NAME}</span>
+          <span className="font-semibold text-sm">{APP_NAME}</span>
         </div>
         <button
           onClick={() => setMobileOpen(true)}
-          className="text-muted-foreground hover:text-foreground cursor-pointer"
+          aria-label="Open navigation"
+          className="text-muted-foreground hover:text-foreground p-1 rounded-sm"
         >
           <Menu className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Mobile drawer */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-50">
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
+            className="absolute inset-0 bg-foreground/40"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="absolute left-0 top-0 bottom-0 w-56 bg-background border-r border-border">
+          <div className="absolute left-0 top-0 bottom-0 w-60 bg-card border-r border-border">
             <button
               onClick={() => setMobileOpen(false)}
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground cursor-pointer"
+              aria-label="Close navigation"
+              className="absolute top-4 right-3 z-10 text-muted-foreground hover:text-foreground p-1 rounded-sm"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
-            <SidebarContent pathname={pathname} setMobileOpen={setMobileOpen} />
+            <SidebarContent
+              pathname={pathname}
+              onNavigate={() => setMobileOpen(false)}
+            />
           </div>
         </div>
       )}

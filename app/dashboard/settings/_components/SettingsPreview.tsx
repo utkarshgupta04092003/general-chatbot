@@ -11,10 +11,10 @@ type SettingsPreviewProps = {
 
 export function SettingsPreview({ selected }: SettingsPreviewProps) {
   return (
-    <div className="bg-muted/50 border border-border rounded-2xl p-6">
+    <div className="bg-card border border-border rounded-lg p-6">
       <h2 className="font-semibold mb-4">Widget Preview</h2>
       <div
-        className={`rounded-xl overflow-hidden border border-border transition-colors ${selected.theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white"}`}
+        className={`rounded-md overflow-hidden border border-border transition-colors ${selected.theme === "dark" ? "bg-card border-slate-800" : "bg-white"}`}
         style={{ minHeight: "450px" }}
       >
         <div
@@ -39,7 +39,7 @@ export function SettingsPreview({ selected }: SettingsPreviewProps) {
               {selected.name}
             </div>
             <div className="text-xs text-white/60 flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 bg-green-400 rounded-full" /> Online
+              <div className="w-1.5 h-1.5 bg-success rounded-full" /> Online
             </div>
           </div>
         </div>
@@ -61,7 +61,7 @@ export function SettingsPreview({ selected }: SettingsPreviewProps) {
               )}
             </div>
             <div
-              className={`rounded-xl rounded-bl-none px-3 py-2 max-w-[80%] text-sm transition-colors ${selected.theme === "dark" ? "bg-slate-800 text-slate-200" : "bg-muted text-muted-foreground"}`}
+              className={`rounded-md rounded-bl-none px-3 py-2 max-w-[80%] text-sm transition-colors ${selected.theme === "dark" ? "bg-muted text-slate-200" : "bg-muted text-muted-foreground"}`}
             >
               <div>{selected.welcomeMessage}</div>
               <div
@@ -78,7 +78,7 @@ export function SettingsPreview({ selected }: SettingsPreviewProps) {
           </div>
           <div className="flex justify-end">
             <div
-              className="px-3 py-2 rounded-xl rounded-br-none text-sm text-white text-right max-w-xs"
+              className="px-3 py-2 rounded-md rounded-br-none text-sm text-white text-right max-w-xs"
               style={{ backgroundColor: selected.primaryColor }}
             >
               How do I get started?

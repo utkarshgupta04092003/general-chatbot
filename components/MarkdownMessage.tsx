@@ -12,7 +12,7 @@ type MarkdownMessageProps = {
 
 export function MarkdownMessage({
   content,
-  linkColor = "text-indigo-600",
+  linkColor = "text-primary",
   codeBg = "bg-gray-100",
   preBg = "bg-gray-100",
 }: MarkdownMessageProps) {

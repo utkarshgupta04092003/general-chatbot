@@ -62,7 +62,7 @@ export function BasicInfoSection({
   }
 
   return (
-    <div className="bg-muted/50 border border-border rounded-2xl p-6">
+    <div className="bg-card border border-border rounded-lg p-6">
       <h2 className="font-semibold mb-5">Basic Information</h2>
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -72,7 +72,7 @@ export function BasicInfoSection({
               Assistant Logo
             </label>
             <div className="flex items-center gap-4">
-              <div className="relative w-16 h-16 rounded-xl hover:bg-accent/50 bg-muted/30 border border-border flex items-center justify-center overflow-hidden shrink-0">
+              <div className="relative w-16 h-16 rounded-md bg-card border border-border border border-border flex items-center justify-center overflow-hidden shrink-0">
                 {selected.assistantLogo ? (
                   <Image
                     src={selected.assistantLogo}
@@ -90,7 +90,7 @@ export function BasicInfoSection({
                 )}
               </div>
               <label className="flex-1 cursor-pointer">
-                <div className="px-4 py-2 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-xs font-medium text-muted-foreground transition-all flex items-center justify-center gap-2">
+                <div className="px-4 py-2 bg-card border border-border hover:bg-accent/50 border border-border rounded-md text-xs font-medium text-muted-foreground transition-all flex items-center justify-center gap-2">
                   <Upload className="w-3.5 h-3.5" />
                   {uploading === "assistant" ? "Uploading..." : "Change Logo"}
                 </div>
@@ -111,7 +111,7 @@ export function BasicInfoSection({
               Website Logo (Scraped)
             </label>
             <div className="flex items-center gap-4">
-              <div className="relative w-16 h-16 rounded-xl hover:bg-accent/50 bg-muted/30 border border-border flex items-center justify-center overflow-hidden shrink-0">
+              <div className="relative w-16 h-16 rounded-md bg-card border border-border border border-border flex items-center justify-center overflow-hidden shrink-0">
                 {selected.websiteLogo ? (
                   <Image
                     src={selected.websiteLogo}
@@ -130,7 +130,7 @@ export function BasicInfoSection({
                 )}
               </div>
               <label className="flex-1 cursor-pointer">
-                <div className="px-4 py-2 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-xs font-medium text-muted-foreground transition-all flex items-center justify-center gap-2">
+                <div className="px-4 py-2 bg-card border border-border hover:bg-accent/50 border border-border rounded-md text-xs font-medium text-muted-foreground transition-all flex items-center justify-center gap-2">
                   <Upload className="w-3.5 h-3.5" />
                   {uploading === "website" ? "Uploading..." : "Replace Logo"}
                 </div>
@@ -154,7 +154,7 @@ export function BasicInfoSection({
             type="text"
             value={selected.name}
             onChange={(e) => onChange({ ...selected, name: e.target.value })}
-            className="w-full px-4 py-2.5 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full px-4 py-2.5 bg-card border border-border border border-border rounded-md text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
           />
         </div>
         <div>
@@ -167,7 +167,7 @@ export function BasicInfoSection({
               onChange({ ...selected, welcomeMessage: e.target.value })
             }
             rows={3}
-            className="w-full px-4 py-2.5 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
+            className="w-full px-4 py-2.5 bg-card border border-border border border-border rounded-md text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none"
           />
         </div>
       </div>

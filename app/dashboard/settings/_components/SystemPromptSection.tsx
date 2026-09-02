@@ -26,7 +26,7 @@ export function SystemPromptSection({
   };
 
   return (
-    <div className="bg-muted/50 border border-border rounded-2xl p-6">
+    <div className="bg-card border border-border rounded-lg p-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
           <h2 className="font-semibold mb-1">System Prompt</h2>
@@ -41,7 +41,7 @@ export function SystemPromptSection({
           <select
             value={selected.agentType || "general"}
             onChange={(e) => handleAgentTypeChange(e.target.value)}
-            className="w-full px-3 py-2 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none cursor-pointer hover:bg-accent/50"
+            className="w-full px-3 py-2 bg-card border border-border border border-border rounded-md text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all appearance-none cursor-pointer hover:bg-accent/50"
           >
             {AGENT_TYPE_OPTIONS.map((opt) => (
               <option
@@ -65,7 +65,7 @@ export function SystemPromptSection({
         placeholder={
           DEFAULT_SYSTEM_PROMPT.split("\n").slice(0, 5).join("\n") + "..."
         }
-        className="w-full px-4 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none font-mono"
+        className="w-full px-4 py-3 bg-card border border-border border border-border rounded-md text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none font-mono"
       />
     </div>
   );

@@ -102,20 +102,20 @@ export default function DemoChat() {
   }
 
   return (
-    <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-2xl">
+    <div className="bg-card border border-border rounded-lg overflow-hidden shadow-e3">
       {/* Chat header */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-indigo-600">
-        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-          <MessageSquare className="w-4 h-4 text-white" />
+      <div className="flex items-center gap-2.5 px-4 h-12 border-b border-border">
+        <div className="w-6 h-6 bg-primary rounded-sm flex items-center justify-center shrink-0">
+          <MessageSquare className="w-3.5 h-3.5 text-primary-foreground" />
         </div>
-        <div>
-          <div className="text-sm font-semibold text-white">
+        <div className="min-w-0">
+          <div className="text-sm font-medium leading-tight">
             {APP_NAME} Assistant
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-            <span className="text-xs text-indigo-200">
-              Online · Trained on {APP_NAME.toLowerCase()}
+            <span className="w-1.5 h-1.5 rounded-full bg-success" />
+            <span className="text-[11px] text-muted-foreground">
+              Trained on {APP_NAME.toLowerCase()} docs
             </span>
           </div>
         </div>
@@ -124,7 +124,7 @@ export default function DemoChat() {
       {/* Messages */}
       <div
         ref={scrollRef}
-        className="h-72 overflow-y-auto p-4 space-y-3 relative group/demo-messages"
+        className="h-72 overflow-y-auto p-4 space-y-3.5 relative"
       >
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none p-10"></div>
         {messages.map((msg, i) => (
@@ -133,10 +133,10 @@ export default function DemoChat() {
             className={`flex ${msg.role === CHAT_ROLES.USER ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed chat-message ${
+              className={`max-w-[85%] text-sm leading-relaxed chat-message ${
                 msg.role === CHAT_ROLES.USER
-                  ? "bg-indigo-600 text-white rounded-br-sm"
-                  : "bg-muted text-foreground rounded-bl-sm"
+                  ? "bg-primary text-primary-foreground rounded-md px-3 py-2"
+                  : "text-foreground"
               }`}
             >
               {msg.content.split("\n").map((line, j) => (
@@ -150,11 +150,11 @@ export default function DemoChat() {
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-muted rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1.5">
+            <div className="flex gap-1.5 py-2">
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className="w-2 h-2 bg-slate-500 rounded-full animate-typing-bounce"
+                  className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-typing-bounce"
                   style={{ animationDelay: `${i * 0.15}s` }}
                 />
               ))}
@@ -172,7 +172,7 @@ export default function DemoChat() {
               onClick={() => {
                 setInput(q);
               }}
-              className="text-xs px-3 py-1.5 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-full text-muted-foreground hover:text-foreground transition-all"
+              className="text-xs px-2.5 py-1 bg-card hover:bg-accent border border-border rounded-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               {q}
             </button>
@@ -194,17 +194,17 @@ export default function DemoChat() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask something..."
-            className="flex-1 px-4 py-2.5 bg-muted border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="flex-1 h-9 px-3 bg-card border border-input rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
           />
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="w-10 h-10 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-80 rounded-xl flex items-center justify-center transition-all"
+            className="w-9 h-9 shrink-0 bg-primary hover:bg-primary-hover disabled:opacity-50 rounded-md flex items-center justify-center transition-colors"
           >
             {loading ? (
-              <Loader2 className="w-4 h-4 text-white animate-spin" />
+              <Loader2 className="w-4 h-4 text-primary-foreground animate-spin" />
             ) : (
-              <Send className="w-4 h-4 text-white" />
+              <Send className="w-4 h-4 text-primary-foreground" />
             )}
           </button>
         </form>

@@ -6,6 +6,7 @@ import {
   README_FILE_URL,
 } from "@/lib/config";
 import PostHogClient from "@/lib/posthog";
+import { PageHeader } from "@/components/ui";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
 import { ArrowRight } from "lucide-react";
@@ -50,17 +51,14 @@ export default async function UsagePage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Usage</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Monitor your resource consumption and payment history.
-        </p>
+        <PageHeader title="Usage" description={"Monitor your resource consumption and payment history."} />
       </div>
 
       {/* Current usage */}
-      <div className="bg-muted/50 border border-border rounded-2xl p-6 mb-8">
+      <div className="bg-card border border-border rounded-lg p-6 mb-8">
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-semibold">Current Usage</h2>
-          <span className="px-3 py-1 bg-indigo-500/10 text-indigo-500 text-xs font-medium rounded-full border border-indigo-500/20">
+          <span className="px-3 py-1 bg-primary-subtle text-primary text-xs font-medium rounded-full border border-primary/20">
             {ENABLE_USAGE_LIMITS ? "Free Plan" : "Limitless Plan"}
           </span>
         </div>
@@ -106,10 +104,10 @@ export default async function UsagePage() {
                     <div
                       className={`absolute left-0 top-0 h-full rounded-full transition-all duration-500 ease-out ${
                         percentage > 90
-                          ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+                          ? "bg-danger shadow-[0_0_8px_rgba(239,68,68,0.5)]"
                           : percentage > 75
-                            ? "bg-amber-500"
-                            : "bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.3)]"
+                            ? "bg-warning"
+                            : "bg-primary shadow-[0_0_8px_rgba(99,102,241,0.3)]"
                       }`}
                       style={{ width: `${Math.min(100, percentage)}%` }}
                     />
@@ -122,7 +120,7 @@ export default async function UsagePage() {
       </div>
 
       {ENABLE_USAGE_LIMITS && (
-        <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-6 text-center flex flex-col items-center">
+        <div className="bg-primary-subtle border border-primary/20 rounded-lg p-6 text-center flex flex-col items-center">
           <h2 className="font-semibold text-lg mb-2 text-foreground">
             Unlock Unlimited Chatbots
           </h2>
@@ -136,7 +134,7 @@ export default async function UsagePage() {
             href={README_FILE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all shadow-sm"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-md transition-all shadow-e1"
           >
             Self Deploy
             <ArrowRight className="w-4 h-4" />

@@ -69,10 +69,10 @@ export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl p-6 overflow-hidden animate-in zoom-in-95 duration-300">
+      <div className="relative w-full max-w-lg bg-card border border-border rounded-lg shadow-e4 p-6 overflow-hidden animate-in zoom-in-95 duration-300">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <Mail className="w-5 h-5 text-foreground" />
             </div>
             <div>
@@ -86,7 +86,7 @@ export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-accent/50 bg-muted/30 rounded-lg transition-colors text-muted-foreground"
+            className="p-2 bg-card border border-border rounded-lg transition-colors text-muted-foreground"
           >
             <X className="w-5 h-5" />
           </button>
@@ -94,8 +94,8 @@ export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
 
         {status === "success" ? (
           <div className="py-8 text-center animate-in zoom-in-95 duration-300">
-            <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 className="w-8 h-8 text-green-400" />
+            <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="w-8 h-8 text-success" />
             </div>
             <h3 className="text-lg font-semibold text-foreground mb-2">
               We&apos;ve got you!
@@ -119,7 +119,7 @@ export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="w-full hover:bg-accent/50 bg-muted/30 border border-border rounded-xl pl-10 pr-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                  className="w-full bg-card border border-border border border-border rounded-md pl-10 pr-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 />
               </div>
             </div>
@@ -135,7 +135,7 @@ export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
                   placeholder={MOBILE_PLACEHOLDER}
-                  className="w-full hover:bg-accent/50 bg-muted/30 border border-border rounded-xl pl-10 pr-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                  className="w-full bg-card border border-border border border-border rounded-md pl-10 pr-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 />
               </div>
             </div>
@@ -149,12 +149,12 @@ export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="How many chatbots do you need? Any custom requirements?"
                 rows={4}
-                className="w-full hover:bg-accent/50 bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
+                className="w-full bg-card border border-border border border-border rounded-md px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none"
               />
             </div>
 
             {status === "error" && (
-              <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-400">
+              <div className="flex items-start gap-3 bg-danger/10 border border-red-500/20 rounded-md p-3 text-danger">
                 <AlertCircle className="w-5 h-5 shrink-0" />
                 <span className="text-sm">{error}</span>
               </div>
@@ -163,7 +163,7 @@ export function WaitlistModal({ plan, isOpen, onClose }: WaitlistModalProps) {
             <button
               type="submit"
               disabled={loading}
-              className="group w-full flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/20"
+              className="group w-full flex items-center justify-center gap-2 py-3 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-semibold rounded-md transition-all shadow-e2 shadow-e2"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />

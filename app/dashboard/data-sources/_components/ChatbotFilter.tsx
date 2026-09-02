@@ -21,9 +21,9 @@ export function ChatbotFilter({
     <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
       <button
         onClick={() => setSelectedChatbotId("all")}
-        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
+        className={`px-4 py-2 rounded-md text-sm font-medium transition-all shrink-0 ${
           selectedChatbotId === "all"
-            ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+            ? "bg-primary text-white shadow-e2 shadow-e2"
             : "bg-muted text-muted-foreground hover:text-foreground"
         }`}
       >
@@ -35,9 +35,9 @@ export function ChatbotFilter({
           <button
             key={id}
             onClick={() => setSelectedChatbotId(id)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-all shrink-0 ${
               selectedChatbotId === id
-                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                ? "bg-primary text-white shadow-e2 shadow-e2"
                 : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >

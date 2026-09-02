@@ -42,9 +42,9 @@ export function PreviewStep({
         ].map((stat) => (
           <div
             key={stat.label}
-            className="bg-card border border-border rounded-xl p-4 text-center"
+            className="bg-card border border-border rounded-md p-4 text-center"
           >
-            <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+            <div className="text-2xl font-bold text-primary dark:text-primary">
               {stat.value}
             </div>
             <div className="text-xs text-muted-foreground mt-1">
@@ -54,7 +54,7 @@ export function PreviewStep({
         ))}
       </div>
 
-      <div className="bg-card border border-border rounded-2xl overflow-hidden mb-6">
+      <div className="bg-card border border-border rounded-lg overflow-hidden mb-6">
         <div className="px-5 py-3 border-b border-border bg-muted/30 text-sm font-medium text-foreground">
           Extracted Pages
         </div>
@@ -63,18 +63,18 @@ export function PreviewStep({
             <button
               key={p.url}
               onClick={() => setSelectedPageIndex(index)}
-              className={`w-full flex items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-accent/50 bg-muted/30 cursor-pointer disabled:cursor-not-allowed ${
-                selectedPageIndex === index ? "bg-indigo-500/10" : ""
+              className={`w-full flex items-center gap-3 px-5 py-3 text-left transition-colors bg-card border border-border cursor-pointer disabled:cursor-not-allowed ${
+                selectedPageIndex === index ? "bg-primary-subtle" : ""
               }`}
             >
               {p.status === "failed" ? (
-                <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+                <AlertCircle className="w-4 h-4 text-danger shrink-0" />
               ) : (
                 <CheckCircle
                   className={`w-4 h-4 shrink-0 ${
                     selectedPageIndex === index
-                      ? "text-indigo-600 dark:text-indigo-400"
-                      : "text-green-400"
+                      ? "text-primary dark:text-primary"
+                      : "text-success"
                   }`}
                 />
               )}
@@ -82,7 +82,7 @@ export function PreviewStep({
                 <div
                   className={`text-sm truncate ${
                     selectedPageIndex === index
-                      ? "text-indigo-500 font-medium"
+                      ? "text-primary font-medium"
                       : "text-muted-foreground"
                   }`}
                 >
@@ -98,12 +98,12 @@ export function PreviewStep({
       </div>
 
       {selectedPage && selectedPage.content && (
-        <div className="bg-card border border-border rounded-xl p-4 mb-6">
+        <div className="bg-card border border-border rounded-md p-4 mb-6">
           <div className="flex items-center justify-between mb-2">
             <div className="text-xs text-muted-foreground uppercase tracking-wide">
               Content preview: {selectedPage.title || "Untitled Page"}
             </div>
-            <div className="text-xs text-slate-600">
+            <div className="text-xs text-muted-foreground">
               {selectedPage.wordCount} words
             </div>
           </div>
@@ -118,13 +118,13 @@ export function PreviewStep({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 hover:bg-accent/50 border border-border rounded-xl text-sm transition-all text-foreground cursor-pointer disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-5 py-3 bg-card border border-border hover:bg-accent/50 border border-border rounded-md text-sm transition-all text-foreground cursor-pointer disabled:cursor-not-allowed"
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
         <button
           onClick={onTrain}
-          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-sm font-medium transition-all text-white cursor-pointer disabled:cursor-not-allowed"
+          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-primary hover:bg-primary-hover rounded-md text-sm font-medium transition-all text-white cursor-pointer disabled:cursor-not-allowed"
         >
           Train Chatbot <Sparkles className="w-4 h-4" />
         </button>

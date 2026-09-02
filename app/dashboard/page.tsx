@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { PageHeader, StatCard } from "@/components/ui";
 import { requireAuth } from "@/lib/session";
 import { formatRelativeTime } from "@/lib/utils";
 import {
@@ -64,76 +65,44 @@ export default async function DashboardOverviewPage() {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Overview</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Welcome back! Here&apos;s how your chatbots are doing.
-          </p>
-        </div>
-        <DashboardActions />
-      </div>
+      <PageHeader
+        title="Overview"
+        description="Welcome back! Here's how your chatbots are doing."
+        actions={<DashboardActions />}
+      />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         {[
+          { label: "Conversations", value: totalConversations, icon: MessageSquare },
+          { label: "Queries", value: totalQueries, icon: BarChart3 },
+          { label: "Data sources", value: totalDataSources, icon: Globe },
           {
-            label: "Total Conversations",
-            value: totalConversations,
-            icon: MessageSquare,
-            color: "text-indigo-400",
-            bg: "bg-indigo-500/10",
-          },
-          {
-            label: "Total Queries",
-            value: totalQueries,
-            icon: BarChart3,
-            color: "text-violet-400",
-            bg: "bg-violet-500/10",
-          },
-          {
-            label: "Data Sources",
-            value: totalDataSources,
-            icon: Globe,
-            color: "text-cyan-400",
-            bg: "bg-cyan-500/10",
-          },
-          {
-            label: "Active Chatbots",
+            label: "Active chatbots",
             value: chatbots.filter((c) => c.status === "ready").length,
             icon: Zap,
-            color: "text-green-400",
-            bg: "bg-green-500/10",
           },
         ].map((stat) => (
-          <div
+          <StatCard
             key={stat.label}
-            className="bg-muted/50 border border-border rounded-2xl p-5"
-          >
-            <div
-              className={`w-10 h-10 ${stat.bg} rounded-xl flex items-center justify-center mb-4`}
-            >
-              <stat.icon className={`w-5 h-5 ${stat.color}`} />
-            </div>
-            <div className="text-2xl font-bold text-foreground mb-1">
-              {stat.value.toLocaleString()}
-            </div>
-            <div className="text-sm text-muted-foreground">{stat.label}</div>
-          </div>
+            label={stat.label}
+            value={stat.value.toLocaleString()}
+            icon={<stat.icon className="w-4 h-4" />}
+          />
         ))}
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6 relative min-w-0">
         {/* Chatbots */}
-        <div className="bg-muted/50 border border-border rounded-2xl p-6 min-w-0">
+        <div className="bg-card border border-border rounded-lg p-6 min-w-0">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-semibold">Your Chatbots</h2>
             <DashboardAddNewLink />
           </div>
           {chatbots.length === 0 ? (
             <div className="text-center py-10">
-              <div className="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
+              <div className="w-14 h-14 bg-primary-subtle rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Zap className="w-7 h-7 text-primary dark:text-primary" />
               </div>
               <p className="text-muted-foreground text-sm mb-4">
                 No chatbots yet
@@ -145,9 +114,9 @@ export default async function DashboardOverviewPage() {
               {chatbots.map((bot) => (
                 <div
                   key={bot.id}
-                  className="flex items-center gap-3 p-3 bg-accent/30 rounded-xl hover:bg-accent/50 transition-colors"
+                  className="flex items-center gap-3 p-3 bg-accent/30 rounded-md hover:bg-accent/50 transition-colors"
                 >
-                  <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center shrink-0">
                     <MessageSquare className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -162,8 +131,8 @@ export default async function DashboardOverviewPage() {
                   <div
                     className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium ${
                       bot.status === "ready"
-                        ? "bg-green-500/10 text-green-400"
-                        : "bg-yellow-500/10 text-yellow-400"
+                        ? "bg-success/10 text-success"
+                        : "bg-warning-subtle text-warning"
                     }`}
                   >
                     {bot.status === "ready" ? (
@@ -180,19 +149,19 @@ export default async function DashboardOverviewPage() {
         </div>
 
         {/* Recent Conversations */}
-        <div className="bg-muted/50 border border-border rounded-2xl p-6 min-w-0">
+        <div className="bg-card border border-border rounded-lg p-6 min-w-0">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-semibold">Recent Conversations</h2>
             <Link
               href="/dashboard/conversations"
-              className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 flex items-center gap-1"
+              className="text-xs text-primary dark:text-primary hover:text-primary dark:hover:text-primary flex items-center gap-1"
             >
               View all <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
           {recentConversations.length === 0 ? (
             <div className="text-center py-10">
-              <MessageSquare className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+              <MessageSquare className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
               <p className="text-muted-foreground text-sm">
                 No conversations yet. Embed your chatbot and start chatting!
               </p>
@@ -202,9 +171,9 @@ export default async function DashboardOverviewPage() {
               {recentConversations.map((conv) => {
                 const firstMsg = conv.messages[0];
                 return (
-                  <div key={conv.id} className="p-3 bg-accent/30 rounded-xl">
+                  <div key={conv.id} className="p-3 bg-accent/30 rounded-md">
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
+                      <span className="text-xs text-primary dark:text-primary font-medium">
                         {conv.chatbotName}
                       </span>
                       <span className="text-xs text-muted-foreground">
@@ -228,9 +197,9 @@ export default async function DashboardOverviewPage() {
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-6 bg-muted/50 border border-border rounded-2xl p-6">
+      <div className="mt-6 bg-card border border-border rounded-lg p-6">
         <div className="flex items-center gap-3 mb-4">
-          <TrendingUp className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+          <TrendingUp className="w-5 h-5 text-primary dark:text-primary" />
           <h2 className="font-semibold">Quick Actions</h2>
         </div>
         <DashboardQuickActions />

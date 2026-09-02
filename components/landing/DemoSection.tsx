@@ -8,8 +8,8 @@ export function DemoSection() {
       <div className="max-w-5xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full text-xs text-green-500 font-medium mb-6">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-success/10 border border-green-500/20 rounded-full text-xs text-success font-medium mb-6">
+              <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
               Live Demo
             </div>
             <h2 className="text-4xl font-bold mb-6">See it in action</h2>
@@ -29,7 +29,7 @@ export function DemoSection() {
                   key={point}
                   className="flex items-center gap-3 text-muted-foreground"
                 >
-                  <CheckCircle className="w-5 h-5 text-green-400 shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-success shrink-0" />
                   {point}
                 </li>
               ))}

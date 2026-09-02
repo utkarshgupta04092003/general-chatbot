@@ -195,19 +195,23 @@ export default function ChatWidget({
       {/* Chat window */}
       {open && (
         <div
-          className={`rounded-2xl shadow-2xl w-80 sm:w-96 flex flex-col overflow-hidden border animate-fade-in-up transition-colors duration-300 ${
+          className={`rounded-xl shadow-[0_12px_32px_-8px_rgba(0,0,0,0.24)] w-80 sm:w-96 flex flex-col overflow-hidden border animate-fade-in-up transition-colors duration-300 ${
             theme === "dark"
-              ? "bg-slate-900 border-slate-800 text-slate-100"
-              : "bg-white border-gray-100 text-slate-900"
+              ? "bg-[#131A19] border-[#232C2B] text-[#EDEDE8]"
+              : "bg-white border-[#DDDAD3] text-[#0E1414]"
           }`}
           style={{ height: "520px" }}
         >
           {/* Header */}
           <div
-            className="flex items-center gap-3 px-4 py-3"
-            style={{ backgroundColor: primaryColor }}
+            className={`flex items-center gap-2.5 px-4 h-14 border-b shrink-0 ${
+              theme === "dark" ? "border-[#232C2B]" : "border-[#DDDAD3]"
+            }`}
           >
-            <div className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center shrink-0 overflow-hidden relative">
+            <div
+              className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 overflow-hidden relative"
+              style={{ backgroundColor: primaryColor }}
+            >
               {websiteLogo ? (
                 <Image
                   src={websiteLogo}
@@ -217,16 +221,18 @@ export default function ChatWidget({
                   className="object-cover"
                 />
               ) : (
-                <MessageSquare className="w-4 h-4 text-white" />
+                <MessageSquare className="w-3.5 h-3.5 text-white" />
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-semibold text-sm text-white">
+              <div className="font-medium text-sm leading-tight truncate">
                 {chatbotName}
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                <span className="text-xs text-white/80">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2E9E7E]" />
+                <span
+                  className={`text-[11px] ${theme === "dark" ? "text-[#8B9998]" : "text-[#5C6B6A]"}`}
+                >
                   Always here to help
                 </span>
               </div>
@@ -235,13 +241,13 @@ export default function ChatWidget({
               <button
                 onClick={handleReset}
                 title="Reset Chat"
-                className="text-white/70 hover:text-white transition-colors"
+                className={`transition-colors ${theme === "dark" ? "text-[#8B9998] hover:text-[#EDEDE8]" : "text-[#5C6B6A] hover:text-[#0E1414]"}`}
               >
                 <RefreshCw className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setOpen(false)}
-                className="text-white/70 hover:text-white transition-colors"
+                className={`transition-colors ${theme === "dark" ? "text-[#8B9998] hover:text-[#EDEDE8]" : "text-[#5C6B6A] hover:text-[#0E1414]"}`}
                 title="Minimize"
               >
                 <Minimize2 className="w-4 h-4" />
@@ -253,7 +259,7 @@ export default function ChatWidget({
           <div
             ref={scrollRef}
             className={`flex-1 overflow-y-auto px-4 py-3 space-y-3 relative group/messages scroll-smooth transition-colors ${
-              theme === "dark" ? "bg-slate-900/50" : "bg-gray-50"
+              theme === "dark" ? "bg-[#131A19]" : "bg-white"
             }`}
           >
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.15] select-none p-10">
@@ -289,12 +295,12 @@ export default function ChatWidget({
                 )}
                 <div className="flex flex-col items-start max-w-[80%] group">
                   <div
-                    className={`rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed break-words overflow-hidden relative transition-colors ${
+                    className={`text-sm leading-relaxed break-words overflow-hidden relative transition-colors ${
                       msg.role === CHAT_ROLES.USER
-                        ? "text-white rounded-br-sm"
+                        ? "text-white rounded-md px-3 py-2"
                         : theme === "dark"
-                          ? "bg-slate-800 text-slate-100 shadow-md rounded-bl-sm"
-                          : "bg-white text-gray-700 shadow-sm rounded-bl-sm"
+                          ? "text-[#EDEDE8]"
+                          : "text-[#26302F]"
                     }`}
                     style={
                       msg.role === CHAT_ROLES.USER
@@ -361,12 +367,12 @@ export default function ChatWidget({
                   )}
                 </div>
                 <div
-                  className={`rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm flex gap-1.5 transition-colors ${theme === "dark" ? "bg-slate-800" : "bg-white"}`}
+                  className="flex gap-1.5 py-2"
                 >
                   {[0, 1, 2].map((i) => (
                     <div
                       key={i}
-                      className={`w-2 h-2 rounded-full animate-typing-bounce ${theme === "dark" ? "bg-slate-500" : "bg-gray-400"}`}
+                      className={`w-1.5 h-1.5 rounded-full animate-typing-bounce ${theme === "dark" ? "bg-[#8B9998]" : "bg-[#5C6B6A]"}`}
                       style={{ animationDelay: `${i * 0.15}s` }}
                     />
                   ))}
@@ -375,14 +381,14 @@ export default function ChatWidget({
             )}
             {fetchingHistory && (
               <div className="flex justify-center py-4">
-                <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+                <Loader2 className="w-4 h-4 text-[#5C6B6A] animate-spin" />
               </div>
             )}
           </div>
 
           {/* Input */}
           <div
-            className={`p-3 border-t transition-colors ${theme === "dark" ? "bg-slate-900 border-slate-800" : "bg-white border-gray-100"}`}
+            className={`p-3 border-t transition-colors ${theme === "dark" ? "bg-[#131A19] border-[#232C2B]" : "bg-white border-[#DDDAD3]"}`}
           >
             <form
               onSubmit={(e) => {
@@ -396,19 +402,16 @@ export default function ChatWidget({
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask a question..."
-                className={`flex-1 px-4 py-2.5 rounded-xl text-sm transition-all focus:outline-none focus:ring-2 ${
+                className={`flex-1 h-9 px-3 rounded-md border text-sm transition-colors focus:outline-none ${
                   theme === "dark"
-                    ? "bg-slate-800 text-slate-100 placeholder:text-slate-500"
-                    : "bg-gray-100 text-gray-700 placeholder:text-gray-400"
+                    ? "bg-[#131A19] border-[#232C2B] text-[#EDEDE8] placeholder:text-[#8B9998] focus:border-[#5FBDB4]"
+                    : "bg-white border-[#DDDAD3] text-[#0E1414] placeholder:text-[#5C6B6A] focus:border-[#0F6E68]"
                 }`}
-                style={
-                  { "--tw-ring-color": primaryColor } as React.CSSProperties
-                }
               />
               <button
                 type="submit"
                 disabled={!input.trim() || loading}
-                className="w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 transition-all text-white"
+                className="w-9 h-9 shrink-0 rounded-md flex items-center justify-center disabled:opacity-40 transition-opacity text-white"
                 style={{ backgroundColor: primaryColor }}
               >
                 {loading ? (

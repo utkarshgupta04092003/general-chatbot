@@ -43,7 +43,7 @@ export function DataSourcesList({
   ).length;
 
   return (
-    <div className="bg-muted/50 border border-border rounded-2xl overflow-hidden">
+    <div className="bg-card border border-border rounded-lg overflow-hidden">
       <div className="flex items-center justify-between px-5 py-4 border-b border-border">
         <h2 className="font-semibold text-sm">{indexedCount} indexed pages</h2>
         <button
@@ -57,11 +57,11 @@ export function DataSourcesList({
 
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-spin" />
+          <Loader2 className="w-8 h-8 text-primary dark:text-primary animate-spin" />
         </div>
       ) : filteredSources.length === 0 ? (
         <div className="text-center py-16">
-          <Globe className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+          <Globe className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <p className="text-muted-foreground text-sm">No pages indexed yet.</p>
           <p className="text-muted-foreground text-xs mt-1">
             Complete the onboarding to train your chatbot.
@@ -77,18 +77,18 @@ export function DataSourcesList({
               <div
                 className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                   source.status === "indexed"
-                    ? "bg-green-500/10"
+                    ? "bg-success/10"
                     : source.status === "failed"
-                      ? "bg-red-500/10"
-                      : "bg-yellow-500/10"
+                      ? "bg-danger/10"
+                      : "bg-warning-subtle"
                 }`}
               >
                 {source.status === "indexed" ? (
-                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                 ) : source.status === "failed" ? (
-                  <AlertCircle className="w-4 h-4 text-red-400" />
+                  <AlertCircle className="w-4 h-4 text-danger" />
                 ) : (
-                  <Clock className="w-4 h-4 text-yellow-400 animate-pulse" />
+                  <Clock className="w-4 h-4 text-warning animate-pulse" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
@@ -107,7 +107,7 @@ export function DataSourcesList({
                       {verifiedDomains.includes(
                         new URL(source.url).hostname,
                       ) && (
-                        <span className="flex items-center gap-0.5 text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded-md font-medium shrink-0">
+                        <span className="flex items-center gap-0.5 text-primary dark:text-primary bg-primary-subtle px-1.5 py-0.5 rounded-md font-medium shrink-0">
                           <ShieldCheck className="w-3 h-3" />
                           Verified
                         </span>
@@ -131,10 +131,10 @@ export function DataSourcesList({
               <div
                 className={`hidden xl:flex items-center gap-1 px-2 py-1 rounded-full text-xs shrink-0 ${
                   source.status === "indexed"
-                    ? "bg-green-500/10 text-green-400"
+                    ? "bg-success/10 text-success"
                     : source.status === "failed"
-                      ? "bg-red-500/10 text-red-400"
-                      : "bg-yellow-500/10 text-yellow-400"
+                      ? "bg-danger/10 text-danger"
+                      : "bg-warning-subtle text-warning"
                 }`}
               >
                 {source.status}
@@ -144,7 +144,7 @@ export function DataSourcesList({
                   <button
                     onClick={() => onResync(source.id)}
                     title="Resync Page Content"
-                    className="p-1.5 text-muted-foreground hover:text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-all cursor-pointer"
+                    className="p-1.5 text-muted-foreground hover:text-primary dark:text-primary hover:bg-primary-subtle rounded-lg transition-all cursor-pointer"
                   >
                     <RefreshCw className="w-4 h-4" />
                   </button>
@@ -152,7 +152,7 @@ export function DataSourcesList({
                 <button
                   onClick={() => onDelete(source.id)}
                   title="Remove Page"
-                  className="p-1.5 text-muted-foreground hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all cursor-pointer"
+                  className="p-1.5 text-muted-foreground hover:text-danger hover:bg-danger/10 rounded-lg transition-all cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

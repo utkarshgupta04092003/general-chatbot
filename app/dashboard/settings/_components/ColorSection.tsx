@@ -11,7 +11,7 @@ type ColorSectionProps = {
 
 export function ColorSection({ selected, onChange }: ColorSectionProps) {
   return (
-    <div className="bg-muted/50 border border-border rounded-2xl p-6">
+    <div className="bg-card border border-border rounded-lg p-6">
       <h2 className="font-semibold mb-5">Primary Color</h2>
       <div className="flex gap-3 flex-wrap">
         {COLORS.map((color) => (
@@ -41,7 +41,7 @@ export function ColorSection({ selected, onChange }: ColorSectionProps) {
           <div
             className={`w-9 h-9 rounded-full flex items-center justify-center transition-all bg-muted border-2 border-border group-hover:border-border ${
               !COLORS.includes(selected.primaryColor)
-                ? "ring-2 ring-foreground/60 ring-offset-2 ring-offset-background scale-110 shadow-lg"
+                ? "ring-2 ring-foreground/60 ring-offset-2 ring-offset-background scale-110 shadow-e2"
                 : ""
             }`}
             style={
@@ -51,7 +51,7 @@ export function ColorSection({ selected, onChange }: ColorSectionProps) {
             }
           >
             {!COLORS.includes(selected.primaryColor) ? (
-              <CheckCircle className="w-4 h-4 text-foreground drop-shadow-md" />
+              <CheckCircle className="w-4 h-4 text-foreground drop-shadow-e2" />
             ) : (
               <Plus className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
             )}

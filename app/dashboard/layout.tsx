@@ -9,10 +9,10 @@ export default async function DashboardLayout({
 }) {
   await requireAuth();
   return (
-    <div className="min-h-screen bg-card text-foreground relative">
+    <div className="min-h-screen bg-background text-foreground">
       <Sidebar />
       <main className="md:ml-56 pt-14 md:pt-0 min-h-screen">
-        <div className="max-w-[80rem] mx-auto p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 relative min-w-0">
+        <div className="max-w-[76rem] mx-auto px-4 py-6 sm:px-6 lg:px-8 lg:py-8 min-w-0">
           <UsageProvider>{children}</UsageProvider>
         </div>
       </main>

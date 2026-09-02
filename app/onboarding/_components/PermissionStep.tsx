@@ -28,10 +28,10 @@ export function PermissionStep({
         Please confirm before we extract content from the selected pages.
       </p>
 
-      <div className="bg-card border border-border rounded-2xl p-6 mb-6">
+      <div className="bg-card border border-border rounded-lg p-6 mb-6">
         <div className="flex items-start gap-4 mb-6">
-          <div className="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+          <div className="w-10 h-10 bg-primary-subtle rounded-md flex items-center justify-center shrink-0">
+            <ShieldCheck className="w-5 h-5 text-primary dark:text-primary" />
           </div>
           <div>
             <h3 className="font-semibold mb-1 text-foreground">
@@ -54,13 +54,13 @@ export function PermissionStep({
           "You can delete your data anytime",
         ].map((point) => (
           <div key={point} className="flex items-center gap-2 py-1.5">
-            <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-success shrink-0" />
             <span className="text-sm text-muted-foreground">{point}</span>
           </div>
         ))}
       </div>
 
-      <div className="bg-indigo-500/5 border border-indigo-500/20 rounded-xl p-4 text-sm text-indigo-500 mb-6">
+      <div className="bg-primary/5 border border-primary/20 rounded-md p-4 text-sm text-primary mb-6">
         <strong>Pages to be indexed:</strong>
         <ul className="mt-2 space-y-1">
           {Array.from(selectedUrls)
@@ -81,14 +81,14 @@ export function PermissionStep({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-3 hover:bg-accent/50 bg-muted/30 border border-border rounded-xl text-sm transition-all text-foreground cursor-pointer disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-5 py-3 bg-card border border-border border border-border rounded-md text-sm transition-all text-foreground cursor-pointer disabled:cursor-not-allowed"
         >
           <ArrowLeft className="w-4 h-4" /> Cancel
         </button>
         <button
           onClick={onScrape}
           disabled={loading}
-          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl text-sm font-medium transition-all text-white cursor-pointer disabled:cursor-not-allowed"
+          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-primary hover:bg-primary-hover disabled:opacity-50 rounded-md text-sm font-medium transition-all text-white cursor-pointer disabled:cursor-not-allowed"
         >
           {loading ? (
             <>
