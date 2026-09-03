@@ -3,6 +3,7 @@ import { PageHeader, StatCard } from "@/components/ui";
 import { requireAuth } from "@/lib/session";
 import { formatRelativeTime } from "@/lib/utils";
 import {
+  AlertCircle,
   ArrowRight,
   BarChart3,
   CheckCircle,
@@ -132,15 +133,23 @@ export default async function DashboardOverviewPage() {
                     className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium ${
                       bot.status === "ready"
                         ? "bg-success/10 text-success"
-                        : "bg-warning-subtle text-warning"
+                        : bot.status === "failed"
+                          ? "bg-danger/10 text-red-400"
+                          : "bg-warning-subtle text-warning"
                     }`}
                   >
                     {bot.status === "ready" ? (
                       <CheckCircle className="w-3 h-3" />
+                    ) : bot.status === "failed" ? (
+                      <AlertCircle className="w-3 h-3" />
                     ) : (
                       <Clock className="w-3 h-3 animate-spin" />
                     )}
-                    {bot.status === "ready" ? "Live" : "Training"}
+                    {bot.status === "ready"
+                      ? "Live"
+                      : bot.status === "failed"
+                        ? "Failed"
+                        : "Training"}
                   </div>
                 </div>
               ))}

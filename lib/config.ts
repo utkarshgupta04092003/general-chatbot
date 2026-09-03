@@ -1,5 +1,7 @@
 export const APP_NAME = "Chatbase";
-export const ENABLE_USAGE_LIMITS = true; // Set to false to disable all usage restrictions
+// Set DISABLE_USAGE_LIMITS=true in .env to lift plan caps (useful while testing).
+export const ENABLE_USAGE_LIMITS =
+  process.env.DISABLE_USAGE_LIMITS !== "true";
 export const CONTACT_EMAIL = "hello@chatbase.com";
 export const SALES_EMAIL = "sales@chatbase.com";
 export const SUPPORT_EMAIL = "support@chatbase.com";

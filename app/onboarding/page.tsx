@@ -8,7 +8,11 @@ import {
   PLAN_LIMITS,
 } from "@/lib/config";
 import { ENDPOINTS } from "@/lib/endpoint";
-import { PROCESSING_STEPS, STEPS } from "@/lib/onboarding-constants";
+import {
+  isTestVerificationEmail,
+  PROCESSING_STEPS,
+  STEPS,
+} from "@/lib/onboarding-constants";
 import { ScrapedPage } from "@/lib/onboarding-types";
 import { getDomain } from "@/lib/utils";
 import Link from "next/link";
@@ -48,6 +52,9 @@ export default function OnboardingPage() {
   const [codeRequested, setCodeRequested] = useState(false);
   const [limitReached, setLimitReached] = useState(false);
   const [limitType, setLimitType] = useState<"chatbot" | "page">("chatbot");
+  // Counts reported by the API when a limit is hit; the useUsage() hook can
+  // still be loading (0) at the moment the modal opens.
+  const [limitPageCount, setLimitPageCount] = useState<number | null>(null);
 
   // Track initial onboarding start
   useEffect(() => {
@@ -150,7 +157,11 @@ export default function OnboardingPage() {
       .replace(/^https?:\/\//, "")
       .split("/")[0]
       .replace(/^www\./, "");
-    if (!verificationEmail.endsWith(`@${domain}`)) {
+    // TODO: Remove the test-email bypass after testing
+    if (
+      !verificationEmail.endsWith(`@${domain}`) &&
+      !isTestVerificationEmail(verificationEmail)
+    ) {
       setError(`Email must be associated with the domain: @${domain}`);
       return;
     }
@@ -242,6 +253,7 @@ export default function OnboardingPage() {
       if (!res.ok) {
         if (data.error === "LIMIT_REACHED") {
           setLimitType("page");
+          setLimitPageCount(data.pageCount ?? null);
           setLimitReached(true);
           return;
         }
@@ -286,11 +298,26 @@ export default function OnboardingPage() {
         await new Promise((r) => setTimeout(r, PROCESSING_STEPS[i].delay));
       }
 
-      await fetch(ENDPOINTS.EMBED, {
+      const embedRes = await fetch(ENDPOINTS.EMBED, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chatbotId: id, pages: scrapedPages }),
       });
+      const embedData = await embedRes.json();
+
+      // Without this check a failed embed still advanced to "Done!", leaving the
+      // chatbot stuck on status "training" with no indexed content.
+      if (!embedRes.ok) {
+        if (embedData.error === "LIMIT_REACHED") {
+          setLimitType("page");
+          setLimitPageCount(embedData.pageCount ?? null);
+          setLimitReached(true);
+          return;
+        }
+        throw new Error(
+          embedData.message || embedData.error || "Failed to index content",
+        );
+      }
 
       setProcessStep(PROCESSING_STEPS.length);
       setStep(7);
@@ -306,6 +333,10 @@ export default function OnboardingPage() {
       setStep(5);
     }
   }
+
+  // Prefer the count the server reported with the limit error; fall back to the
+  // usage hook, which may still be loading when the modal first renders.
+  const effectivePageCount = limitPageCount ?? pageCount;
 
   const totalWords = scrapedPages.reduce(
     (acc, p) => acc + (p.wordCount || 0),
@@ -326,7 +357,10 @@ export default function OnboardingPage() {
         description={
           limitType === "chatbot"
             ? `You've used all ${PLAN_LIMITS.FREE.MAX_CHATBOTS} chatbot slot(s) available on the Free plan. Delete an existing chatbot or upgrade your plan to create more.`
-            : `You have already indexed ${pageCount} pages. You can only add ${Math.max(0, PLAN_LIMITS.FREE.MAX_PAGES - pageCount)} more page(s) on this Free plan. Please restart or upgrade your plan.`
+            : `You have already indexed ${effectivePageCount} page(s). You can add ${Math.max(
+                0,
+                PLAN_LIMITS.FREE.MAX_PAGES - effectivePageCount,
+              )} more page(s) on this Free plan. Please restart or upgrade your plan.`
         }
       />
       <OnboardingHeader step={step} totalSteps={STEPS.length} />

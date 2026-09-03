@@ -17,3 +17,19 @@ export const PROCESSING_STEPS = [
   { label: "Generating embeddings", icon: Sparkles, delay: 2000 },
   { label: "Storing in vector database", icon: Database, delay: 2000 },
 ];
+
+export const TEST_VERIFICATION_EMAIL = "test@example.com";
+export const TEST_VERIFICATION_CODE = "111111";
+
+export const TEST_VERIFICATION_ENABLED =
+  process.env.NEXT_PUBLIC_ENABLE_TEST_VERIFICATION === "true";
+
+export function isTestVerificationEmail(email: string) {
+  if (!TEST_VERIFICATION_ENABLED) return false;
+  return email.trim().toLowerCase() === TEST_VERIFICATION_EMAIL;
+}
+
+export function isTestVerificationCode(code: string) {
+  if (!TEST_VERIFICATION_ENABLED) return false;
+  return code.trim() === TEST_VERIFICATION_CODE;
+}

@@ -1,6 +1,11 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getDomain } from "@/lib/utils";
+// TODO: Remove these testing shortcut imports after testing
+import {
+  isTestVerificationCode,
+  isTestVerificationEmail,
+} from "@/lib/onboarding-constants";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -30,7 +35,11 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === "request-code") {
-      if (!email || !email.endsWith(`@${domain}`)) {
+      // TODO: Remove the test-email bypass after testing (non-prod only)
+      if (
+        !email ||
+        (!email.endsWith(`@${domain}`) && !isTestVerificationEmail(email))
+      ) {
         return NextResponse.json(
           { error: `Please provide an email address suffix with @${domain}` },
           { status: 400 },
@@ -82,10 +91,11 @@ export async function POST(req: NextRequest) {
       const verifiedDomain = await prisma.verifiedDomain.findFirst({
         where: { userId: user.id, domain, deleted: false },
       });
-      // TODO: Remove this dummy verification code after testing
+      // TODO: Remove this dummy verification code after testing (non-prod only)
       if (
         !verifiedDomain ||
-        (verifiedDomain.verificationCode !== code && code !== "111111")
+        (verifiedDomain.verificationCode !== code &&
+          !isTestVerificationCode(code))
       ) {
         return NextResponse.json(
           { error: "Invalid verification code" },
@@ -94,7 +104,7 @@ export async function POST(req: NextRequest) {
       }
 
       if (
-        code !== "111111" &&
+        !isTestVerificationCode(code) &&
         verifiedDomain.codeExpiresAt &&
         verifiedDomain.codeExpiresAt < new Date()
       ) {

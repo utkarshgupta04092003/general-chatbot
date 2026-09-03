@@ -26,6 +26,8 @@ function chunkText(text: string, chunkSize = 500, overlap = 50): string[] {
 }
 
 export async function POST(req: Request) {
+  // Tracked outside the try so the catch block can flag the chatbot as failed.
+  let chatbotIdForFailure: string | null = null;
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -48,6 +50,7 @@ export async function POST(req: Request) {
     if (!chatbot) {
       return NextResponse.json({ error: "Chatbot not found" }, { status: 404 });
     }
+    chatbotIdForFailure = chatbotId;
 
     const pageCount = await prisma.dataSource.count({
       where: {
@@ -60,7 +63,12 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           error: "LIMIT_REACHED",
-          message: `You have already indexed ${pageCount} pages. You can only index up to ${PLAN_LIMITS.FREE.MAX_PAGES} pages on the Free plan.`,
+          pageCount,
+          maxPages: PLAN_LIMITS.FREE.MAX_PAGES,
+          message: `You have already indexed ${pageCount} page(s). You can add ${Math.max(
+            0,
+            PLAN_LIMITS.FREE.MAX_PAGES - pageCount,
+          )} more page(s) on the Free plan.`,
         },
         { status: 403 },
       );
@@ -146,6 +154,20 @@ export async function POST(req: Request) {
     });
   } catch (err: unknown) {
     logger.error("Embedding error:", err);
+
+    // Mark the chatbot as failed so it is distinguishable from one that is
+    // genuinely still indexing; otherwise it sits on "training" forever.
+    if (chatbotIdForFailure) {
+      try {
+        await prisma.chatbot.update({
+          where: { id: chatbotIdForFailure },
+          data: { status: "failed" },
+        });
+      } catch (statusErr) {
+        logger.error("Failed to mark chatbot as failed:", statusErr);
+      }
+    }
+
     const message = err instanceof Error ? err.message : "Embedding failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }

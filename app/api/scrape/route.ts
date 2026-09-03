@@ -48,11 +48,19 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    if (ENABLE_USAGE_LIMITS && pageCount + urls.length > PLAN_LIMITS.FREE.MAX_PAGES) {
+    if (
+      ENABLE_USAGE_LIMITS &&
+      pageCount + urls.length > PLAN_LIMITS.FREE.MAX_PAGES
+    ) {
       return NextResponse.json(
         {
           error: "LIMIT_REACHED",
-          message: `You have already indexed ${pageCount} pages. You can only index up to ${PLAN_LIMITS.FREE.MAX_PAGES} pages on the Free plan. Adding ${urls.length} more page(s) exceeds your limit.`,
+          pageCount,
+          maxPages: PLAN_LIMITS.FREE.MAX_PAGES,
+          message: `You have already indexed ${pageCount} page(s). You can add ${Math.max(
+            0,
+            PLAN_LIMITS.FREE.MAX_PAGES - pageCount,
+          )} more page(s) on the Free plan, but you selected ${urls.length}.`,
         },
         { status: 403 },
       );

@@ -1,6 +1,12 @@
 "use client";
 
 import { AlertCircle, ArrowLeft, Loader2, ShieldCheck } from "lucide-react";
+// TODO: Remove these testing shortcut imports after testing
+import {
+  TEST_VERIFICATION_CODE,
+  TEST_VERIFICATION_EMAIL,
+  TEST_VERIFICATION_ENABLED,
+} from "@/lib/onboarding-constants";
 
 type DomainVerificationStepProps = {
   url: string;
@@ -58,6 +64,19 @@ export function DomainVerificationStep({
               Enter an email address associated with this domain to receive a
               verification code.
             </p>
+            {/* TODO: Remove this dummy verification email hint after testing */}
+            {TEST_VERIFICATION_ENABLED && (
+              <p className="text-sm text-primary italic flex flex-wrap items-center gap-1">
+                For testing use
+                <button
+                  type="button"
+                  onClick={() => setVerificationEmail(TEST_VERIFICATION_EMAIL)}
+                  className="underline font-medium cursor-pointer"
+                >
+                  {TEST_VERIFICATION_EMAIL}
+                </button>
+              </p>
+            )}
             <div className="flex gap-3">
               <input
                 type="email"
@@ -88,8 +107,9 @@ export function DomainVerificationStep({
         ) : (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground italic mb-2 text-primary flex items-center gap-2">
-              Verification code sent to {verificationEmail} (for testing use
-              111111)
+              Verification code sent to {verificationEmail}
+              {TEST_VERIFICATION_ENABLED &&
+                ` (for testing use ${TEST_VERIFICATION_CODE})`}
             </p>
             <div className="flex gap-3">
               <input
